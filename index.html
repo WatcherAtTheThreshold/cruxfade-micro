@@ -7,8 +7,21 @@
 <style>
   :root { --bg:#0f0f13; --ink:#e8e6e3; --muted:#9aa0a6; --crux:#5b1f5e; --frag:#3a845a; --exit:#b08900; --ward:#27506a; --tile:#1a1d24; --tileHi:#232731; --accent:#6ea7ff; --good:#68d391; --bad:#ef6b73; }
   * { box-sizing:border-box; }
-  html,body { margin:0; font-family:system-ui,Segoe UI,Roboto,Inter,Arial; background:radial-gradient(1200px 600px at 50% -20%, #1b2030 0%, var(--bg) 60%); color:var(--ink); display:flex; justify-content:center; align-items:flex-start; min-height:100svh; overflow-y:auto; padding-block:24px 28px; }
-  body { margin:0; font-family:system-ui,Segoe UI,Roboto,Inter,Arial; background:radial-gradient(1200px 600px at 50% -20%, #1b2030 0%, var(--bg) 60%); color:var(--ink); display:flex; min-height:100dvh; align-items:center; justify-content:center; }
+  html, body {
+  margin: 0;
+  padding: 0;
+  font-family: system-ui, Segoe UI, Roboto, Inter, Arial;
+  background: radial-gradient(1200px 600px at 50% -20%, #1b2030 0%, var(--bg) 60%);
+  color: var(--ink);
+  min-height: 100vh;
+}
+
+body {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 24px 0 28px;
+}
   .wrap { width:min(980px, 94vw); display:grid; gap:16px; margin-inline:auto; }
   header { display:flex; align-items:center; justify-content:space-between; gap:12px; }
   h1 { margin:0; font-size:1.05rem; letter-spacing:0.04em; color:#cfd8ff; }
