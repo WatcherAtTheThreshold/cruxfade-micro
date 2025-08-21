@@ -1,4 +1,4 @@
-**Cruxfade‑Micro** tiny now but ready to grow later.
+**Cruxfade‑Micro** tiny now but ready to grow.
 
 # Baseline structure (no build tools)
 
