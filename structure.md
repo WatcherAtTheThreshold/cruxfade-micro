@@ -111,7 +111,3 @@ main.js
 * **Tier 2**: add TypeScript + Vite, keep the same folder structure.
 * **Tier 3**: extract overlays into small web components (still no framework).
 * Avoid premature frameworks; your UI surface is compact.
-
----
-
-If you want, I can push a **starter repo layout** into the canvas (folders + empty files + a minimal `index.html` that boots `main.js`) so you can drop it into a project and go.
