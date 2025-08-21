@@ -1,7 +1,3 @@
-Got it — your answers really lock in the tone and mechanics, so I can now draw a **full annotated gameplay loop** instead of just a placeholder grid.
-
-Here’s the distilled *locked-down* structure before I draw it:
-
 ---
 
 ## **Cruxfade-Micro Core Loop (Locked Down)**
@@ -59,12 +55,3 @@ Here’s the distilled *locked-down* structure before I draw it:
 * If all die, run ends.
 
 ---
-
-If you’re good with that, I can now make you a **visual loop diagram** showing:
-
-* Movement/exploration → event overlays → deck interactions → boss → repeat.
-* Marking where the dice rolls, party selection, and equipment buffs happen.
-
-That’ll make it super easy to keep the design in front of you while prototyping.
-
-Do you want me to make that **full stylized loop diagram** now?
