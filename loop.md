@@ -1,6 +1,3 @@
-*locked-down* structure:
-
----
 
 ## **Cruxfade-Micro Core Loop (Locked Down)**
 
@@ -55,5 +52,3 @@
 * Three grids → Boss fight.
 * If party leader dies, you keep going with other members.
 * If all die, run ends.
-
----
