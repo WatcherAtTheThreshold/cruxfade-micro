@@ -428,6 +428,41 @@ function renderGameLog() {
 // ================================================================
 // EVENT HANDLERS - Replace your bindEventHandlers function with this
 // ================================================================
+
+// ================================================================
+// HELPER FUNCTIONS FOR EVENT BINDING
+// Add these RIGHT BEFORE the bindEventHandlers function
+// ================================================================
+
+/**
+ * Bind click handlers for board tiles
+ */
+function bindTileClickHandlers() {
+    DOM.tiles.forEach((tileElement, index) => {
+        tileElement.addEventListener('click', () => {
+            const row = Math.floor(index / 3);
+            const col = index % 3;
+            handleTileClick(row, col);
+        });
+    });
+}
+
+/**
+ * Bind overlay system handlers
+ */
+function bindOverlayHandlers() {
+    // Close overlays when clicking outside content
+    document.querySelectorAll('.overlay').forEach(overlay => {
+        overlay.addEventListener('click', (e) => {
+            if (e.target === overlay) {
+                closeAllOverlays();
+            }
+        });
+    });
+}
+
+// Your bindEventHandlers function should come RIGHT AFTER these two functions
+
 /**
  * Bind overlay system handlers
  */
