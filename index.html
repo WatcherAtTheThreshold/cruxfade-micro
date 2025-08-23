@@ -1,467 +1,168 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Cruxfade: Micro Deckcrawl</title>
-<style>
-  :root { --bg:#0f0f13; --ink:#e8e6e3; --muted:#9aa0a6; --crux:#5b1f5e; --frag:#3a845a; --exit:#b08900; --ward:#27506a; --tile:#1a1d24; --tileHi:#232731; --accent:#6ea7ff; --good:#68d391; --bad:#ef6b73; --boardW:720px; }
-  * { box-sizing:border-box; }
-  html, body { margin: 0; padding: 0; font-family: system-ui, Segoe UI, Roboto, Inter, Arial; background: radial-gradient(1200px 600px at 50% -20%, #1b2030 0%, var(--bg) 60%); color: var(--ink); min-height: 100svh; }
-  body { display: flex; justify-content: center; align-items: flex-start; padding: 24px 0 28px; }
-
-  .wrap { width:min(980px, 94vw); display:grid; gap:16px; margin-inline:auto; }
-  header { display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; }
-  h1 { margin:0; font-size:1.05rem; letter-spacing:0.04em; color:#cfd8ff; }
-  .hud { font-size:0.95rem; color:var(--muted); display:flex; gap:14px; flex-wrap:wrap; align-items:center; }
-  .chip { background:#141820; padding:6px 10px; border-radius:999px; border:1px solid #263047; color:#c9d1f3; }
-  .chip strong{ color:var(--ink); }
-
-  /* Board width controls tile size */
-  .board { width:min(var(--boardW), 94vw); margin-inline:auto; display:grid; grid-template-columns:repeat(3, 1fr); gap:10px; background:linear-gradient(180deg,#121520,#0c0e14); padding:10px; border-radius:16px; box-shadow:0 10px 28px rgba(0,0,0,.35), inset 0 0 0 1px #2a3040; }
-  .tile { aspect-ratio:1/1; border-radius:12px; background:var(--tile); display:grid; place-items:center; position:relative; cursor:pointer; user-select:none; border:1px solid #222633; transition:transform .08s ease, background .15s ease, box-shadow .15s ease; overflow:hidden; }
-  .tile:hover { background:var(--tileHi); box-shadow:0 0 0 2px #2b3347 inset; }
-  .tile.revealed::after { content:""; position:absolute; inset:0; border-radius:12px; box-shadow:inset 0 0 0 1px #2a3040; pointer-events:none; }
-  .tile .glyph { font-size:1.4rem; opacity:.95; }
-  .tile.hidden .glyph { filter: blur(6px) brightness(.7); opacity:.5; }
-  .tile.player { outline:2px solid var(--accent); box-shadow:0 0 0 2px var(--accent) inset, 0 0 12px rgba(110,167,255,.25); }
-  .tile.crux { background:linear-gradient(180deg, #1a0f1b, #1c1422); border-color:#33213b; }
-  .tile.crux.revealed { box-shadow:inset 0 0 0 1px #3d2745; }
-  .tile.frag { background:linear-gradient(180deg, #0f1b16, #122018); border-color:#1e3a2d; }
-  .tile.exit { background:linear-gradient(180deg, #251f0f, #19160d); border-color:#3e3214; }
-  .tile.warded { box-shadow:inset 0 0 0 2px var(--ward); }
-
-  /* Bust styling */
-  .bust { position:absolute; inset:7%; width:86%; height:86%; object-fit:contain; image-rendering: pixelated; filter: drop-shadow(0 6px 10px rgba(0,0,0,.45)); pointer-events:none; }
-
-  .panel { display:grid; gap:10px; grid-template-columns: 1fr; }
-  .hand { display:flex; gap:10px; flex-wrap:wrap; }
-  .card { flex:1 1 140px; min-width:140px; border-radius:12px; padding:10px; background:#141926; border:1px solid #263047; box-shadow:0 6px 16px rgba(0,0,0,.25); cursor:pointer; transition: transform .08s ease, box-shadow .2s ease; }
-  .card:hover { transform:translateY(-2px); box-shadow:0 10px 24px rgba(0,0,0,.35); }
-  .card .title { font-weight:700; letter-spacing:.02em; margin-bottom:6px; color:#d8e0ff; }
-  .card .text { font-size:.9rem; color:#c0c6d8; }
-  .controls { display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
-  button { background:#162236; color:#e7ecff; border:1px solid #2a3b5f; padding:10px 14px; border-radius:10px; cursor:pointer; font-weight:600; letter-spacing:.02em; }
-  button:hover{ filter:brightness(1.1); }
-  button:disabled { opacity:.5; cursor:not-allowed; }
-
-  .log { background:#11141b; border:1px solid #232a3d; border-radius:12px; padding:10px; color:#cbd5e1; font-size:.9rem; max-height:140px; overflow:auto; }
-  .log p { margin:.4em 0; }
-
-  .footer { color:var(--muted); font-size:.85rem; text-align:center; }
-  .k { opacity:.7; }
-
-  @media (max-width:700px){
-    :root{ --boardW: 640px; }
-    .wrap { gap:12px; }
-    .card{ min-width:calc(50% - 6px); }
-  }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cruxfade-Micro</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <div class="wrap">
-    <header>
-      <h1>CRUXFADE · Micro Deckcrawl</h1>
-      <div class="hud">
-        <span class="chip">❤ <strong id="hp">10</strong></span>
-        <span class="chip">✧ Fragments: <strong id="fragCount">0</strong>/3</span>
-        <span class="chip">⟳ Deck: <strong id="deckCount">0</strong></span>
-        <span class="chip">⟲ Discard: <strong id="discardCount">0</strong></span>
-        <span class="chip">⚡ Actions: <strong id="actions">3</strong></span>
-        <span class="chip">Threat: <strong id="threat">0</strong></span>
-        <span class="chip"><label>Portrait: 
-          <select id="portraitSelect">
-            <option value="Shelindra.png">Shelindra</option>
-            <option value="Morris.png">Morris</option>
-            <option value="Thorn.png">Thorn</option>
-            <option value="Tong.png">Tong</option>
-            <option value="Xavier.png">Xavier</option>
-            <option value="Bill.png">Bill</option>
-            <option value="Dragon.png">Dragon</option>
-            <option value="Draxel.png">Draxel</option>
-          </select></label></span>
-      </div>
-    </header>
+    <!-- Main game container with 3:2 aspect ratio and letterboxing -->
+    <div class="wrap">
+        
+        <!-- SECTION 1: EXPLORATION GRID (Top Left) -->
+        <section class="exploration-area">
+            <div class="grid-header">
+                <h2>Grid Level <span id="grid-level">1</span></h2>
+                <div class="grid-stats">
+                    <span class="chip">
+                        <strong id="keys-found">0</strong> Keys
+                    </span>
+                </div>
+            </div>
+            
+            <!-- 3x3 Game Board -->
+            <div class="board" id="game-board">
+                <!-- Tiles generated by JS -->
+                <div class="tile" data-row="0" data-col="0"></div>
+                <div class="tile" data-row="0" data-col="1"></div>
+                <div class="tile" data-row="0" data-col="2"></div>
+                <div class="tile" data-row="1" data-col="0"></div>
+                <div class="tile player-tile" data-row="1" data-col="1"></div> <!-- Start position -->
+                <div class="tile" data-row="1" data-col="2"></div>
+                <div class="tile" data-row="2" data-col="0"></div>
+                <div class="tile" data-row="2" data-col="1"></div>
+                <div class="tile" data-row="2" data-col="2"></div>
+            </div>
+        </section>
 
-    <div class="board" id="board"></div>
+        <!-- SECTION 2: PARTY STATUS (Top Right) -->
+        <section class="party-status">
+            <div class="status-header">
+                <h2>Party Status</h2>
+                <div class="run-info">
+                    <span class="chip">
+                        Seed: <strong id="run-seed">12345</strong>
+                    </span>
+                </div>
+            </div>
+            
+            <!-- Party Member Stats -->
+            <div class="party-stats" id="party-stats">
+                <!-- Generated by JS -->
+                <div class="party-member">
+                    <div class="member-portrait">
+                        <img src="/img/portraits/player.png" alt="You" onerror="this.style.display='none'">
+                        <span class="portrait-fallback">⚔️</span>
+                    </div>
+                    <div class="member-info">
+                        <strong>You</strong>
+                        <div class="stats">
+                            <span class="hp">❤️ <strong>10</strong></span>
+                            <span class="atk">⚔️ <strong>2</strong></span>
+                            <span class="mag">✨ <strong>1</strong></span>
+                        </div>
+                    </div>
+                    <div class="leader-marker">LEADER</div>
+                </div>
+            </div>
 
-    <section class="panel">
-      <div class="hand" id="hand"></div>
-      <div class="controls">
-        <button id="endTurnBtn">End Turn (Enter)</button>
-        <button id="newGameBtn">New Run</button>
-        <span class="k">Tip: Click adjacent tiles to move. Play cards for utility.</span>
-      </div>
-      <div class="log" id="log"></div>
-      <div class="footer">Goal: Collect 3 fragments then find the ✦ Exit. Avoid the ☍ Crux as it spreads each turn.</div>
-    </section>
-  </div>
+            <!-- Game Log -->
+            <div class="log-area">
+                <h3>Event Log</h3>
+                <div class="log" id="game-log">
+                    <p>Welcome to the grid. Find the key to proceed...</p>
+                </div>
+            </div>
+        </section>
 
-<script>
-(() => {
-  // --- Data & helpers ------------------------------------------------------
-  const el = sel => document.querySelector(sel);
-  const logEl = el('#log');
-  const boardEl = el('#board');
-  const handEl = el('#hand');
-  const rng = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
-  const chance = p => Math.random() < p;
+        <!-- SECTION 3: PARTY CARDS (Bottom Left) -->
+        <section class="party-cards">
+            <div class="cards-header">
+                <h2>Party Hand</h2>
+                <div class="deck-info">
+                    <span class="chip">
+                        Deck: <strong id="deck-count">8</strong>
+                    </span>
+                    <span class="chip">
+                        Hand: <strong id="hand-count">5</strong>
+                    </span>
+                </div>
+            </div>
+            
+            <!-- Overlapping Party Cards Display -->
+            <div class="party-hand" id="party-hand">
+                <!-- Generated by JS - cards overlap with leader elevated -->
+                <div class="party-card leader">
+                    <div class="card-portrait">⚔️</div>
+                    <div class="card-content">
+                        <h4>You</h4>
+                        <div class="card-skills">
+                            <span class="skill">Basic Strike</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-  const TILE = { EMPTY:'empty', CRUX:'crux', FRAG:'frag', EXIT:'exit' };
+        <!-- SECTION 4: ENCOUNTERS (Bottom Right) -->
+        <section class="encounters">
+            <div class="encounter-header">
+                <h2>Current Encounter</h2>
+            </div>
+            
+            <!-- Encounter Content Area -->
+            <div class="encounter-content" id="encounter-area">
+                <div class="encounter-placeholder">
+                    <p>Move to a tile to begin an encounter...</p>
+                </div>
+            </div>
+            
+            <!-- Action Buttons -->
+            <div class="encounter-actions" id="encounter-actions">
+                <button class="btn-primary" disabled>Waiting...</button>
+            </div>
+        </section>
 
-  const GLYPH = {
-    [TILE.EMPTY]: '·',
-    [TILE.CRUX]: '☍',
-    [TILE.FRAG]: '◆',
-    [TILE.EXIT]: '✦',
-    player: ''
-  };
+    </div>
 
-  // Portrait mapping (filenames expected next to this HTML)
-  let PLAYER_PORTRAIT = 'Shelindra.png';
+    <!-- Overlay System for Dice, Combat, etc. -->
+    <div class="overlay-system" id="overlay-system">
+        <!-- Dice Roll Overlay -->
+        <div class="overlay dice-overlay" id="dice-overlay">
+            <div class="overlay-content">
+                <h3>Rolling...</h3>
+                <div class="dice-display" id="dice-display">
+                    <div class="die">?</div>
+                </div>
+                <p id="dice-result">Click to roll!</p>
+            </div>
+        </div>
 
-  const START_HP = 10;
-  const ACTIONS_PER_TURN = 3;
-  const NEEDED_FRAGS = 3;
+        <!-- Combat Overlay -->
+        <div class="overlay combat-overlay" id="combat-overlay">
+            <div class="overlay-content">
+                <h3 id="combat-title">Combat</h3>
+                <div class="combat-participants">
+                    <div class="participant player">
+                        <strong id="player-name">You</strong>
+                        <div class="participant-hp">❤️ <span id="player-hp">10</span></div>
+                    </div>
+                    <div class="vs">VS</div>
+                    <div class="participant enemy">
+                        <strong id="enemy-name">Goblin</strong>
+                        <div class="participant-hp">❤️ <span id="enemy-hp">4</span></div>
+                    </div>
+                </div>
+                <div class="combat-actions">
+                    <button class="btn-primary" id="attack-btn">Attack</button>
+                    <button class="btn-secondary" id="defend-btn">Defend</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
-  const START_DECK = [
-    { id:'scout1', name:'Scout', text:'Reveal all tiles.', type:'skill' },
-    { id:'cleanse1', name:'Cleanse', text:'Purge Crux on a tile.', type:'skill' },
-    { id:'blink1', name:'Blink', text:'Teleport to any revealed tile.', type:'skill' },
-    { id:'ward1', name:'Ward', text:'Ward your current tile for 2 turns.', type:'skill' },
-    { id:'draw1', name:'Focus', text:'Draw 2 new cards.', type:'skill' },
-    { id:'step1', name:'Stride', text:'Free move (no action).', type:'move' },
-    { id:'step2', name:'Stride', text:'Free move (no action).', type:'move' },
-    { id:'sense1', name:'Sense', text:'Peek types of hidden neighbors.', type:'skill' },
-    { id:'cleanse2', name:'Cleanse', text:'Purge Crux on a tile.', type:'skill' },
-    { id:'ward2', name:'Ward', text:'Ward your current tile for 2 turns.', type:'skill' }
-  ];
-
-  // --- Game state ----------------------------------------------------------
-  const G = {
-    hp: START_HP,
-    actions: ACTIONS_PER_TURN,
-    threat: 0,
-    frags: 0,
-    deck: [],
-    discard: [],
-    hand: [],
-    grid: [], // 3x3
-    revealed: new Set(),
-    wards: new Map(), // key-> turns
-    player: { r:1, c:1 },
-    exitSpawned: false,
-    over:false
-  };
-
-  function key(r,c){ return `${r},${c}`; }
-
-  function initBoard(){
-    G.grid = new Array(3).fill(0).map(()=> new Array(3).fill(TILE.EMPTY));
-    // Place some crux
-    let cruxCount = rng(2,3);
-    while(cruxCount>0){
-      const r = rng(0,2), c=rng(0,2);
-      if((r===1&&c===1)) continue; // skip center
-      if(G.grid[r][c]===TILE.EMPTY){ G.grid[r][c]=TILE.CRUX; cruxCount--; }
-    }
-    // Place 2 fragments to start
-    let placed=0;
-    while(placed<2){
-      const r=rng(0,2), c=rng(0,2);
-      if((r===1&&c===1)) continue;
-      if(G.grid[r][c]===TILE.EMPTY){ G.grid[r][c]=TILE.FRAG; placed++; }
-    }
-    // random reveals around start
-    G.revealed.add(key(1,1));
-    neighbors(1,1).forEach(({r,c})=> G.revealed.add(key(r,c)) );
-  }
-
-  function resetRun(){
-    Object.assign(G, { hp:START_HP, actions:ACTIONS_PER_TURN, threat:0, frags:0, deck:[], discard:[], hand:[], revealed:new Set(), wards:new Map(), player:{r:1,c:1}, exitSpawned:false, over:false });
-    initBoard();
-    G.deck = shuffle([...START_DECK]);
-    draw(5);
-    renderAll();
-    log("You wake between worlds. The Crux stirs.");
-  }
-
-  function shuffle(arr){
-    for(let i=arr.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [arr[i],arr[j]]=[arr[j],arr[i]]; }
-    return arr;
-  }
-
-  function draw(n=1){
-    for(let i=0;i<n;i++){
-      if(G.deck.length===0){
-        if(G.discard.length===0) return; // nothing to draw
-        G.deck = shuffle(G.discard.splice(0));
-      }
-      G.hand.push(G.deck.pop());
-    }
-  }
-
-  function discardCard(idx){
-    const [c] = G.hand.splice(idx,1);
-    if(c) G.discard.push(c);
-  }
-
-  function neighbors(r,c){
-    return [ [r-1,c],[r+1,c],[r,c-1],[r,c+1] ].filter(([rr,cc])=> rr>=0&&rr<3&&cc>=0&&cc<3).map(([rr,cc])=>({r:rr,c:cc}));
-  }
-
-  function moveTo(r,c, free=false){
-    if(G.over) return;
-    const pr = G.player.r, pc = G.player.c;
-    const isAdj = neighbors(pr,pc).some(n=> n.r===r && n.c===c);
-    if(!isAdj){ log('You can only move to adjacent tiles.'); return; }
-    if(!free){ if(G.actions<=0) { log('No actions left.'); return; } G.actions--; }
-
-    G.player.r=r; G.player.c=c; G.revealed.add(key(r,c));
-    const t = G.grid[r][c];
-    if(t===TILE.FRAG){
-      G.grid[r][c]=TILE.EMPTY; G.frags++;
-      log(`You recover a fragment ✧ (${G.frags}/${NEEDED_FRAGS}).`);
-      if(G.frags===NEEDED_FRAGS && !G.exitSpawned){ spawnExit(); }
-    }
-    if(t===TILE.CRUX){
-      const warded = (G.wards.get(key(r,c))||0)>0;
-      if(!warded){
-        G.hp -= 2; flashTile(r,c,'hurt');
-        log('The Crux burns you (−2).');
-        if(G.hp<=0) return gameOver('Devoured by the Crux.');
-      } else {
-        log('Ward muffles the Crux.');
-      }
-    }
-    renderAll();
-  }
-
-  function flashTile(r,c,kind='hurt'){
-    const idx = r*3+c;
-    const tile = boardEl.children[idx];
-    if(!tile) return;
-    const prev = tile.style.boxShadow;
-    tile.style.boxShadow = kind==='hurt' ? '0 0 0 2px #ef6b73 inset, 0 0 18px rgba(239,107,115,.35)' : '0 0 0 2px #68d391 inset, 0 0 18px rgba(104,211,145,.35)';
-    setTimeout(()=> tile.style.boxShadow = prev, 260);
-  }
-
-  function spawnExit(){
-    // place exit at a random empty revealed edge tile if possible, else any empty tile
-    const empties = [];
-    for(let r=0;r<3;r++) for(let c=0;c<3;c++) if(G.grid[r][c]===TILE.EMPTY) empties.push({r,c});
-    const edge = empties.filter(({r,c})=> r===0||r===2||c===0||c===2);
-    const pool = edge.length? edge : empties;
-    if(pool.length){ const pick = pool[rng(0,pool.length-1)]; G.grid[pick.r][pick.c]=TILE.EXIT; G.exitSpawned=true; log('A path opens ✦.'); }
-  }
-
-  function endTurn(){
-    if(G.over) return;
-    // decay wards
-    for(const k of [...G.wards.keys()]){
-      const t = G.wards.get(k)-1; if(t<=0) G.wards.delete(k); else G.wards.set(k,t);
-    }
-    // Crux spreads with threat+random
-    cruxSpread();
-    G.actions = ACTIONS_PER_TURN;
-    // draw up to 5
-    while(G.hand.length<5) draw(1);
-    renderAll();
-  }
-
-  function cruxSpread(){
-    let added = 0;
-    const toCrux = [];
-    for(let r=0;r<3;r++) for(let c=0;c<3;c++){
-      if(G.grid[r][c]===TILE.CRUX){
-        neighbors(r,c).forEach(n=>{
-          if(G.grid[n.r][n.c]!==TILE.CRUX && !isWarded(n.r,n.c) && chance(0.3 + G.threat*0.05)){
-            toCrux.push(n);
-          }
-        });
-      }
-    }
-    toCrux.forEach(({r,c})=>{ if(G.grid[r][c]===TILE.FRAG) G.grid[r][c]=TILE.EMPTY; G.grid[r][c]=TILE.CRUX; added++; });
-    if(added>0){ G.threat++; log(`The Crux swells (${added} tile${added>1?'s':''}). Threat ${G.threat}.`); }
-
-    // damage if player on crux and no ward
-    const {r,c} = G.player; if(G.grid[r][c]===TILE.CRUX && !isWarded(r,c)){
-      G.hp -= 1; flashTile(r,c,'hurt'); log('Ambient Crux gnaws at you (−1).'); if(G.hp<=0) return gameOver('Devoured by the Crux.');
-    }
-  }
-
-  function isWarded(r,c){ return (G.wards.get(key(r,c))||0) > 0; }
-
-  function playCard(idx){
-    if(G.over) return;
-    const card = G.hand[idx]; if(!card) return;
-    switch(card.id){
-      case 'scout1':
-        G.actions--; if(G.actions<0){ G.actions++; return log('No actions left.'); }
-        for(let r=0;r<3;r++) for(let c=0;c<3;c++) G.revealed.add(key(r,c));
-        log('You survey the lattice.');
-        discardCard(idx);
-        break;
-      case 'cleanse1':
-      case 'cleanse2':
-        G.actions--; if(G.actions<0){ G.actions++; return log('No actions left.'); }
-        promptSelectTile('Choose a tile to purge.', ({r,c})=>{
-          if(G.grid[r][c]===TILE.CRUX){ G.grid[r][c]=TILE.EMPTY; log('The Crux recedes.'); flashTile(r,c,'heal'); } else { log('Nothing to cleanse there.'); }
-          renderAll();
-        });
-        discardCard(idx);
-        break;
-      case 'blink1':
-        promptSelectTile('Blink to any revealed tile.', ({r,c})=>{
-          if(G.revealed.has(key(r,c))){ G.player.r=r; G.player.c=c; log('Space folds.'); renderAll(); }
-          else log('That place is not yet known.');
-        });
-        discardCard(idx);
-        break;
-      case 'ward1':
-      case 'ward2':
-        G.actions--; if(G.actions<0){ G.actions++; return log('No actions left.'); }
-        {
-          const k = key(G.player.r,G.player.c); G.wards.set(k,2); log('A ward hums (2).');
-          renderAll();
-        }
-        discardCard(idx);
-        break;
-      case 'draw1':
-        G.actions--; if(G.actions<0){ G.actions++; return log('No actions left.'); }
-        draw(2); log('Mind sharpens. (+2)');
-        discardCard(idx);
-        break;
-      case 'step1':
-      case 'step2':
-        promptSelectTile('Stride: move for free to an adjacent tile.', ({r,c})=> moveTo(r,c,true));
-        discardCard(idx);
-        break;
-      case 'sense1':
-        G.actions--; if(G.actions<0){ G.actions++; return log('No actions left.'); }
-        const ns = neighbors(G.player.r,G.player.c);
-        ns.forEach(({r,c})=> G.revealed.add(key(r,c)) );
-        ns.forEach(({r,c})=> flashTile(r,c,'heal'));
-        log('You feel nearby contours.');
-        discardCard(idx);
-        break;
-      default:
-        log('The card fizzles.');
-        discardCard(idx);
-    }
-    renderAll();
-  }
-
-  function promptSelectTile(message, cb){
-    log(message);
-    boardEl.classList.add('selecting');
-    const prevHandlers = [];
-    for(const tile of boardEl.children){
-      const handler = () => {
-        const r = +tile.dataset.r, c=+tile.dataset.c;
-        boardEl.classList.remove('selecting');
-        prevHandlers.forEach(([t,h])=> t.removeEventListener('click', h));
-        cb({r,c});
-      };
-      tile.addEventListener('click', handler);
-      prevHandlers.push([tile,handler]);
-    }
-  }
-
-  function gameOver(msg){
-    G.over = true; log(`✖ ${msg}`); el('#endTurnBtn').disabled = true; boardEl.style.filter='grayscale(0.2)';
-  }
-
-  function tryWin(){
-    if(G.frags>=NEEDED_FRAGS && G.grid[G.player.r][G.player.c]===TILE.EXIT){
-      G.over = true; log('✔ You step through the Threshold. (Win)'); el('#endTurnBtn').disabled=true; boardEl.style.filter='saturate(1.2)';
-    }
-  }
-
-  // --- Rendering -----------------------------------------------------------
-  function renderAll(){
-    // board
-    boardEl.innerHTML='';
-    for(let r=0;r<3;r++){
-      for(let c=0;c<3;c++){
-        const t = G.grid[r][c];
-        const div = document.createElement('div');
-        div.className = 'tile revealed';
-        if(!G.revealed.has(key(r,c))) div.classList.add('hidden');
-        if(t===TILE.CRUX) div.classList.add('crux');
-        if(t===TILE.FRAG) div.classList.add('frag');
-        if(t===TILE.EXIT) div.classList.add('exit');
-        if(G.player.r===r && G.player.c===c) div.classList.add('player');
-        if(isWarded(r,c)) div.classList.add('warded');
-        div.dataset.r=r; div.dataset.c=c;
-
-        // glyph fallback
-        const glyph = document.createElement('div'); glyph.className='glyph';
-        let text = GLYPH[TILE.EMPTY];
-        if(t===TILE.CRUX) text = GLYPH[TILE.CRUX];
-        if(t===TILE.FRAG) text = GLYPH[TILE.FRAG];
-        if(t===TILE.EXIT) text = GLYPH[TILE.EXIT];
-
-        // If player here, show portrait instead of glyph
-        if(G.player.r===r && G.player.c===c){
-          const img = document.createElement('img');
-          img.src = PLAYER_PORTRAIT; // e.g., './Shelindra.png'
-          img.alt = 'player portrait';
-          img.className = 'bust';
-          div.appendChild(img);
-        } else {
-          glyph.textContent = text;
-          div.appendChild(glyph);
-        }
-
-        div.addEventListener('click', ()=> moveTo(r,c));
-        boardEl.appendChild(div);
-      }
-    }
-
-    // hand
-    handEl.innerHTML='';
-    G.hand.forEach((card, i)=>{
-      const d = document.createElement('div'); d.className='card'; d.tabIndex=0;
-      d.innerHTML = `<div class="title">${card.name}</div><div class="text">${card.text}</div>`;
-      d.addEventListener('click', ()=> playCard(i));
-      handEl.appendChild(d);
-    });
-
-    // hud
-    el('#hp').textContent = G.hp;
-    el('#fragCount').textContent = G.frags;
-    el('#deckCount').textContent = G.deck.length;
-    el('#discardCount').textContent = G.discard.length;
-    el('#actions').textContent = G.actions;
-    el('#threat').textContent = G.threat;
-
-    tryWin();
-  }
-
-  function log(msg){
-    const p = document.createElement('p'); p.textContent = msg; logEl.appendChild(p); logEl.scrollTop = logEl.scrollHeight;
-  }
-
-  // --- Controls ------------------------------------------------------------
-  el('#endTurnBtn').addEventListener('click', endTurn);
-  el('#newGameBtn').addEventListener('click', resetRun);
-  window.addEventListener('keydown', (e)=>{
-    if(e.key==='Enter') endTurn();
-    const map = { ArrowUp:[-1,0], ArrowDown:[1,0], ArrowLeft:[0,-1], ArrowRight:[0,1] };
-    if(map[e.key]){
-      const [dr,dc]=map[e.key]; const r=G.player.r+dr, c=G.player.c+dc; if(r>=0&&r<3&&c>=0&&c<3) moveTo(r,c);
-    }
-  });
-
-  // Portrait selector
-  el('#portraitSelect').addEventListener('change', (e)=>{
-    PLAYER_PORTRAIT = e.target.value; renderAll();
-  });
-
-  // --- Start ---------------------------------------------------------------
-  resetRun();
-})();
-</script>
+    <!-- Load main game script as ES module -->
+    <script type="module" src="/js/main.js"></script>
 </body>
 </html>
