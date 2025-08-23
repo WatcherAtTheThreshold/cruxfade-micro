@@ -563,23 +563,44 @@ export function closeAllOverlays() {
 // ================================================================
 
 // Make encounter actions available globally
-window.CruxfadeMicro = window.CruxfadeMicro || {};
-Object.assign(window.CruxfadeMicro, {
+window.CruxfadeMicro = {
     // Combat actions
-    startCombat: () => { showOverlay('combat-overlay'); },
-    flee: () => { addLogEntry('🏃 You fled from combat!'); updateGame(); },
+    startCombat: () => { 
+        console.log('⚔️ Starting combat...');
+        showOverlay('combat-overlay'); 
+    },
+    flee: () => { 
+        addLogEntry('🏃 You fled from combat!'); 
+        updateGame(); 
+    },
     
     // Encounter resolutions
-    resolveHazard: () => { addLogEntry('⚡ You carefully navigate the hazard!'); updateGame(); },
-    takeItem: () => { addLogEntry('📦 You found a useful item!'); updateGame(); },
-    recruitAlly: () => { addLogEntry('🤝 The warrior joins your party!'); updateGame(); },
+    resolveHazard: () => { 
+        addLogEntry('⚡ You carefully navigate the hazard!'); 
+        updateGame(); 
+    },
+    takeItem: () => { 
+        addLogEntry('📦 You found a useful item!'); 
+        updateGame(); 
+    },
+    recruitAlly: () => { 
+        addLogEntry('🤝 The warrior joins your party!'); 
+        updateGame(); 
+    },
     takeKey: () => { 
         console.log('🗝️ Taking key...');
         foundKey(); 
         updateGame(); 
     },
-    proceedToNextGrid: () => { nextGrid(); updateGame(); },
+    proceedToNextGrid: () => { 
+        console.log('🚪 Proceeding to next grid...');
+        nextGrid(); 
+        updateGame(); 
+    },
     
     // Utility
     closeOverlays: closeAllOverlays
-});
+};
+
+// Log that we've set up the global object
+console.log('✅ Global CruxfadeMicro ready with functions:', Object.keys(window.CruxfadeMicro));
