@@ -169,15 +169,15 @@ section {
   gap: 8px;
 }
 
-/* 3x3 Game Board - Takes up 2/3rds of the section */
+/* 3x3 Game Board - Takes up most of the section */
 .board {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: var(--gap-cards);
   aspect-ratio: 1/1;
-  flex: 2; /* Give the board 2/3rds of available space */
+  flex: 3; /* Give the board 3/4 of available space */
   max-width: 100%;
-  min-height: 200px; /* Ensure minimum size */
+  min-height: 280px; /* Larger minimum size */
 }
 
 /* Individual tile styling */
@@ -191,7 +191,8 @@ section {
   position: relative;
   cursor: pointer;
   transition: transform 0.08s ease, background 0.15s ease, box-shadow 0.2s ease;
-  font-size: 1.5rem;
+  font-size: 1.8rem; /* Larger icons */
+  min-height: 80px; /* Minimum tile size */
 }
 
 .tile:hover {
