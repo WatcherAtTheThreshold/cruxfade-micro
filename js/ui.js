@@ -573,7 +573,11 @@ Object.assign(window.CruxfadeMicro, {
     resolveHazard: () => { addLogEntry('⚡ You carefully navigate the hazard!'); updateGame(); },
     takeItem: () => { addLogEntry('📦 You found a useful item!'); updateGame(); },
     recruitAlly: () => { addLogEntry('🤝 The warrior joins your party!'); updateGame(); },
-    takeKey: () => { foundKey(); updateGame(); },
+    takeKey: () => { 
+        console.log('🗝️ Taking key...');
+        foundKey(); 
+        updateGame(); 
+    },
     proceedToNextGrid: () => { nextGrid(); updateGame(); },
     
     // Utility
