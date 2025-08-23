@@ -107,7 +107,7 @@ img {
   margin-block: 2vh;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  grid-template-rows: 1fr 1fr;
+  grid-template-rows: 2fr 1fr; /* Top sections get 2/3, bottom sections get 1/3 */
   gap: var(--gap-main);
   aspect-ratio: 3/2;
   max-height: 90vh;
@@ -353,6 +353,7 @@ section {
 
 .party-cards {
   position: relative;
+  min-height: auto; /* Allow it to be compact */
 }
 
 .deck-info {
@@ -366,6 +367,7 @@ section {
   margin-left: 20px;
   flex: 1;
   align-items: flex-start;
+  min-height: auto; /* More compact */
 }
 
 .party-card {
