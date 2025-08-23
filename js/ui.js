@@ -403,7 +403,7 @@ function renderKeyEncounter() {
             <p>The key to the next grid lies here!</p>
         </div>
     `;
-    DOM.encounterActions.innerHTML = `<button class="btn-primary" onclick="window.CruxfadeMicro.takeKey()">Take Key</button>`;
+    DOM.encounterActions.innerHTML = `<button class="btn-primary" onclick="window.CruxfadeMicro.takekey()">Take Key</button>`;
 }
 
 /**
