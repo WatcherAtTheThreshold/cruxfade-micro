@@ -279,61 +279,10 @@ function getMemberSkills(member) {
 }
 
 // ================================================================
-// ENCOUNTER AREA RENDERING
+// ENCOUNTER RENDERING FUNCTIONS - Using data-action instead of onclick
+// Replace these functions in your ui.js (around lines 340-420)
 // ================================================================
 
-/**
- * Render the current encounter area
- */
-function renderEncounterArea() {
-    if (!DOM.encounterArea || !DOM.encounterActions) return;
-    
-    const currentTile = getCurrentTile();
-    
-    if (!currentTile.revealed || currentTile.type === 'start' || currentTile.type === 'empty') {
-        // No encounter or empty tile
-        DOM.encounterArea.innerHTML = `
-            <div class="encounter-placeholder">
-                <p>Move to a tile to begin an encounter...</p>
-            </div>
-        `;
-        DOM.encounterActions.innerHTML = '<button class="btn-primary" disabled>Waiting...</button>';
-        return;
-    }
-    
-    // Render encounter based on tile type
-    renderEncounterByType(currentTile);
-}
-
-/**
- * Render encounter content based on tile type
- */
-function renderEncounterByType(tile) {
-    switch (tile.type) {
-        case 'fight':
-            renderFightEncounter();
-            break;
-        case 'hazard':
-            renderHazardEncounter();
-            break;
-        case 'item':
-            renderItemEncounter();
-            break;
-        case 'ally':
-            renderAllyEncounter();
-            break;
-        case 'key':
-            renderKeyEncounter();
-            break;
-        case 'door':
-            renderDoorEncounter();
-            break;
-        default:
-            renderDefaultEncounter();
-    }
-}
-
-/**
 /**
  * Render a fight encounter
  */
@@ -349,8 +298,8 @@ function renderFightEncounter() {
     `;
     
     DOM.encounterActions.innerHTML = `
-        <button class="btn-primary" onclick="window.CruxfadeMicro.startCombat()">Fight!</button>
-        <button class="btn-secondary" onclick="window.CruxfadeMicro.flee()">Flee</button>
+        <button class="btn-primary" data-action="start-combat">Fight!</button>
+        <button class="btn-secondary" data-action="flee">Flee</button>
     `;
 }
 
@@ -364,7 +313,9 @@ function renderHazardEncounter() {
             <p>A dangerous trap lies ahead...</p>
         </div>
     `;
-    DOM.encounterActions.innerHTML = `<button class="btn-primary" onclick="window.CruxfadeMicro.resolveHazard()">Navigate Carefully</button>`;
+    DOM.encounterActions.innerHTML = `
+        <button class="btn-primary" data-action="resolve-hazard">Navigate Carefully</button>
+    `;
 }
 
 /**
@@ -377,7 +328,9 @@ function renderItemEncounter() {
             <p>You discovered a useful item!</p>
         </div>
     `;
-    DOM.encounterActions.innerHTML = `<button class="btn-primary" onclick="window.CruxfadeMicro.takeItem()">Take Item</button>`;
+    DOM.encounterActions.innerHTML = `
+        <button class="btn-primary" data-action="take-item">Take Item</button>
+    `;
 }
 
 /**
@@ -390,7 +343,9 @@ function renderAllyEncounter() {
             <p>A warrior offers to join your party...</p>
         </div>
     `;
-    DOM.encounterActions.innerHTML = `<button class="btn-primary" onclick="window.CruxfadeMicro.recruitAlly()">Recruit</button>`;
+    DOM.encounterActions.innerHTML = `
+        <button class="btn-primary" data-action="recruit-ally">Recruit</button>
+    `;
 }
 
 /**
@@ -403,7 +358,9 @@ function renderKeyEncounter() {
             <p>The key to the next grid lies here!</p>
         </div>
     `;
-    DOM.encounterActions.innerHTML = `<button class="btn-primary" onclick="window.CruxfadeMicro.takeKey()">Take Key</button>`;
+    DOM.encounterActions.innerHTML = `
+        <button class="btn-primary" data-action="take-key">Take Key</button>
+    `;
 }
 
 /**
@@ -418,12 +375,23 @@ function renderDoorEncounter() {
         </div>
     `;
     DOM.encounterActions.innerHTML = `
-        <button class="btn-primary" ${canProceed ? '' : 'disabled'} onclick="window.CruxfadeMicro.proceedToNextGrid()">
+        <button class="btn-primary" ${canProceed ? '' : 'disabled'} data-action="proceed-next-grid">
             ${canProceed ? 'Enter Next Grid' : 'Locked'}
         </button>
     `;
 }
 
+/**
+ * Render default/empty encounter
+ */
+function renderDefaultEncounter() {
+    DOM.encounterArea.innerHTML = `
+        <div class="encounter-placeholder">
+            <p>This area is empty...</p>
+        </div>
+    `;
+    DOM.encounterActions.innerHTML = '';
+}
 // ================================================================
 // HEADER INFO RENDERING
 // ================================================================
@@ -458,7 +426,7 @@ function renderGameLog() {
 }
 
 // ================================================================
-// EVENT HANDLERS
+// EVENT HANDLERS - Replace your bindEventHandlers function with this
 // ================================================================
 
 /**
@@ -474,65 +442,66 @@ export function bindEventHandlers() {
     // Overlay handlers
     bindOverlayHandlers();
     
-    console.log('🎯 Event handlers bound');
-}
-
-/**
- * Bind click handlers for board tiles
- */
-function bindTileClickHandlers() {
-    DOM.tiles.forEach((tileElement, index) => {
-        tileElement.addEventListener('click', () => {
-            const row = Math.floor(index / 3);
-            const col = index % 3;
-            handleTileClick(row, col);
-        });
-    });
-}
-
-/**
- * Handle tile click events
- */
-function handleTileClick(row, col) {
-    console.log(`🖱️ Tile clicked: (${row}, ${col})`);
-    console.log(`Current player position: (${G.board.player.r}, ${G.board.player.c})`);
-    console.log(`Is adjacent: ${isAdjacentToPlayer(row, col)}`);
-    console.log(`Game over: ${G.over}`);
-    
-    if (G.over) return;
-    
-    // Check if it's an adjacent tile
-    if (isAdjacentToPlayer(row, col)) {
-        console.log('🎯 Attempting to move player...');
-        const success = movePlayer(row, col);
-        if (success) {
-            console.log('✅ Move successful, updating game...');
-            updateGame();
-        } else {
-            console.log('❌ Move failed');
-        }
-    } else if (!isPlayerCurrentTile(row, col)) {
-        addLogEntry('❌ Can only move to adjacent tiles');
-        updateGame();
-    } else {
-        console.log('📍 Clicked current player tile');
-    }
-}
-
-/**
- * Bind overlay system handlers
- */
-function bindOverlayHandlers() {
-    // Close overlays when clicking outside content
-    document.querySelectorAll('.overlay').forEach(overlay => {
-        overlay.addEventListener('click', (e) => {
-            if (e.target === overlay) {
-                closeAllOverlays();
+    // NEW: Event delegation for encounter actions
+    // This handles ALL button clicks in the encounter area
+    const encounterActions = document.getElementById('encounter-actions');
+    if (encounterActions) {
+        encounterActions.addEventListener('click', (e) => {
+            // Find the button that was clicked
+            const button = e.target.closest('button[data-action]');
+            if (!button || button.disabled) return;
+            
+            // Get the action from the data-action attribute
+            const action = button.dataset.action;
+            console.log('🎮 Action triggered:', action);
+            
+            // Handle the action
+            switch(action) {
+                case 'start-combat':
+                    console.log('⚔️ Starting combat...');
+                    showOverlay('combat-overlay');
+                    break;
+                    
+                case 'flee':
+                    addLogEntry('🏃 You fled from combat!');
+                    updateGame();
+                    break;
+                    
+                case 'resolve-hazard':
+                    addLogEntry('⚡ You carefully navigate the hazard!');
+                    updateGame();
+                    break;
+                    
+                case 'take-item':
+                    addLogEntry('📦 You found a useful item!');
+                    updateGame();
+                    break;
+                    
+                case 'recruit-ally':
+                    addLogEntry('🤝 The warrior joins your party!');
+                    updateGame();
+                    break;
+                    
+                case 'take-key':
+                    console.log('🗝️ Taking key...');
+                    foundKey();
+                    updateGame();
+                    break;
+                    
+                case 'proceed-next-grid':
+                    console.log('🚪 Proceeding to next grid...');
+                    nextGrid();
+                    updateGame();
+                    break;
+                    
+                default:
+                    console.warn('Unknown action:', action);
             }
         });
-    });
+    }
+    
+    console.log('🎯 Event handlers bound with delegation');
 }
-
 // ================================================================
 // OVERLAY MANAGEMENT
 // ================================================================
@@ -565,50 +534,3 @@ export function closeAllOverlays() {
         overlay.classList.remove('active');
     });
 }
-
-// ================================================================
-// GAME ACTION HANDLERS (exposed globally)
-// ================================================================
-
-// Make encounter actions available globally
-window.CruxfadeMicro = {
-    // Combat actions
-    startCombat: () => { 
-        console.log('⚔️ Starting combat...');
-        showOverlay('combat-overlay'); 
-    },
-    flee: () => { 
-        addLogEntry('🏃 You fled from combat!'); 
-        updateGame(); 
-    },
-    
-    // Encounter resolutions
-    resolveHazard: () => { 
-        addLogEntry('⚡ You carefully navigate the hazard!'); 
-        updateGame(); 
-    },
-    takeItem: () => { 
-        addLogEntry('📦 You found a useful item!'); 
-        updateGame(); 
-    },
-    recruitAlly: () => { 
-        addLogEntry('🤝 The warrior joins your party!'); 
-        updateGame(); 
-    },
-    takeKey: () => { 
-        console.log('🗝️ Taking key...');
-        foundKey(); 
-        updateGame(); 
-    },
-    proceedToNextGrid: () => { 
-        console.log('🚪 Proceeding to next grid...');
-        nextGrid(); 
-        updateGame(); 
-    },
-    
-    // Utility
-    closeOverlays: closeAllOverlays
-};
-
-// Log that we've set up the global object
-console.log('✅ Global CruxfadeMicro ready with functions:', Object.keys(window.CruxfadeMicro));
