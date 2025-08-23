@@ -160,6 +160,8 @@ section {
 
 .exploration-area {
   position: relative;
+  display: flex;
+  flex-direction: column;
 }
 
 .grid-stats {
@@ -167,14 +169,15 @@ section {
   gap: 8px;
 }
 
-/* 3x3 Game Board */
+/* 3x3 Game Board - Takes up 2/3rds of the section */
 .board {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: var(--gap-cards);
   aspect-ratio: 1/1;
-  flex: 1;
+  flex: 2; /* Give the board 2/3rds of available space */
   max-width: 100%;
+  min-height: 200px; /* Ensure minimum size */
 }
 
 /* Individual tile styling */
