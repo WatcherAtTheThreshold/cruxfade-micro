@@ -194,7 +194,7 @@ function createPartyMemberElement(member, isLeader = false) {
     
     memberDiv.innerHTML = `
         <div class="member-portrait">
-            <img src="/img/portraits/${member.id}.png" alt="${member.name}" onerror="this.style.display='none'">
+            <img src="./images/portraits/${member.id}.png" alt="${member.name}" onerror="this.style.display='none'">
             <span class="portrait-fallback">${getCharacterIcon(member)}</span>
         </div>
         <div class="member-info">
