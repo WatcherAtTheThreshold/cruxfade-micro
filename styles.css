@@ -1,349 +1,711 @@
-# 📋 Cruxfade-Micro — Data Structure & Progression Plan
+/* ================================================================
+   CRUXFADE-MICRO STYLESHEET
+   Sectioned with index for easy navigation and modification
+   ================================================================ */
 
-This plan outlines how to structure Cruxfade-Micro's data files for easy content iteration, balanced progression, and maintainable code separation.
+/* 
+   SECTION INDEX:
+   1. CSS CUSTOM PROPERTIES (Theme System)
+   2. RESET & BASE STYLES
+   3. MAIN CONTAINER & LAYOUT SYSTEM
+   4. EXPLORATION AREA (Top Left - 3x3 Grid)
+   5. PARTY STATUS (Top Right - Stats & Log)
+   6. PARTY CARDS (Bottom Left - Overlapping Cards)  
+   7. ENCOUNTERS (Bottom Right - Combat & Events)
+   8. OVERLAY SYSTEM (Dice, Combat Popups)
+   9. UI COMPONENTS (Buttons, Chips, Cards)
+   10. RESPONSIVE ADJUSTMENTS
+   11. ANIMATIONS & TRANSITIONS
+*/
 
----
+/* ================================================================
+   1. CSS CUSTOM PROPERTIES (Theme System)
+   ================================================================ */
+:root {
+  /* Base Colors */
+  --bg: #0f0f13;
+  --ink: #e8e6e3;
+  --muted: #9aa0a6;
+  --accent: #6ea7ff;
+  --good: #68d391;
+  --bad: #ef6b73;
+  --warning: #f6d55c;
+  
+  /* Game-Specific Colors */
+  --crux: #5b1f5e;
+  --frag: #3a845a;
+  --exit: #b08900;
+  --ward: #27506a;
+  --tile: #1a1d24;
+  --tileHi: #232731;
+  
+  /* Surface Colors */
+  --surface: #141926;
+  --surface-border: #263047;
+  --surface-light: #1e2332;
+  
+  /* Layout Variables */
+  --container-max: 1200px;
+  --gap-main: 16px;
+  --gap-cards: 10px;
+  --gap-mobile: 12px;
+  
+  /* Border Radius */
+  --radius-sm: 8px;
+  --radius: 12px;
+  --radius-full: 999px;
+  
+  /* Typography */
+  --font-body: system-ui, -apple-system, sans-serif;
+  --font-mono: 'SF Mono', Consolas, monospace;
+}
 
-## 1. Current Architecture Goals
+/* ================================================================
+   2. RESET & BASE STYLES
+   ================================================================ */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
-**From structure.md:**
-- Keep content as JSON in `/data/` so design can iterate without touching code
-- `cards.js` maps `effectId` → function that applies effect to state
-- Weighted encounter generation per grid level
-- Reproducible runs via seeded RNG
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-body);
+  line-height: 1.5;
+  min-height: 100vh;
+}
 
-**New Goal:**
-- Support multiple difficulty modes and run variants through data configuration
-- Clear progression from Grid 1 → Grid 2 → Grid 3 → Boss
+h1, h2, h3, h4 {
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
 
----
+h2 { font-size: 1.25rem; }
+h3 { font-size: 1.1rem; }
+h4 { font-size: 1rem; }
 
-## 2. Proposed Data Structure
+button {
+  font-family: inherit;
+  font-size: inherit;
+}
 
-```
-/data/
-  run-configs.json          # Different run types (normal, hard, daily, etc.)
-  /encounters/
-    grid-1.json             # Encounter weights & pools for first grid
-    grid-2.json             # Encounter weights & pools for second grid  
-    grid-3.json             # Encounter weights & pools for third grid
-    bosses.json             # Multi-phase boss configurations
-  /cards/
-    starting.json           # Starting deck compositions
-    skills.json             # All skill cards with effects
-    equipment.json          # Equipment cards and stat modifiers
-  /entities/
-    enemies.json            # Enemy stats, abilities, loot tables
-    allies.json             # Ally stats, deck contributions, join conditions
-  /tables/
-    loot.json              # Item drop tables by enemy type/grid level
-    shops.json             # Safe room shop inventories by grid
-```
+img {
+  max-width: 100%;
+  height: auto;
+}
 
----
+/* ================================================================
+   3. MAIN CONTAINER & LAYOUT SYSTEM
+   ================================================================ */
 
-## 3. Run Configuration System
+/* Main wrapper with 3:2 aspect ratio and letterboxing */
+.wrap {
+  width: min(var(--container-max), 94vw);
+  margin-inline: auto;
+  margin-block: 2vh;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: var(--gap-main);
+  aspect-ratio: 3/2;
+  max-height: 90vh;
+}
 
-### Example: `run-configs.json`
-```json
-{
-  "normal": {
-    "name": "Standard Run",
-    "description": "Balanced 3-grid adventure",
-    "startingDeck": "basic-explorer",
-    "startingStats": { "hp": 10, "atk": 2, "mag": 1 },
-    "gridConfigs": ["grid-1", "grid-2", "grid-3"],
-    "bossSet": "standard",
-    "allowedAllies": "all"
-  },
-  "hard": {
-    "name": "Veteran Run", 
-    "description": "Harder enemies, limited allies",
-    "startingDeck": "basic-explorer",
-    "startingStats": { "hp": 8, "atk": 2, "mag": 1 },
-    "gridConfigs": ["grid-1-hard", "grid-2-hard", "grid-3-hard"],
-    "bossSet": "veteran",
-    "allowedAllies": ["warrior", "mage"],
-    "modifiers": { "enemyHpBonus": 2, "lootReduction": 0.7 }
+/* Grid areas for 4-section layout */
+.exploration-area { 
+  grid-area: 1 / 1; /* Top Left */
+}
+
+.party-status { 
+  grid-area: 1 / 2; /* Top Right */
+}
+
+.party-cards { 
+  grid-area: 2 / 1; /* Bottom Left */
+}
+
+.encounters { 
+  grid-area: 2 / 2; /* Bottom Right */
+}
+
+/* Section base styling */
+section {
+  background: var(--surface);
+  border: 1px solid var(--surface-border);
+  border-radius: var(--radius);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* Section headers */
+.grid-header,
+.status-header,
+.cards-header,
+.encounter-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--surface-border);
+}
+
+/* ================================================================
+   4. EXPLORATION AREA (Top Left - 3x3 Grid)
+   ================================================================ */
+
+.exploration-area {
+  position: relative;
+}
+
+.grid-stats {
+  display: flex;
+  gap: 8px;
+}
+
+/* 3x3 Game Board */
+.board {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--gap-cards);
+  aspect-ratio: 1/1;
+  flex: 1;
+  max-width: 100%;
+}
+
+/* Individual tile styling */
+.tile {
+  aspect-ratio: 1/1;
+  background: var(--tile);
+  border: 1px solid var(--surface-border);
+  border-radius: var(--radius);
+  display: grid;
+  place-items: center;
+  position: relative;
+  cursor: pointer;
+  transition: transform 0.08s ease, background 0.15s ease, box-shadow 0.2s ease;
+  font-size: 1.5rem;
+}
+
+.tile:hover {
+  background: var(--tileHi);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+}
+
+/* Player position indicator */
+.tile.player-tile {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: white;
+  font-weight: bold;
+  box-shadow: 0 0 0 2px var(--accent) inset, 0 0 12px rgba(110, 167, 255, 0.35);
+}
+
+.tile.player-tile::before {
+  content: '◉';
+}
+
+/* Tile type indicators */
+.tile.fight::before { content: '⚔️'; }
+.tile.hazard::before { content: '⚡'; }
+.tile.item::before { content: '📦'; }
+.tile.ally::before { content: '🤝'; }
+.tile.key::before { content: '🗝️'; }
+.tile.door::before { content: '🚪'; }
+.tile.empty::before { content: '·'; color: var(--muted); }
+
+/* Revealed tile styling */
+.tile.revealed {
+  border-color: var(--accent);
+  opacity: 1;
+}
+
+.tile:not(.revealed) {
+  opacity: 0.6;
+}
+
+/* ================================================================
+   5. PARTY STATUS (Top Right - Stats & Log)
+   ================================================================ */
+
+.party-status {
+  gap: 16px;
+}
+
+.run-info {
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+}
+
+/* Party member display */
+.party-stats {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.party-member {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 12px;
+  align-items: center;
+  padding: 8px;
+  background: var(--surface-light);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--surface-border);
+}
+
+.member-portrait {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--tile);
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  position: relative;
+}
+
+.member-portrait img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.portrait-fallback {
+  font-size: 1.2rem;
+}
+
+.member-info strong {
+  display: block;
+  font-size: 0.95rem;
+}
+
+.stats {
+  display: flex;
+  gap: 12px;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.stats span {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.leader-marker {
+  background: var(--accent);
+  color: white;
+  padding: 2px 6px;
+  border-radius: var(--radius-full);
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Game Log */
+.log-area {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.log-area h3 {
+  margin-bottom: 8px;
+  font-size: 0.95rem;
+  color: var(--muted);
+}
+
+.log {
+  background: #11141b;
+  border: 1px solid var(--surface-border);
+  border-radius: var(--radius-sm);
+  padding: 10px;
+  color: #cbd5e1;
+  font-size: 0.85rem;
+  flex: 1;
+  overflow-y: auto;
+  line-height: 1.4;
+}
+
+.log p {
+  margin-bottom: 4px;
+}
+
+.log p:last-child {
+  margin-bottom: 0;
+}
+
+/* ================================================================
+   6. PARTY CARDS (Bottom Left - Overlapping Cards)
+   ================================================================ */
+
+.party-cards {
+  position: relative;
+}
+
+.deck-info {
+  display: flex;
+  gap: 8px;
+}
+
+/* Overlapping hand display */
+.party-hand {
+  display: flex;
+  margin-left: 20px;
+  flex: 1;
+  align-items: flex-start;
+}
+
+.party-card {
+  width: 120px;
+  margin-left: -15px;
+  transition: transform 0.2s ease, z-index 0.2s ease, box-shadow 0.2s ease;
+  position: relative;
+}
+
+.party-card:first-child {
+  margin-left: 0;
+}
+
+.party-card.leader {
+  transform: translateY(-8px);
+  z-index: 10;
+}
+
+.party-card:hover {
+  transform: translateY(-4px);
+  z-index: 5;
+}
+
+/* Card structure */
+.party-card {
+  background: var(--surface);
+  border: 1px solid var(--surface-border);
+  border-radius: var(--radius);
+  padding: 10px;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+.party-card:hover {
+  box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+}
+
+.card-portrait {
+  width: 100%;
+  height: 60px;
+  background: var(--tile);
+  border-radius: var(--radius-sm);
+  display: grid;
+  place-items: center;
+  font-size: 1.5rem;
+  margin-bottom: 8px;
+}
+
+.card-content h4 {
+  font-size: 0.9rem;
+  margin-bottom: 6px;
+  text-align: center;
+}
+
+.card-skills {
+  text-align: center;
+}
+
+.skill {
+  display: inline-block;
+  background: var(--surface-border);
+  color: var(--muted);
+  padding: 2px 6px;
+  border-radius: var(--radius-full);
+  font-size: 0.7rem;
+  margin: 2px;
+}
+
+/* ================================================================
+   7. ENCOUNTERS (Bottom Right - Combat & Events)
+   ================================================================ */
+
+.encounters {
+  position: relative;
+}
+
+.encounter-content {
+  flex: 1;
+  display: grid;
+  place-items: center;
+  text-align: center;
+  color: var(--muted);
+}
+
+.encounter-placeholder {
+  padding: 20px;
+}
+
+.encounter-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  margin-top: 12px;
+}
+
+/* ================================================================
+   8. OVERLAY SYSTEM (Dice, Combat Popups)
+   ================================================================ */
+
+.overlay-system {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  pointer-events: none;
+}
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.8);
+  display: grid;
+  place-items: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+  pointer-events: none;
+}
+
+.overlay.active {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.overlay-content {
+  background: var(--surface);
+  border: 1px solid var(--surface-border);
+  border-radius: var(--radius);
+  padding: 24px;
+  max-width: 400px;
+  width: 90vw;
+  text-align: center;
+  box-shadow: 0 12px 32px rgba(0,0,0,0.5);
+}
+
+/* Dice overlay specific */
+.dice-display {
+  margin: 20px 0;
+}
+
+.die {
+  width: 60px;
+  height: 60px;
+  background: var(--accent);
+  border-radius: var(--radius);
+  display: grid;
+  place-items: center;
+  font-size: 24px;
+  font-weight: bold;
+  color: white;
+  margin: 0 auto;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.die:hover {
+  transform: scale(1.1);
+}
+
+/* Combat overlay specific */
+.combat-participants {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: 16px;
+  align-items: center;
+  margin: 20px 0;
+}
+
+.participant {
+  text-align: center;
+}
+
+.participant-hp {
+  font-size: 0.9rem;
+  color: var(--muted);
+  margin-top: 4px;
+}
+
+.vs {
+  font-weight: bold;
+  color: var(--muted);
+}
+
+.combat-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  margin-top: 16px;
+}
+
+/* ================================================================
+   9. UI COMPONENTS (Buttons, Chips, Cards)
+   ================================================================ */
+
+/* Chips for displaying stats/info */
+.chip {
+  background: #141820;
+  color: #c9d1f3;
+  padding: 4px 8px;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--surface-border);
+  font-size: 0.8rem;
+  white-space: nowrap;
+}
+
+.chip strong {
+  color: var(--ink);
+}
+
+/* Button system */
+button {
+  background: #162236;
+  color: #e7ecff;
+  border: 1px solid #2a3b5f;
+  padding: 8px 14px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  transition: all 0.15s ease;
+}
+
+button:hover:not(:disabled) {
+  filter: brightness(1.15);
+  transform: translateY(-1px);
+}
+
+button:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  filter: none;
+}
+
+.btn-primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: white;
+}
+
+.btn-secondary {
+  background: var(--surface-border);
+  border-color: var(--muted);
+  color: var(--ink);
+}
+
+.btn-danger {
+  background: var(--bad);
+  border-color: var(--bad);
+  color: white;
+}
+
+.btn-success {
+  background: var(--good);
+  border-color: var(--good);
+  color: white;
+}
+
+/* ================================================================
+   10. RESPONSIVE ADJUSTMENTS
+   ================================================================ */
+
+@media (max-width: 900px) {
+  :root {
+    --container-max: 95vw;
+    --gap-main: var(--gap-mobile);
+  }
+  
+  .wrap {
+    margin-block: 1vh;
+    max-height: 95vh;
+  }
+  
+  section {
+    padding: 12px;
   }
 }
-```
 
----
-
-## 4. Grid Encounter Tables
-
-### Example: `encounters/grid-1.json`
-```json
-{
-  "name": "First Grid - Tutorial Area",
-  "safeRoomType": "healing-spring",
-  "encounterWeights": {
-    "fight": 3,
-    "hazard": 2, 
-    "item": 2,
-    "ally": 1,
-    "key": 1,
-    "empty": 1
-  },
-  "guaranteedEncounters": {
-    "key": 1,
-    "door": 1
-  },
-  "fightPools": {
-    "common": ["goblin", "dire-rat", "shadow-wisp"],
-    "rare": ["orc-scout"]
-  },
-  "hazardPools": {
-    "environmental": ["pit-trap", "poisonous-spores"],
-    "magical": ["unstable-rune"]
-  },
-  "itemPools": {
-    "equipment": ["leather-armor", "iron-sword", "focus-crystal"],
-    "consumables": ["healing-potion", "energy-boost"]
-  },
-  "allyPools": {
-    "available": ["warrior-recruit", "hedge-wizard"],
-    "joinChance": 0.8
+@media (max-width: 700px) {
+  .wrap {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto auto auto;
+    aspect-ratio: unset;
+    gap: var(--gap-mobile);
+  }
+  
+  .exploration-area { grid-area: 1; }
+  .party-status { grid-area: 2; }
+  .party-cards { grid-area: 3; }
+  .encounters { grid-area: 4; }
+  
+  .party-hand {
+    margin-left: 0;
+  }
+  
+  .party-card {
+    width: 100px;
+    margin-left: -10px;
+  }
+  
+  .party-card:first-child {
+    margin-left: 0;
   }
 }
-```
 
----
+/* ================================================================
+   11. ANIMATIONS & TRANSITIONS
+   ================================================================ */
 
-## 5. Card & Equipment System
-
-### Example: `cards/skills.json`
-```json
-{
-  "power-strike": {
-    "name": "Power Strike",
-    "type": "attack",
-    "rarity": "common",
-    "tags": ["physical", "single-target"],
-    "description": "Deal +2 damage on your next attack",
-    "effectId": "modifyNextAttack",
-    "effectData": { "damageBonus": 2 }
-  },
-  "shadow-step": {
-    "name": "Shadow Step", 
-    "type": "utility",
-    "rarity": "rare",
-    "tags": ["movement", "stealth"],
-    "description": "Avoid the next hazard or enemy attack",
-    "effectId": "grantAvoidance",
-    "effectData": { "duration": 1 }
-  }
+/* Flash effects for game feedback */
+.tile.flash-hurt {
+  box-shadow: 0 0 0 2px var(--bad) inset, 0 0 18px rgba(239, 107, 115, 0.35);
+  animation: flash-damage 0.5s ease;
 }
-```
 
-### Example: `cards/equipment.json`
-```json
-{
-  "iron-sword": {
-    "name": "Iron Sword",
-    "type": "weapon",
-    "slot": "mainhand",
-    "statModifiers": { "atk": 1 },
-    "description": "+1 Attack",
-    "rarity": "common",
-    "sellValue": 2
-  },
-  "mage-robes": {
-    "name": "Mage Robes",
-    "type": "armor", 
-    "slot": "body",
-    "statModifiers": { "mag": 2, "hp": -1 },
-    "description": "+2 Magic, -1 HP",
-    "rarity": "uncommon", 
-    "sellValue": 4
-  }
+.tile.flash-heal {
+  box-shadow: 0 0 0 2px var(--good) inset, 0 0 18px rgba(104, 211, 145, 0.35);
+  animation: flash-heal 0.5s ease;
 }
-```
 
----
-
-## 6. Entity Definitions
-
-### Example: `entities/enemies.json`
-```json
-{
-  "goblin": {
-    "name": "Goblin",
-    "hp": 4,
-    "atk": 2,
-    "mag": 0,
-    "traits": ["cowardly"],
-    "description": "A small, quick creature that flees when wounded",
-    "lootTable": "weak-enemy",
-    "abilities": ["flee-at-low-hp"]
-  },
-  "orc-champion": {
-    "name": "Orc Champion",
-    "hp": 12, 
-    "atk": 4,
-    "mag": 1,
-    "traits": ["tough", "leader"],
-    "description": "A battle-hardened warrior with devastating attacks",
-    "lootTable": "strong-enemy",
-    "abilities": ["berserker-rage", "intimidate"]
-  }
+@keyframes flash-damage {
+  0%, 100% { background: var(--tile); }
+  50% { background: rgba(239, 107, 115, 0.2); }
 }
-```
 
-### Example: `entities/allies.json`
-```json
-{
-  "warrior-recruit": {
-    "name": "Warrior Recruit",
-    "hp": 8,
-    "atk": 3,
-    "mag": 0,
-    "tags": ["human", "warrior"],
-    "description": "A young fighter eager to prove themselves",
-    "deckContribution": ["shield-bash", "defensive-stance"],
-    "joinConditions": { "minGridLevel": 1, "maxPartySize": 4 },
-    "leavesOn": ["party-leader-death", "grid-3-entry"]
-  }
+@keyframes flash-heal {
+  0%, 100% { background: var(--tile); }
+  50% { background: rgba(104, 211, 145, 0.2); }
 }
-```
 
----
-
-## 7. Loot & Shop Tables
-
-### Example: `tables/loot.json`
-```json
-{
-  "weak-enemy": {
-    "goldRange": [1, 3],
-    "itemChance": 0.3,
-    "itemPools": {
-      "common": ["healing-potion", "rusty-dagger"],
-      "rare": ["silver-coin"]
-    }
-  },
-  "boss-loot": {
-    "goldRange": [8, 12],
-    "itemChance": 1.0,
-    "guaranteedItems": ["boss-fragment"],
-    "itemPools": {
-      "rare": ["enchanted-weapon", "power-crystal"],
-      "legendary": ["artifact-shard"]
-    }
-  }
+/* Hover lift effects */
+.tile,
+.party-card,
+button,
+.die {
+  transition: transform 0.08s ease;
 }
-```
 
-### Example: `tables/shops.json`
-```json
-{
-  "healing-spring": {
-    "name": "Healing Spring",
-    "services": ["full-heal", "remove-debuffs"],
-    "shopInventory": {
-      "equipment": ["basic-sword", "leather-armor"],
-      "consumables": ["healing-potion", "antidote"],
-      "skills": ["first-aid", "dodge-roll"]
-    },
-    "priceModifier": 1.0
-  }
+/* Smooth state transitions */
+.overlay {
+  transition: opacity 0.3s ease, visibility 0.3s ease;
 }
-```
 
----
-
-## 8. Boss Configuration
-
-### Example: `encounters/bosses.json`
-```json
-{
-  "shadow-lord": {
-    "name": "The Shadow Lord",
-    "phases": [
-      {
-        "name": "Summoning Phase",
-        "type": "minion-encounter",
-        "enemies": ["shadow-minion", "shadow-minion"],
-        "description": "Defeat the summoned shadows"
-      },
-      {
-        "name": "Weakened Form", 
-        "type": "hazard",
-        "hazardType": "reality-tear",
-        "description": "Navigate the collapsing reality"
-      },
-      {
-        "name": "Final Confrontation",
-        "type": "boss-fight",
-        "hp": 25,
-        "atk": 6,
-        "mag": 4,
-        "abilities": ["shadow-blast", "teleport-strike", "darkness-aura"],
-        "description": "Face the Shadow Lord at full power"
-      }
-    ],
-    "victoryRewards": {
-      "gold": 50,
-      "items": ["shadow-crystal", "victory-token"]
-    }
-  }
-}
-```
-
----
-
-## 9. Implementation Benefits
-
-### Content Iteration
-- **Balance tweaking**: Change encounter weights, enemy stats, loot rates without touching code
-- **New run types**: Add seasonal events, challenge modes, or story variants
-- **Rapid prototyping**: Test different progression curves or difficulty spikes
-
-### Code Clarity
-- **Separation of concerns**: Game logic vs. game content
-- **Maintainability**: Card effects in code, card stats in data
-- **Testing**: Easy to create test scenarios with known data sets
-
-### Expansion Ready
-- **New grids**: Add grid-4.json for extended runs
-- **Campaign mode**: Chain multiple run-configs together
-- **Mod support**: Players can edit JSON files for custom content
-
----
-
-## 10. Migration Strategy
-
-### Phase 1: Extract Current Hardcoded Values
-1. Move existing enemy stats from `encounters.js` to `enemies.json`
-2. Move card definitions from `cards.js` to `skills.json` and `equipment.json`
-3. Create basic `grid-1.json` with current encounter weights
-
-### Phase 2: Add Configuration Loading
-1. Update `main.js` to load run config and pass to game engine
-2. Modify generation functions to use loaded data instead of hardcoded values
-3. Test that gameplay remains identical with data-driven approach
-
-### Phase 3: Add Progression & Variety
-1. Create `grid-2.json` and `grid-3.json` with escalating difficulty
-2. Add boss configuration system
-3. Implement run type selection (normal/hard modes)
-
----
-
-## 11. File Loading Pattern
-
-```javascript
-// In main.js - load configuration
-const runType = 'normal'; // or from URL/user selection
-const config = await fetch(`/data/run-configs.json`).then(r => r.json());
-const runConfig = config[runType];
-
-// Load grid encounters
-const gridConfig = await fetch(`/data/encounters/${runConfig.gridConfigs[0]}.json`).then(r => r.json());
-
-// Pass to game engine
-gameEngine.init(runConfig, gridConfig);
-```
-
-This keeps the same modular JS architecture from `structure.md` while adding the flexibility to support multiple difficulty modes and easy content iteration!
+/* End of Stylesheet */
