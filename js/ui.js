@@ -87,6 +87,8 @@ export function renderAll() {
 function renderBoard() {
     if (!DOM.tiles) return;
     
+    console.log('🎨 Rendering board with', G.board.tiles.length, 'tiles');
+    
     DOM.tiles.forEach((tileElement, index) => {
         const row = Math.floor(index / 3);
         const col = index % 3;
@@ -115,13 +117,21 @@ function renderBoard() {
         const content = getTileDisplayContent(tile);
         tileElement.innerHTML = content;
         
-        // Add click handler state
+        // Add click handler state - make adjacent tiles more obvious
         if (isAdjacentToPlayer(row, col) && !isPlayerCurrentTile(row, col)) {
             tileElement.classList.add('adjacent');
             tileElement.style.cursor = 'pointer';
+            tileElement.style.border = '2px solid var(--accent)';
+        } else if (isPlayerCurrentTile(row, col)) {
+            tileElement.style.cursor = 'default';
+            tileElement.style.border = '2px solid var(--accent)';
         } else {
             tileElement.style.cursor = 'default';
+            tileElement.style.border = '1px solid var(--surface-border)';
         }
+        
+        // Debug info
+        console.log(`Tile ${index} (${row},${col}): ${tile.type}, revealed: ${tile.revealed}, adjacent: ${isAdjacentToPlayer(row, col)}`);
     });
 }
 
@@ -476,17 +486,28 @@ function bindTileClickHandlers() {
  * Handle tile click events
  */
 function handleTileClick(row, col) {
+    console.log(`🖱️ Tile clicked: (${row}, ${col})`);
+    console.log(`Current player position: (${G.board.player.r}, ${G.board.player.c})`);
+    console.log(`Is adjacent: ${isAdjacentToPlayer(row, col)}`);
+    console.log(`Game over: ${G.over}`);
+    
     if (G.over) return;
     
     // Check if it's an adjacent tile
     if (isAdjacentToPlayer(row, col)) {
+        console.log('🎯 Attempting to move player...');
         const success = movePlayer(row, col);
         if (success) {
+            console.log('✅ Move successful, updating game...');
             updateGame();
+        } else {
+            console.log('❌ Move failed');
         }
     } else if (!isPlayerCurrentTile(row, col)) {
         addLogEntry('❌ Can only move to adjacent tiles');
         updateGame();
+    } else {
+        console.log('📍 Clicked current player tile');
     }
 }
 
