@@ -334,6 +334,7 @@ function renderEncounterByType(tile) {
 }
 
 /**
+/**
  * Render a fight encounter
  */
 function renderFightEncounter() {
@@ -354,7 +355,7 @@ function renderFightEncounter() {
 }
 
 /**
- * Render other encounter types (simplified for now)
+ * Render a hazard encounter
  */
 function renderHazardEncounter() {
     DOM.encounterArea.innerHTML = `
@@ -366,6 +367,9 @@ function renderHazardEncounter() {
     DOM.encounterActions.innerHTML = `<button class="btn-primary" onclick="window.CruxfadeMicro.resolveHazard()">Navigate Carefully</button>`;
 }
 
+/**
+ * Render an item encounter
+ */
 function renderItemEncounter() {
     DOM.encounterArea.innerHTML = `
         <div class="encounter-item">
@@ -376,6 +380,9 @@ function renderItemEncounter() {
     DOM.encounterActions.innerHTML = `<button class="btn-primary" onclick="window.CruxfadeMicro.takeItem()">Take Item</button>`;
 }
 
+/**
+ * Render an ally encounter
+ */
 function renderAllyEncounter() {
     DOM.encounterArea.innerHTML = `
         <div class="encounter-ally">
@@ -386,6 +393,9 @@ function renderAllyEncounter() {
     DOM.encounterActions.innerHTML = `<button class="btn-primary" onclick="window.CruxfadeMicro.recruitAlly()">Recruit</button>`;
 }
 
+/**
+ * Render a key encounter
+ */
 function renderKeyEncounter() {
     DOM.encounterArea.innerHTML = `
         <div class="encounter-key">
@@ -396,6 +406,9 @@ function renderKeyEncounter() {
     DOM.encounterActions.innerHTML = `<button class="btn-primary" onclick="window.CruxfadeMicro.takeKey()">Take Key</button>`;
 }
 
+/**
+ * Render a door encounter
+ */
 function renderDoorEncounter() {
     const canProceed = G.keyFound;
     DOM.encounterArea.innerHTML = `
@@ -409,11 +422,6 @@ function renderDoorEncounter() {
             ${canProceed ? 'Enter Next Grid' : 'Locked'}
         </button>
     `;
-}
-
-function renderDefaultEncounter() {
-    DOM.encounterArea.innerHTML = `<div class="encounter-placeholder"><p>Nothing here...</p></div>`;
-    DOM.encounterActions.innerHTML = '<button class="btn-primary" disabled>Continue</button>';
 }
 
 // ================================================================
