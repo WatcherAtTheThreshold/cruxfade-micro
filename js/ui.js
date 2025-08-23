@@ -428,7 +428,19 @@ function renderGameLog() {
 // ================================================================
 // EVENT HANDLERS - Replace your bindEventHandlers function with this
 // ================================================================
-
+/**
+ * Bind overlay system handlers
+ */
+function bindOverlayHandlers() {
+    // Close overlays when clicking outside content
+    document.querySelectorAll('.overlay').forEach(overlay => {
+        overlay.addEventListener('click', (e) => {
+            if (e.target === overlay) {
+                closeAllOverlays();
+            }
+        });
+    });
+}
 /**
  * Bind all event handlers for user interaction
  */
