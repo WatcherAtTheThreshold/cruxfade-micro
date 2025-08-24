@@ -398,6 +398,78 @@ export function resolveHazard() {
 }
 
 // ================================================================
+// ALLY SYSTEM FUNCTIONS  
+// ================================================================
+
+/**
+ * Recruit a random ally to join the party
+ */
+export function recruitRandomAlly() {
+    // Potential allies with different specializations
+    const allies = [
+        { 
+            id: 'warrior-' + Date.now(), 
+            name: 'Warrior', 
+            hp: 12, 
+            maxHp: 12, 
+            atk: 4, 
+            mag: 0, 
+            tags: ['human', 'warrior'],
+            skills: ['Shield Bash', 'Taunt']
+        },
+        { 
+            id: 'mage-' + Date.now(), 
+            name: 'Mage', 
+            hp: 6, 
+            maxHp: 6, 
+            atk: 1, 
+            mag: 4, 
+            tags: ['human', 'mage'],
+            skills: ['Magic Bolt', 'Heal']
+        },
+        { 
+            id: 'rogue-' + Date.now(), 
+            name: 'Rogue', 
+            hp: 8, 
+            maxHp: 8, 
+            atk: 3, 
+            mag: 2, 
+            tags: ['human', 'rogue'],
+            skills: ['Sneak Attack', 'Dodge']
+        },
+        { 
+            id: 'scout-' + Date.now(), 
+            name: 'Scout', 
+            hp: 10, 
+            maxHp: 10, 
+            atk: 2, 
+            mag: 1, 
+            tags: ['human', 'scout'],
+            skills: ['Track', 'First Aid']
+        }
+    ];
+    
+    // Pick random ally
+    const allyTemplate = allies[Math.floor(Math.random() * allies.length)];
+    
+    // Check party size limit
+    if (G.party.length >= 4) {
+        addLogEntry(`🤝 The ${allyTemplate.name} wants to join, but your party is full!`);
+        return false;
+    }
+    
+    // Add to party
+    addPartyMember(allyTemplate);
+    
+    // Add their equipment slot
+    G.equipment[allyTemplate.id] = [];
+    
+    addLogEntry(`🎉 The ${allyTemplate.name} brings their skills: ${allyTemplate.skills.join(', ')}`);
+    
+    return allyTemplate;
+}
+
+// ================================================================
 // CARD SYSTEM FUNCTIONS
 // ================================================================
 
