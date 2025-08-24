@@ -9,7 +9,7 @@
    2. RESET & BASE STYLES
    3. MAIN CONTAINER & LAYOUT SYSTEM
    4. EXPLORATION AREA (Top Left - 3x3 Grid)
-   5. PARTY STATUS (Top Right - Stats & Log)
+   5. PARTY STATUS (Top Right - Stats & Cards Combined)
    6. PARTY CARDS (Bottom Left - Overlapping Cards)  
    7. ENCOUNTERS (Bottom Right - Combat & Events)
    8. OVERLAY SYSTEM (Dice, Combat Popups)
@@ -107,7 +107,7 @@ img {
   margin-block: 1vh;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  grid-template-rows: 3fr 1fr; /* Top sections get 3/4, bottom sections get 1/4 */
+  grid-template-rows: 1fr 1fr; /* Equal space for top and bottom sections */
   gap: var(--gap-main);
   height: 95vh; /* Use fixed height instead of aspect ratio */
   max-height: 95vh;
