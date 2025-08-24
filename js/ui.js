@@ -331,20 +331,51 @@ function renderEncounterArea() {
  * Render a fight encounter
  */
 function renderFightEncounter() {
-    DOM.encounterArea.innerHTML = `
-        <div class="encounter-fight">
-            <h3>⚔️ Enemy Encounter</h3>
-            <p>A wild goblin blocks your path!</p>
-            <div class="enemy-stats">
-                <strong>Goblin</strong> - HP: 4, ATK: 2
+    // Check if combat is already active
+    if (G.combat.active) {
+        DOM.encounterArea.innerHTML = `
+            <div class="encounter-fight">
+                <h3>⚔️ Combat: ${G.combat.enemy.name}</h3>
+                <div class="combat-status">
+                    <div class="combatant">
+                        <strong>You</strong><br>
+                        ❤️ ${G.combat.playerHp} HP
+                    </div>
+                    <div class="vs">VS</div>
+                    <div class="combatant">
+                        <strong>${G.combat.enemy.name}</strong><br>
+                        ❤️ ${G.combat.enemyHp} HP
+                    </div>
+                </div>
+                ${G.combat.lastRoll ? `<p>🎲 Last roll: ${G.combat.lastRoll}</p>` : ''}
+                <p>${G.combat.turn === 'player' ? 'Your turn!' : 'Enemy turn...'}</p>
             </div>
-        </div>
-    `;
-    
-    DOM.encounterActions.innerHTML = `
-        <button class="btn-primary" data-action="start-combat">Fight!</button>
-        <button class="btn-secondary" data-action="flee">Flee</button>
-    `;
+        `;
+        
+        DOM.encounterActions.innerHTML = `
+            ${G.combat.turn === 'player' ? 
+                '<button class="btn-primary" data-action="player-attack">Attack!</button>' :
+                '<button class="btn-secondary" data-action="enemy-turn">Continue...</button>'
+            }
+        `;
+    } else {
+        // Not in combat yet - show encounter start
+        DOM.encounterArea.innerHTML = `
+            <div class="encounter-fight">
+                <h3>⚔️ Enemy Encounter</h3>
+                <p>A wild goblin blocks your path!</p>
+                <div class="enemy-preview">
+                    <strong>Goblin</strong><br>
+                    A small, vicious creature
+                </div>
+            </div>
+        `;
+        
+        DOM.encounterActions.innerHTML = `
+            <button class="btn-primary" data-action="start-combat">Fight!</button>
+            <button class="btn-secondary" data-action="flee-encounter">Flee</button>
+        `;
+    }
 }
 
 /**
@@ -534,7 +565,27 @@ export function bindEventHandlers(updateGameCallback) {
             switch(action) {
                 case 'start-combat':
                     console.log('⚔️ Starting combat...');
-                    showOverlay('combat-overlay');
+                    startCombat('goblin'); // Start with goblin enemy
+                    _updateGameCallback();
+                    break;
+                    
+                case 'player-attack':
+                    console.log('⚔️ Player attacks...');
+                    playerAttack();
+                    _updateGameCallback();
+                    break;
+                    
+                case 'enemy-turn':
+                    console.log('💥 Enemy turn...');
+                    setTimeout(() => {
+                        enemyAttack();
+                        _updateGameCallback();
+                    }, 1000); // Brief delay for enemy action
+                    break;
+                    
+                case 'flee-encounter':
+                    addLogEntry('🏃 You fled from the encounter!');
+                    _updateGameCallback();
                     break;
                     
                 case 'flee':
