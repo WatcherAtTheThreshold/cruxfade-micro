@@ -20,8 +20,9 @@ function init() {
     // Initialize game state
     initializeGame();
     
-    // Set up UI event handlers (tile clicks, buttons, etc.)
-    bindEventHandlers();
+    // Set up UI event handlers and pass updateGame as callback
+    // This breaks the circular dependency by injecting the dependency
+    bindEventHandlers(updateGame);
     
     // Initial render of all game elements
     renderAll();
@@ -32,7 +33,6 @@ function init() {
     console.log('✅ Game initialized successfully');
     console.log('🎯 Current state:', G);
 }
-
 // ================================================================
 // GAME LOOP & STATE MANAGEMENT
 // ================================================================
