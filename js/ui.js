@@ -292,6 +292,12 @@ function renderEncounterArea() {
         return;
     }
 
+    // If we're in active combat, always show combat UI regardless of tile type
+    if (G.combat.active) {
+        renderFightEncounter();
+        return;
+    }
+
     // Based on the tile type, call the specific render function
     switch (tile.type) {
         case 'fight':
