@@ -204,10 +204,17 @@ section {
 /* Player position indicator */
 .tile.player-tile {
   background: var(--accent);
-  border-color: var(--accent);
+  border: 2px solid var(--accent);
   color: white;
   font-weight: bold;
   box-shadow: 0 0 0 2px var(--accent) inset, 0 0 12px rgba(110, 167, 255, 0.35);
+  cursor: default;
+}
+
+/* Adjacent clickable tiles */
+.tile.adjacent {
+  cursor: pointer;
+  border: 2px solid var(--accent);
 }
 
 .tile.player-tile::before {
