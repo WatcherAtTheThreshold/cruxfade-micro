@@ -12,7 +12,12 @@ import {
     nextGrid, 
     addLogEntry,
     getTileAt,
-    isAdjacentToPlayer
+    isAdjacentToPlayer,
+    // Combat functions
+    startCombat,
+    playerAttack,
+    enemyAttack,
+    rollDice
 } from './state.js';
 
 
