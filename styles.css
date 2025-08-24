@@ -115,19 +115,19 @@ img {
 
 /* Grid areas for 4-section layout */
 .exploration-area { 
-  grid-area: 1 / 1; /* Top Left */
+  grid-area: 1 / 1; /* Top Left - Same */
 }
 
 .party-status { 
-  grid-area: 1 / 2; /* Top Right */
+  grid-area: 1 / 2; /* Top Right - Same but includes cards now */
 }
 
-.party-cards { 
-  grid-area: 2 / 1; /* Bottom Left */
+.event-log-area { 
+  grid-area: 2 / 1; /* Bottom Left - Event log moved here */
 }
 
 .encounters { 
-  grid-area: 2 / 2; /* Bottom Right */
+  grid-area: 2 / 2; /* Bottom Right - Much more space now */
 }
 
 /* Section base styling */
