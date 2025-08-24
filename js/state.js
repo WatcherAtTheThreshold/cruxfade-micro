@@ -346,6 +346,56 @@ export function giveRandomItem() {
     return item;
 }
 
+// ================================================================
+// HAZARD SYSTEM FUNCTIONS  
+// ================================================================
+
+/**
+ * Resolve a hazard encounter with a dice roll
+ */
+export function resolveHazard() {
+    const player = getPartyLeader();
+    if (!player) return false;
+    
+    // Different hazard types
+    const hazards = [
+        { name: 'Poison Spores', difficulty: 12, damage: 2, stat: 'atk' },
+        { name: 'Pit Trap', difficulty: 11, damage: 3, stat: 'atk' },
+        { name: 'Magic Ward', difficulty: 13, damage: 2, stat: 'mag' },
+        { name: 'Unstable Floor', difficulty: 10, damage: 1, stat: 'atk' },
+        { name: 'Arcane Barrier', difficulty: 14, damage: 3, stat: 'mag' }
+    ];
+    
+    // Pick random hazard
+    const hazard = hazards[Math.floor(Math.random() * hazards.length)];
+    
+    // Roll dice + add best relevant stat
+    const roll = rollDice(20); // d20 roll
+    const statBonus = player[hazard.stat];
+    const total = roll + statBonus;
+    
+    addLogEntry(`⚡ ${hazard.name}! Rolling to avoid... (d20 + ${hazard.stat.toUpperCase()})`);
+    addLogEntry(`🎲 Rolled ${roll} + ${statBonus} = ${total} (need ${hazard.difficulty}+)`);
+    
+    if (total >= hazard.difficulty) {
+        // Success!
+        addLogEntry(`✅ Success! You avoided the ${hazard.name}!`);
+        
+        // Small chance of finding something useful
+        if (Math.random() < 0.3) {
+            addLogEntry(`🎁 You found something useful while navigating!`);
+            giveRandomItem();
+        }
+        
+        return { success: true, hazard };
+    } else {
+        // Failure - take damage
+        damagePartyMember(player.id, hazard.damage);
+        addLogEntry(`❌ Failed! The ${hazard.name} caught you!`);
+        
+        return { success: false, hazard };
+    }
+}
 
 // ================================================================
 // CARD SYSTEM FUNCTIONS
