@@ -173,7 +173,6 @@ function renderPartyStatus() {
         DOM.partyStats.appendChild(memberElement);
     });
 }
-
 /**
  * Create a party member display element
  */
@@ -186,7 +185,8 @@ function createPartyMemberElement(member, isLeader = false) {
     
     memberDiv.innerHTML = `
         <div class="member-portrait">
-            <img src="./images/portraits/${member.id}.png" alt="${member.name}" onerror="this.style.display='none'">
+            <img src="./images/portraits/${member.id}.png" alt="${member.name}" 
+                 onerror="this.style.display='none'; this.nextElementSibling.style.display='inline'">
             <span class="portrait-fallback">${getCharacterIcon(member)}</span>
         </div>
         <div class="member-info">
