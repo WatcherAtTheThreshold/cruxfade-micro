@@ -612,8 +612,9 @@ export function bindEventHandlers(updateGameCallback) {
                     break;
                     
                 case 'resolve-hazard':
-                    addLogEntry('⚡ You carefully navigate the hazard!');
-                    _updateGameCallback();
+                console.log('⚡ Resolving hazard...');
+                   resolveHazard();  // Call our new function!
+                   _updateGameCallback();
                     break;
                     
                 case 'take-item':
