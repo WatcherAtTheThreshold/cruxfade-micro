@@ -470,6 +470,36 @@ export function recruitRandomAlly() {
 }
 
 // ================================================================
+// PARTY LEADERSHIP FUNCTIONS
+// ================================================================
+
+/**
+ * Switch party leadership to a different member
+ */
+export function switchPartyLeader(memberId) {
+    // Find the member by ID
+    const memberIndex = G.party.findIndex(member => member.id === memberId);
+    if (memberIndex === -1) {
+        console.error('Member not found:', memberId);
+        return false;
+    }
+    
+    // If they're already the leader, do nothing
+    if (memberIndex === 0) {
+        addLogEntry(`${G.party[0].name} is already the party leader!`);
+        return false;
+    }
+    
+    // Move the member to position 0 (leader spot)
+    const newLeader = G.party[memberIndex];
+    G.party.splice(memberIndex, 1); // Remove from current position
+    G.party.unshift(newLeader); // Add to front of array
+    
+    addLogEntry(`👑 ${newLeader.name} is now the party leader!`);
+    return true;
+}
+
+// ================================================================
 // CARD SYSTEM FUNCTIONS
 // ================================================================
 
