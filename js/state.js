@@ -303,6 +303,50 @@ export function healPartyMember(memberId, amount) {
     }
 }
 
+
+// ================================================================
+// ITEM SYSTEM FUNCTIONS  
+// ================================================================
+
+/**
+ * Give the player a random stat boost item
+ */
+export function giveRandomItem() {
+    const player = getPartyLeader();
+    if (!player) return false;
+    
+    // Random item types
+    const items = [
+        { name: 'Health Potion', stat: 'hp', boost: 3, maxBoost: 2 },
+        { name: 'Strength Elixir', stat: 'atk', boost: 1 },
+        { name: 'Magic Crystal', stat: 'mag', boost: 1 },
+        { name: 'Iron Sword', stat: 'atk', boost: 2 },
+        { name: 'Healing Herbs', stat: 'hp', boost: 5, maxBoost: 3 }
+    ];
+    
+    // Pick random item
+    const item = items[Math.floor(Math.random() * items.length)];
+    
+    // Apply the boost
+    if (item.stat === 'hp') {
+        // Health items both heal and increase max HP
+        const healAmount = Math.min(item.boost, player.maxHp - player.hp);
+        player.hp += healAmount;
+        if (item.maxBoost) {
+            player.maxHp += item.maxBoost;
+            player.hp += item.maxBoost; // Also increase current HP
+        }
+        addLogEntry(`📦 Found ${item.name}! Healed ${healAmount + (item.maxBoost || 0)} HP! (${player.hp}/${player.maxHp} HP)`);
+    } else {
+        // Other stats just increase
+        player[item.stat] += item.boost;
+        addLogEntry(`📦 Found ${item.name}! +${item.boost} ${item.stat.toUpperCase()}! (${item.stat.toUpperCase()}: ${player[item.stat]})`);
+    }
+    
+    return item;
+}
+
+
 // ================================================================
 // CARD SYSTEM FUNCTIONS
 // ================================================================
