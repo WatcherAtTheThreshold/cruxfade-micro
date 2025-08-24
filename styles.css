@@ -107,7 +107,7 @@ img {
   margin-block: 1vh;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  grid-template-rows: 5fr 2fr; /* Top sections get 5/7, bottom sections get 2/7 (~29%) */
+  grid-template-rows: 3fr 2fr; 
   gap: var(--gap-main);
   height: 95vh; /* Use fixed height instead of aspect ratio */
   max-height: 95vh;
