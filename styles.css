@@ -115,19 +115,19 @@ img {
 
 /* Grid areas for 4-section layout */
 .exploration-area { 
-  grid-area: 1 / 1; /* Top Left - Same */
+  grid-area: 1 / 1; /* Top Left */
 }
 
 .encounters { 
-  grid-area: 1 / 2; /* Top Right - Much more space now */
+  grid-area: 1 / 2; /* Top Right - contains both party status and encounters */
 }
 
-.event-log-area { 
-  grid-area: 2 / 1; /* Bottom Left - Event log moved here */
+.event-log { 
+  grid-area: 2 / 1; /* Bottom Left */
 }
 
-.party-status { 
-  grid-area: 2 / 2; /* TBottom Right - Same but includes cards now */
+.party-hand-section { 
+  grid-area: 2 / 2; /* Bottom Right - dedicated party hand */
 }
 
 
