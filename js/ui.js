@@ -16,6 +16,7 @@ import {
     giveRandomItem,
     resolveHazard,
     recruitRandomAlly,
+    switchPartyLeader,
     // Combat functions
     startCombat,
     playerAttack,
@@ -191,8 +192,13 @@ function renderPartyStatus() {
  */
 function createPartyMemberElement(member, isLeader = false) {
     const memberDiv = document.createElement('div');
-    memberDiv.className = 'party-member';
-    
+    memberDiv.className = 'party-member';      
+    memberDiv.style.cursor = 'pointer';  // <-- Add this line
+    memberDiv.addEventListener('click', () => {  // <-- Add this block
+    console.log('🖱️ Clicked party member:', member.name);
+    switchPartyLeader(member.id);
+    _updateGameCallback();
+});
     const hpColor = member.hp <= member.maxHp * 0.25 ? '#ef6b73' : 
                     member.hp <= member.maxHp * 0.5 ? '#f6d55c' : '#68d391';
     
