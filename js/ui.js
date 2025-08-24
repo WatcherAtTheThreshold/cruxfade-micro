@@ -13,7 +13,8 @@ import {
     addLogEntry,
     getTileAt,
     isAdjacentToPlayer,
-    giveRandomItem,  // <-- Add this line!
+    giveRandomItem,
+    resolveHazard,
     // Combat functions
     startCombat,
     playerAttack,
