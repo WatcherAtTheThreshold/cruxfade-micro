@@ -15,6 +15,7 @@ import {
     isAdjacentToPlayer,
     giveRandomItem,
     resolveHazard,
+    recruitRandomAlly,
     // Combat functions
     startCombat,
     playerAttack,
@@ -624,7 +625,8 @@ export function bindEventHandlers(updateGameCallback) {
                      break;
                     
                 case 'recruit-ally':
-                    addLogEntry('🤝 The warrior joins your party!');
+                    console.log('🤝 Recruiting ally...');
+                    recruitRandomAlly();  // Call our new function!
                     _updateGameCallback();
                     break;
                     
