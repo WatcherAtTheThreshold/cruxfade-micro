@@ -512,8 +512,12 @@ function bindOverlayHandlers() {
 
 /**
  * Bind all event handlers for user interaction
+ * @param {Function} updateGameCallback - Function to call when game state changes
  */
-export function bindEventHandlers() {
+export function bindEventHandlers(updateGameCallback) {
+    // Store the callback for use in event handlers
+    _updateGameCallback = updateGameCallback;
+    
     // Cache DOM elements first
     cacheDOMElements();
     
@@ -545,34 +549,34 @@ export function bindEventHandlers() {
                     
                 case 'flee':
                     addLogEntry('🏃 You fled from combat!');
-                    updateGame();
+                    _updateGameCallback();
                     break;
                     
                 case 'resolve-hazard':
                     addLogEntry('⚡ You carefully navigate the hazard!');
-                    updateGame();
+                    _updateGameCallback();
                     break;
                     
                 case 'take-item':
                     addLogEntry('📦 You found a useful item!');
-                    updateGame();
+                    _updateGameCallback();
                     break;
                     
                 case 'recruit-ally':
                     addLogEntry('🤝 The warrior joins your party!');
-                    updateGame();
+                    _updateGameCallback();
                     break;
                     
                 case 'take-key':
                     console.log('🗝️ Taking key...');
                     foundKey();
-                    updateGame();
+                    _updateGameCallback();
                     break;
                     
                 case 'proceed-next-grid':
                     console.log('🚪 Proceeding to next grid...');
                     nextGrid();
-                    updateGame();
+                    _updateGameCallback();
                     break;
                     
                 default:
@@ -581,7 +585,7 @@ export function bindEventHandlers() {
         });
     }
     
-    console.log('🎯 Event handlers bound with delegation');
+    console.log('🎯 Event handlers bound with callback system');
 }
 
 /**
@@ -601,18 +605,17 @@ function handleTileClick(row, col) {
         const success = movePlayer(row, col);
         if (success) {
             console.log('✅ Move successful, updating game...');
-            updateGame();
+            _updateGameCallback(); // Use callback instead of direct import
         } else {
             console.log('❌ Move failed');
         }
     } else if (!isPlayerCurrentTile(row, col)) {
         addLogEntry('❌ Can only move to adjacent tiles');
-        updateGame();
+        _updateGameCallback(); // Use callback instead of direct import
     } else {
-        console.log('🔍 Clicked current player tile');
+        console.log('📍 Clicked current player tile');
     }
 }
-
 // ================================================================
 // OVERLAY MANAGEMENT
 // ================================================================
