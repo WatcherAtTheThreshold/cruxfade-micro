@@ -13,6 +13,7 @@ import {
     addLogEntry,
     getTileAt,
     isAdjacentToPlayer,
+    giveRandomItem,  // <-- Add this line!
     // Combat functions
     startCombat,
     playerAttack,
@@ -615,9 +616,10 @@ export function bindEventHandlers(updateGameCallback) {
                     break;
                     
                 case 'take-item':
-                    addLogEntry('📦 You found a useful item!');
+                    console.log('📦 Taking item...');
+                    giveRandomItem();  // Call our new function!
                     _updateGameCallback();
-                    break;
+                     break;
                     
                 case 'recruit-ally':
                     addLogEntry('🤝 The warrior joins your party!');
