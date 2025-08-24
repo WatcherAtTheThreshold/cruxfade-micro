@@ -278,6 +278,58 @@ function getMemberSkills(member) {
     return skills;
 }
 
+// ui.js
+
+// ================================================================
+// ENCOUNTER AREA RENDERING (Add this entire section)
+// ================================================================
+
+/**
+ * Renders the encounter area based on the player's current tile.
+ * This function acts as a dispatcher.
+ */
+function renderEncounterArea() {
+    const tile = getCurrentTile();
+    if (!tile) {
+        renderDefaultEncounter();
+        return;
+    }
+
+    // Based on the tile type, call the specific render function
+    switch (tile.type) {
+        case 'fight':
+            renderFightEncounter();
+            break;
+        case 'hazard':
+            renderHazardEncounter();
+            break;
+        case 'item':
+            renderItemEncounter();
+            break;
+        case 'ally':
+            renderAllyEncounter();
+            break;
+        case 'key':
+            renderKeyEncounter();
+            break;
+        case 'door':
+            renderDoorEncounter();
+            break;
+        case 'start':
+        case 'empty':
+            renderDefaultEncounter();
+            break;
+        default:
+            console.warn(`Unknown tile type for encounter rendering: ${tile.type}`);
+            renderDefaultEncounter();
+            break;
+    }
+}
+
+// NOTE: The individual functions like renderFightEncounter(), 
+// renderKeyEncounter(), etc., that you've already written are perfect. 
+// This new function just ties them all together.
+
 // ================================================================
 // ENCOUNTER RENDERING FUNCTIONS - Using data-action instead of onclick
 // Replace these functions in your ui.js (around lines 340-420)
