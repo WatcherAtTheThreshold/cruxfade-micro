@@ -162,6 +162,8 @@ section {
   position: relative;
   display: flex;
   flex-direction: column;
+  justify-content: flex-start;
+  align-items: center; /* Center the grid */
 }
 
 .grid-stats {
@@ -174,15 +176,16 @@ section {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: var(--gap-cards);
-  aspect-ratio: 1/1;
-  flex: 3; /* Give the board 3/4 of available space */
-  max-width: 100%;
-  min-height: 280px; /* Larger minimum size */
+  aspect-ratio: 1/1; /* Always square */
+  width: 100%;
+  max-width: min(100%, 400px); /* Don't get too big */
+  min-width: 240px; /* Don't get too small */
+  margin: 0 auto; /* Center in container */
 }
 
 /* Individual tile styling */
 .tile {
-  aspect-ratio: 1/1;
+  aspect-ratio: 1/1; /* Always square */
   background: var(--tile);
   border: 1px solid var(--surface-border);
   border-radius: var(--radius);
@@ -191,8 +194,9 @@ section {
   position: relative;
   cursor: pointer;
   transition: transform 0.08s ease, background 0.15s ease, box-shadow 0.2s ease;
-  font-size: 1.8rem; /* Larger icons */
-  min-height: 80px; /* Minimum tile size */
+  font-size: clamp(1.2rem, 2vw, 1.8rem); /* Responsive font size */
+  min-height: 60px; /* Smaller minimum */
+  min-width: 60px;
 }
 
 .tile:hover {
