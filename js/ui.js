@@ -15,7 +15,7 @@ import {
     isAdjacentToPlayer
 } from './state.js';
 
-import { updateGame } from './main.js';
+
 
 // ================================================================
 // DOM ELEMENT CACHING
@@ -23,6 +23,9 @@ import { updateGame } from './main.js';
 
 // Cache frequently accessed DOM elements
 let DOM = {};
+
+// Callback to main game loop - set during initialization
+let _updateGameCallback = () => console.warn('updateGame callback not set!');
 
 /**
  * Cache all important DOM elements for performance
@@ -58,7 +61,6 @@ function cacheDOMElements() {
     // Cache all tile elements
     DOM.tiles = Array.from(document.querySelectorAll('.tile'));
 }
-
 // ================================================================
 // MAIN RENDER FUNCTION
 // ================================================================
