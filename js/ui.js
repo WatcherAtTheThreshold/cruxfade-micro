@@ -26,12 +26,6 @@ import {
 // DOM ELEMENT CACHING
 // ================================================================
 
-// Cache frequently accessed DOM elements
-let DOM = {};
-
-// Callback to main game loop - set during initialization
-let _updateGameCallback = () => console.warn('updateGame callback not set!');
-
 /**
  * Cache all important DOM elements for performance
  */
@@ -51,7 +45,7 @@ function cacheDOMElements() {
         deckCount: document.getElementById('deck-count'),
         handCount: document.getElementById('hand-count'),
         
-        // Game log
+        // Game log - now in its own section
         gameLog: document.getElementById('game-log'),
         
         // Overlays
