@@ -392,6 +392,139 @@ export function clearLog() {
 }
 
 // ================================================================
+// COMBAT SYSTEM FUNCTIONS
+// ================================================================
+
+/**
+ * Basic enemy data - will move to JSON later
+ */
+const ENEMIES = {
+    goblin: {
+        name: 'Goblin',
+        hp: 4,
+        atk: 2,
+        description: 'A small, vicious creature'
+    },
+    orc: {
+        name: 'Orc Warrior', 
+        hp: 8,
+        atk: 3,
+        description: 'A battle-hardened brute'
+    }
+};
+
+/**
+ * Start combat with a specific enemy type
+ */
+export function startCombat(enemyType = 'goblin') {
+    const enemyTemplate = ENEMIES[enemyType];
+    if (!enemyTemplate) {
+        console.error('Unknown enemy type:', enemyType);
+        return false;
+    }
+    
+    const player = getPartyLeader();
+    if (!player) {
+        console.error('No party leader for combat');
+        return false;
+    }
+    
+    G.combat.active = true;
+    G.combat.enemy = { ...enemyTemplate }; // Copy enemy data
+    G.combat.playerHp = player.hp;
+    G.combat.enemyHp = enemyTemplate.hp;
+    G.combat.turn = 'player';
+    G.combat.lastRoll = null;
+    
+    addLogEntry(`⚔️ Combat started with ${enemyTemplate.name}!`);
+    return true;
+}
+
+/**
+ * Roll a die with specified number of sides
+ */
+export function rollDice(sides = 6) {
+    const result = Math.floor(Math.random() * sides) + 1;
+    G.combat.lastRoll = result;
+    addLogEntry(`🎲 Rolled ${result} on d${sides}`);
+    return result;
+}
+
+/**
+ * Player attacks the enemy
+ */
+export function playerAttack() {
+    if (!G.combat.active) return false;
+    
+    const player = getPartyLeader();
+    const roll = rollDice(6);
+    const damage = Math.max(1, player.atk + roll - 3); // Base damage with some randomness
+    
+    G.combat.enemyHp = Math.max(0, G.combat.enemyHp - damage);
+    addLogEntry(`⚔️ You attack for ${damage} damage! Enemy HP: ${G.combat.enemyHp}`);
+    
+    if (G.combat.enemyHp <= 0) {
+        endCombat(true);
+        return true;
+    }
+    
+    G.combat.turn = 'enemy';
+    return true;
+}
+
+/**
+ * Enemy attacks the player  
+ */
+export function enemyAttack() {
+    if (!G.combat.active) return false;
+    
+    const roll = rollDice(6);
+    const damage = Math.max(1, G.combat.enemy.atk + roll - 3);
+    
+    G.combat.playerHp = Math.max(0, G.combat.playerHp - damage);
+    
+    // Apply damage to actual party leader
+    const player = getPartyLeader();
+    player.hp = G.combat.playerHp;
+    
+    addLogEntry(`💥 ${G.combat.enemy.name} attacks for ${damage} damage! Your HP: ${G.combat.playerHp}`);
+    
+    if (G.combat.playerHp <= 0) {
+        endCombat(false);
+        return true;
+    }
+    
+    G.combat.turn = 'player';
+    return true;
+}
+
+/**
+ * End combat with victory or defeat
+ */
+export function endCombat(victory) {
+    if (!G.combat.active) return;
+    
+    if (victory) {
+        addLogEntry(`🎉 Victory! You defeated the ${G.combat.enemy.name}!`);
+        // TODO: Add loot/experience here later
+    } else {
+        addLogEntry(`💀 Defeat! The ${G.combat.enemy.name} has bested you!`);
+        // Check if game should end
+        if (G.combat.playerHp <= 0) {
+            G.over = true;
+        }
+    }
+    
+    // Reset combat state
+    G.combat.active = false;
+    G.combat.enemy = null;
+    G.combat.playerHp = 0;
+    G.combat.enemyHp = 0;
+    G.combat.turn = 'player';
+    G.combat.lastRoll = null;
+}
+
+// ================================================================
 // UTILITY FUNCTIONS
 // ================================================================
 
