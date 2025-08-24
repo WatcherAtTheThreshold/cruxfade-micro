@@ -356,6 +356,29 @@ section {
 }
 
 /* ================================================================
+   5.5. EVENT LOG AREA (Bottom Left - Moved from Party Status)
+   ================================================================ */
+
+.event-log-area {
+  display: flex;
+  flex-direction: column;
+}
+
+.log-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--surface-border);
+}
+
+/* Reuse existing .log styles but make it take full space */
+.event-log-area .log {
+  flex: 1;
+}
+
+/* ================================================================
    6. PARTY CARDS (Bottom Left - Overlapping Cards)
    ================================================================ */
 
