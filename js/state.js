@@ -352,17 +352,31 @@ export function nextGrid() {
         return false;
     }
     
+    // Get current player position (exit door location)
+    const exitRow = G.board.player.r;
+    const exitCol = G.board.player.c;
+    
+    // Calculate entrance position on new grid (opposite corner)
+    const entranceRow = 2 - exitRow;
+    const entranceCol = 2 - exitCol;
+    
     G.gridLevel++;
     G.keyFound = false;
     
-    // Reset player position to center
-    G.board.player = { r: 1, c: 1 };
-    G.board.seen = new Set([4]); // Center tile seen
+    // Set player position to calculated entrance (opposite of exit)
+    G.board.player = { r: entranceRow, c: entranceCol };
+    
+    // Calculate entrance tile index and mark as seen
+    const entranceIndex = entranceRow * 3 + entranceCol;
+    G.board.seen = new Set([entranceIndex]);
     
     // Generate new grid
     generateGrid();
     
-    addLogEntry(`🌟 Entered Grid Level ${G.gridLevel}!`);
+    // Make sure the entrance tile is revealed
+    G.board.tiles[entranceIndex].revealed = true;
+    
+    addLogEntry(`🌟 Entered Grid Level ${G.gridLevel}! (Entered from ${getPositionName(entranceRow, entranceCol)})`);
     return true;
 }
 
