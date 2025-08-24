@@ -576,6 +576,25 @@ export function nextGrid() {
     return true;
 }
 
+/**
+ * Get a descriptive name for a position on the grid
+ */
+export function getPositionName(row, col) {
+    const positions = {
+        '0,0': 'top-left',
+        '0,1': 'top-center', 
+        '0,2': 'top-right',
+        '1,0': 'middle-left',
+        '1,1': 'center',
+        '1,2': 'middle-right',
+        '2,0': 'bottom-left',
+        '2,1': 'bottom-center',
+        '2,2': 'bottom-right'
+    };
+    
+    return positions[`${row},${col}`] || `position (${row},${col})`;
+}
+
 // ================================================================
 // LOGGING FUNCTIONS
 // ================================================================
