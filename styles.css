@@ -290,6 +290,7 @@ section {
 
 .portrait-fallback {
   font-size: 1.2rem;
+  display: none; /* Hidden by default - shown only when image fails */
 }
 
 .member-info strong {
