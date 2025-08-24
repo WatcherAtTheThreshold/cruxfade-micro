@@ -55,6 +55,16 @@ export const G = {
     // Game log messages
     log: [],
     
+    // Combat state
+    combat: {
+        active: false,
+        enemy: null,
+        playerHp: 0,
+        enemyHp: 0,
+        turn: 'player', // 'player' or 'enemy'
+        lastRoll: null
+    },
+    
     // Game over flag
     over: false
 };
