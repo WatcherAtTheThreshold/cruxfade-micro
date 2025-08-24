@@ -426,12 +426,7 @@ function renderGameLog() {
 }
 
 // ================================================================
-// EVENT HANDLERS - Replace your bindEventHandlers function with this
-// ================================================================
-
-// ================================================================
-// HELPER FUNCTIONS FOR EVENT BINDING
-// Add these RIGHT BEFORE the bindEventHandlers function
+// EVENT HANDLERS
 // ================================================================
 
 /**
@@ -461,21 +456,6 @@ function bindOverlayHandlers() {
     });
 }
 
-// Your bindEventHandlers function should come RIGHT AFTER these two functions
-
-/**
- * Bind overlay system handlers
- */
-function bindOverlayHandlers() {
-    // Close overlays when clicking outside content
-    document.querySelectorAll('.overlay').forEach(overlay => {
-        overlay.addEventListener('click', (e) => {
-            if (e.target === overlay) {
-                closeAllOverlays();
-            }
-        });
-    });
-}
 /**
  * Bind all event handlers for user interaction
  */
@@ -489,7 +469,7 @@ export function bindEventHandlers() {
     // Overlay handlers
     bindOverlayHandlers();
     
-    // NEW: Event delegation for encounter actions
+    // Event delegation for encounter actions
     // This handles ALL button clicks in the encounter area
     const encounterActions = document.getElementById('encounter-actions');
     if (encounterActions) {
@@ -549,6 +529,36 @@ export function bindEventHandlers() {
     
     console.log('🎯 Event handlers bound with delegation');
 }
+
+/**
+ * Handle tile click events
+ */
+function handleTileClick(row, col) {
+    console.log(`🖱️ Tile clicked: (${row}, ${col})`);
+    console.log(`Current player position: (${G.board.player.r}, ${G.board.player.c})`);
+    console.log(`Is adjacent: ${isAdjacentToPlayer(row, col)}`);
+    console.log(`Game over: ${G.over}`);
+    
+    if (G.over) return;
+    
+    // Check if it's an adjacent tile
+    if (isAdjacentToPlayer(row, col)) {
+        console.log('🎯 Attempting to move player...');
+        const success = movePlayer(row, col);
+        if (success) {
+            console.log('✅ Move successful, updating game...');
+            updateGame();
+        } else {
+            console.log('❌ Move failed');
+        }
+    } else if (!isPlayerCurrentTile(row, col)) {
+        addLogEntry('❌ Can only move to adjacent tiles');
+        updateGame();
+    } else {
+        console.log('🔍 Clicked current player tile');
+    }
+}
+
 // ================================================================
 // OVERLAY MANAGEMENT
 // ================================================================
