@@ -106,13 +106,18 @@ export function initializeGame() {
 function generateGrid() {
     G.board.tiles = [];
     
+    // Get player's entrance position
+    const entranceRow = G.board.player.r;
+    const entranceCol = G.board.player.c;
+    const entranceIndex = entranceRow * 3 + entranceCol;
+    
     // Create 9 tiles (3x3 grid)
     for (let i = 0; i < 9; i++) {
         const row = Math.floor(i / 3);
         const col = i % 3;
         
-        // Center tile (1,1) is always start/safe
-        if (row === 1 && col === 1) {
+        // Entrance tile is always safe/start type
+        if (i === entranceIndex) {
             G.board.tiles.push({
                 type: 'start',
                 row: row,
