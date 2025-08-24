@@ -118,17 +118,18 @@ img {
   grid-area: 1 / 1; /* Top Left - Same */
 }
 
-.party-status { 
-  grid-area: 1 / 2; /* Top Right - Same but includes cards now */
+.encounters { 
+  grid-area: 1 / 2; /* Top Right - Much more space now */
 }
 
 .event-log-area { 
   grid-area: 2 / 1; /* Bottom Left - Event log moved here */
 }
 
-.encounters { 
-  grid-area: 2 / 2; /* Bottom Right - Much more space now */
+.party-status { 
+  grid-area: 2 / 2; /* TBottom Right - Same but includes cards now */
 }
+
 
 /* Section base styling */
 section {
