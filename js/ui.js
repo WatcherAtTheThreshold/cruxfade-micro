@@ -82,14 +82,15 @@ export function renderAll() {
 // ================================================================
 // BOARD RENDERING
 // ================================================================
+// ================================================================
+// BOARD RENDERING
+// ================================================================
 
 /**
  * Render the 3x3 game board
  */
 function renderBoard() {
     if (!DOM.tiles) return;
-    
-    console.log('🎨 Rendering board with', G.board.tiles.length, 'tiles');
     
     DOM.tiles.forEach((tileElement, index) => {
         const row = Math.floor(index / 3);
@@ -119,21 +120,10 @@ function renderBoard() {
         const content = getTileDisplayContent(tile);
         tileElement.innerHTML = content;
         
-        // Add click handler state - make adjacent tiles more obvious
+        // Add adjacent class for tiles that can be clicked
         if (isAdjacentToPlayer(row, col) && !isPlayerCurrentTile(row, col)) {
             tileElement.classList.add('adjacent');
-            tileElement.style.cursor = 'pointer';
-            tileElement.style.border = '2px solid var(--accent)';
-        } else if (isPlayerCurrentTile(row, col)) {
-            tileElement.style.cursor = 'default';
-            tileElement.style.border = '2px solid var(--accent)';
-        } else {
-            tileElement.style.cursor = 'default';
-            tileElement.style.border = '1px solid var(--surface-border)';
         }
-        
-        // Debug info
-        console.log(`Tile ${index} (${row},${col}): ${tile.type}, revealed: ${tile.revealed}, adjacent: ${isAdjacentToPlayer(row, col)}`);
     });
 }
 
