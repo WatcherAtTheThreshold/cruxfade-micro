@@ -781,3 +781,23 @@ export function isAdjacentToPlayer(row, col) {
     const deltaCol = Math.abs(col - G.board.player.c);
     return deltaRow + deltaCol === 1;
 }
+
+/**
+ * Mark the current tile as consumed (used up)
+ */
+export function consumeCurrentTile() {
+    const currentTile = getCurrentTile();
+    if (currentTile) {
+        currentTile.consumed = true;
+        addLogEntry(`🔍 This area has been thoroughly searched.`);
+        console.log('🔍 Tile consumed:', currentTile);
+    }
+}
+
+/**
+ * Check if current tile has been consumed
+ */
+export function isCurrentTileConsumed() {
+    const currentTile = getCurrentTile();
+    return currentTile ? currentTile.consumed : false;
+}
