@@ -122,7 +122,8 @@ function generateGrid() {
                 type: 'start',
                 row: row,
                 col: col,
-                revealed: true
+                revealed: true,
+                consumed: false
             });
         } else {
             // Random encounter for other tiles
@@ -130,7 +131,8 @@ function generateGrid() {
                 type: getRandomEncounterType(),
                 row: row,
                 col: col,
-                revealed: false
+                revealed: false,
+                consumed: false
             });
         }
     }
