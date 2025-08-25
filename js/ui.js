@@ -424,15 +424,27 @@ function renderHazardEncounter() {
  * Render an item encounter
  */
 function renderItemEncounter() {
-    DOM.encounterArea.innerHTML = `
-        <div class="encounter-item">
-            <h3>📦 Item Found</h3>
-            <p>You discovered a useful item!</p>
-        </div>
-    `;
-    DOM.encounterActions.innerHTML = `
-        <button class="btn-primary" data-action="take-item">Take Item</button>
-    `;
+    if (isCurrentTileConsumed()) {
+        // Show consumed state
+        DOM.encounterArea.innerHTML = `
+            <div class="encounter-item">
+                <h3>📦 Searched Area</h3>
+                <p>This area has been thoroughly searched. Nothing remains.</p>
+            </div>
+        `;
+        DOM.encounterActions.innerHTML = ``; // No buttons
+    } else {
+        // Show normal item encounter
+        DOM.encounterArea.innerHTML = `
+            <div class="encounter-item">
+                <h3>📦 Item Found</h3>
+                <p>You discovered a useful item!</p>
+            </div>
+        `;
+        DOM.encounterActions.innerHTML = `
+            <button class="btn-primary" data-action="take-item">Take Item</button>
+        `;
+    }
 }
 
 /**
