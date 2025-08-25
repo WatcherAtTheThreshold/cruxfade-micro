@@ -106,18 +106,24 @@ export function initializeGame() {
 function generateGrid() {
     G.board.tiles = [];
     
+    // Get player's entrance position
+    const entranceRow = G.board.player.r;
+    const entranceCol = G.board.player.c;
+    const entranceIndex = entranceRow * 3 + entranceCol;
+    
     // Create 9 tiles (3x3 grid)
     for (let i = 0; i < 9; i++) {
         const row = Math.floor(i / 3);
         const col = i % 3;
         
-        // Center tile (1,1) is always start/safe
-        if (row === 1 && col === 1) {
+        // Entrance tile is always safe/start type
+        if (i === entranceIndex) {
             G.board.tiles.push({
                 type: 'start',
                 row: row,
                 col: col,
-                revealed: true
+                revealed: true,
+                consumed: false
             });
         } else {
             // Random encounter for other tiles
@@ -125,7 +131,8 @@ function generateGrid() {
                 type: getRandomEncounterType(),
                 row: row,
                 col: col,
-                revealed: false
+                revealed: false,
+                consumed: false
             });
         }
     }
@@ -342,7 +349,8 @@ export function giveRandomItem() {
         player[item.stat] += item.boost;
         addLogEntry(`📦 Found ${item.name}! +${item.boost} ${item.stat.toUpperCase()}! (${item.stat.toUpperCase()}: ${player[item.stat]})`);
     }
-    
+
+    consumeCurrentTile();
     return item;
 }
 
@@ -392,7 +400,8 @@ export function resolveHazard() {
         // Failure - take damage
         damagePartyMember(player.id, hazard.damage);
         addLogEntry(`❌ Failed! The ${hazard.name} caught you!`);
-        
+
+        consumeCurrentTile();
         return { success: false, hazard };
     }
 }
@@ -455,6 +464,7 @@ export function recruitRandomAlly() {
     // Check party size limit
     if (G.party.length >= 4) {
         addLogEntry(`🤝 The ${allyTemplate.name} wants to join, but your party is full!`);
+        consumeCurrentTile();
         return false;
     }
     
@@ -465,8 +475,39 @@ export function recruitRandomAlly() {
     G.equipment[allyTemplate.id] = [];
     
     addLogEntry(`🎉 The ${allyTemplate.name} brings their skills: ${allyTemplate.skills.join(', ')}`);
-    
+
+    consumeCurrentTile();
     return allyTemplate;
+}
+
+// ================================================================
+// PARTY LEADERSHIP FUNCTIONS
+// ================================================================
+
+/**
+ * Switch party leadership to a different member
+ */
+export function switchPartyLeader(memberId) {
+    // Find the member by ID
+    const memberIndex = G.party.findIndex(member => member.id === memberId);
+    if (memberIndex === -1) {
+        console.error('Member not found:', memberId);
+        return false;
+    }
+    
+    // If they're already the leader, do nothing
+    if (memberIndex === 0) {
+        addLogEntry(`${G.party[0].name} is already the party leader!`);
+        return false;
+    }
+    
+    // Move the member to position 0 (leader spot)
+    const newLeader = G.party[memberIndex];
+    G.party.splice(memberIndex, 1); // Remove from current position
+    G.party.unshift(newLeader); // Add to front of array
+    
+    addLogEntry(`👑 ${newLeader.name} is now the party leader!`);
+    return true;
 }
 
 // ================================================================
@@ -507,6 +548,7 @@ export function playCard(cardId) {
 export function foundKey() {
     G.keyFound = true;
     addLogEntry('🗝️ Found the key! The door is now accessible.');
+    consumeCurrentTile();
 }
 
 /**
@@ -544,6 +586,25 @@ export function nextGrid() {
     
     addLogEntry(`🌟 Entered Grid Level ${G.gridLevel}! (Entered from ${getPositionName(entranceRow, entranceCol)})`);
     return true;
+}
+
+/**
+ * Get a descriptive name for a position on the grid
+ */
+export function getPositionName(row, col) {
+    const positions = {
+        '0,0': 'top-left',
+        '0,1': 'top-center', 
+        '0,2': 'top-right',
+        '1,0': 'middle-left',
+        '1,1': 'center',
+        '1,2': 'middle-right',
+        '2,0': 'bottom-left',
+        '2,1': 'bottom-center',
+        '2,2': 'bottom-right'
+    };
+    
+    return positions[`${row},${col}`] || `position (${row},${col})`;
 }
 
 // ================================================================
@@ -686,6 +747,7 @@ export function endCombat(victory) {
     
     if (victory) {
         addLogEntry(`🎉 Victory! You defeated the ${G.combat.enemy.name}!`);
+         consumeCurrentTile();
         // TODO: Add loot/experience here later
     } else {
         addLogEntry(`💀 Defeat! The ${G.combat.enemy.name} has bested you!`);
@@ -724,4 +786,24 @@ export function isAdjacentToPlayer(row, col) {
     const deltaRow = Math.abs(row - G.board.player.r);
     const deltaCol = Math.abs(col - G.board.player.c);
     return deltaRow + deltaCol === 1;
+}
+
+/**
+ * Mark the current tile as consumed (used up)
+ */
+export function consumeCurrentTile() {
+    const currentTile = getCurrentTile();
+    if (currentTile) {
+        currentTile.consumed = true;
+        addLogEntry(`🔍 This area has been thoroughly searched.`);
+        console.log('🔍 Tile consumed:', currentTile);
+    }
+}
+
+/**
+ * Check if current tile has been consumed
+ */
+export function isCurrentTileConsumed() {
+    const currentTile = getCurrentTile();
+    return currentTile ? currentTile.consumed : false;
 }

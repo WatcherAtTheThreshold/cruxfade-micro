@@ -16,6 +16,9 @@ import {
     giveRandomItem,
     resolveHazard,
     recruitRandomAlly,
+    switchPartyLeader,
+    consumeCurrentTile,
+    isCurrentTileConsumed,
     // Combat functions
     startCombat,
     playerAttack,
@@ -191,8 +194,13 @@ function renderPartyStatus() {
  */
 function createPartyMemberElement(member, isLeader = false) {
     const memberDiv = document.createElement('div');
-    memberDiv.className = 'party-member';
-    
+    memberDiv.className = 'party-member';      
+    memberDiv.style.cursor = 'pointer';  // <-- Add this line
+    memberDiv.addEventListener('click', () => {  // <-- Add this block
+    console.log('🖱️ Clicked party member:', member.name);
+    switchPartyLeader(member.id);
+    _updateGameCallback();
+});
     const hpColor = member.hp <= member.maxHp * 0.25 ? '#ef6b73' : 
                     member.hp <= member.maxHp * 0.5 ? '#f6d55c' : '#68d391';
     
@@ -350,7 +358,17 @@ function renderEncounterArea() {
  * Render a fight encounter
  */
 function renderFightEncounter() {
-    // Check if combat is already active
+    // Check if this fight was already won
+    if (isCurrentTileConsumed()) {
+        DOM.encounterArea.innerHTML = `
+            <div class="encounter-fight">
+                <h3>⚔️ Defeated Enemy</h3>
+                <p>The remains of your defeated foe lie here. Nothing left to fight.</p>
+            </div>
+        `;
+        DOM.encounterActions.innerHTML = ``; // No buttons
+        return; // Exit early, don't show combat UI
+    }
     if (G.combat.active) {
         DOM.encounterArea.innerHTML = `
             <div class="encounter-fight">
@@ -401,60 +419,108 @@ function renderFightEncounter() {
  * Render a hazard encounter
  */
 function renderHazardEncounter() {
-    DOM.encounterArea.innerHTML = `
-        <div class="encounter-hazard">
-            <h3>⚡ Hazard</h3>
-            <p>A dangerous trap lies ahead...</p>
-        </div>
-    `;
-    DOM.encounterActions.innerHTML = `
-        <button class="btn-primary" data-action="resolve-hazard">Navigate Carefully</button>
-    `;
+    if (isCurrentTileConsumed()) {
+        // Show consumed state
+        DOM.encounterArea.innerHTML = `
+            <div class="encounter-hazard">
+                <h3>⚡ Cleared Path</h3>
+                <p>The hazard has been dealt with. The path is now safe.</p>
+            </div>
+        `;
+        DOM.encounterActions.innerHTML = ``; // No buttons
+    } else {
+        // Show normal hazard encounter
+        DOM.encounterArea.innerHTML = `
+            <div class="encounter-hazard">
+                <h3>⚡ Hazard</h3>
+                <p>A dangerous trap lies ahead...</p>
+            </div>
+        `;
+        DOM.encounterActions.innerHTML = `
+            <button class="btn-primary" data-action="resolve-hazard">Navigate Carefully</button>
+        `;
+    }
 }
 
 /**
  * Render an item encounter
  */
 function renderItemEncounter() {
-    DOM.encounterArea.innerHTML = `
-        <div class="encounter-item">
-            <h3>📦 Item Found</h3>
-            <p>You discovered a useful item!</p>
-        </div>
-    `;
-    DOM.encounterActions.innerHTML = `
-        <button class="btn-primary" data-action="take-item">Take Item</button>
-    `;
+    if (isCurrentTileConsumed()) {
+        // Show consumed state
+        DOM.encounterArea.innerHTML = `
+            <div class="encounter-item">
+                <h3>📦 Searched Area</h3>
+                <p>This area has been thoroughly searched. Nothing remains.</p>
+            </div>
+        `;
+        DOM.encounterActions.innerHTML = ``; // No buttons
+    } else {
+        // Show normal item encounter
+        DOM.encounterArea.innerHTML = `
+            <div class="encounter-item">
+                <h3>📦 Item Found</h3>
+                <p>You discovered a useful item!</p>
+            </div>
+        `;
+        DOM.encounterActions.innerHTML = `
+            <button class="btn-primary" data-action="take-item">Take Item</button>
+        `;
+    }
 }
 
 /**
  * Render an ally encounter
  */
 function renderAllyEncounter() {
-    DOM.encounterArea.innerHTML = `
-        <div class="encounter-ally">
-            <h3>🤝 Potential Ally</h3>
-            <p>A warrior offers to join your party...</p>
-        </div>
-    `;
-    DOM.encounterActions.innerHTML = `
-        <button class="btn-primary" data-action="recruit-ally">Recruit</button>
-    `;
+    if (isCurrentTileConsumed()) {
+        // Show consumed state
+        DOM.encounterArea.innerHTML = `
+            <div class="encounter-ally">
+                <h3>🤝 Empty Camp</h3>
+                <p>The ally has moved on. Only traces of their camp remain.</p>
+            </div>
+        `;
+        DOM.encounterActions.innerHTML = ``; // No buttons
+    } else {
+        // Show normal ally encounter
+        DOM.encounterArea.innerHTML = `
+            <div class="encounter-ally">
+                <h3>🤝 Potential Ally</h3>
+                <p>A warrior offers to join your party...</p>
+            </div>
+        `;
+        DOM.encounterActions.innerHTML = `
+            <button class="btn-primary" data-action="recruit-ally">Recruit</button>
+        `;
+    }
 }
 
 /**
  * Render a key encounter
  */
 function renderKeyEncounter() {
-    DOM.encounterArea.innerHTML = `
-        <div class="encounter-key">
-            <h3>🗝️ Key Found</h3>
-            <p>The key to the next grid lies here!</p>
-        </div>
-    `;
-    DOM.encounterActions.innerHTML = `
-        <button class="btn-primary" data-action="take-key">Take Key</button>
-    `;
+    if (isCurrentTileConsumed()) {
+        // Show consumed state
+        DOM.encounterArea.innerHTML = `
+            <div class="encounter-key">
+                <h3>🗝️ Empty Pedestal</h3>
+                <p>The key has been taken. Only an empty pedestal remains.</p>
+            </div>
+        `;
+        DOM.encounterActions.innerHTML = ``; // No buttons
+    } else {
+        // Show normal key encounter
+        DOM.encounterArea.innerHTML = `
+            <div class="encounter-key">
+                <h3>🗝️ Key Found</h3>
+                <p>The key to the next grid lies here!</p>
+            </div>
+        `;
+        DOM.encounterActions.innerHTML = `
+            <button class="btn-primary" data-action="take-key">Take Key</button>
+        `;
+    }
 }
 
 /**
