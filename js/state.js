@@ -548,6 +548,7 @@ export function playCard(cardId) {
 export function foundKey() {
     G.keyFound = true;
     addLogEntry('🗝️ Found the key! The door is now accessible.');
+    consumeCurrentTile();
 }
 
 /**
