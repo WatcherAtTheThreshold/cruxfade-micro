@@ -17,6 +17,8 @@ import {
     resolveHazard,
     recruitRandomAlly,
     switchPartyLeader,
+    consumeCurrentTile,
+    isCurrentTileConsumed,
     // Combat functions
     startCombat,
     playerAttack,
