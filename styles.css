@@ -179,9 +179,9 @@ section {
   grid-template-columns: repeat(3, 1fr);
   gap: var(--gap-cards);
   aspect-ratio: 1/1; /* Always square */
-  width: 86%; /* Use most of the available width */
+  width: 80%; /* Use most of the available width */
   max-width: 600px; /* Allow it to get much bigger */
-  min-width: 300px; /* Larger minimum size too */
+  min-width: 280px; /* Larger minimum size too */
   margin: 0 auto; /* Center in container */
 }
 
