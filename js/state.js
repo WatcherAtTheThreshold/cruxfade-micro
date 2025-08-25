@@ -19,11 +19,11 @@ export const G = {
     // Current grid level (1-3, then boss)
     gridLevel: 1,
     
-    // 3x3 board state
+    // 4x4 board state
     board: {
-        tiles: [],           // Array of 9 tile objects
+        tiles: [],           // Array of 16 tile objects
         seen: new Set(),     // Set of seen tile indices
-        player: { r: 1, c: 1 }  // Player position (center start)
+        player: { r: 1, c: 0 }  // Player position (left edge start)
     },
     
     // Party members (leader first)
@@ -83,12 +83,12 @@ export function initializeGame() {
     G.over = false;
     G.log = [];
     
-    // Initialize player position to center
-    G.board.player = { r: 1, c: 1 };
+    // Initialize player position to left edge start (1,0)
+    G.board.player = { r: 1, c: 0 };
     G.board.seen = new Set();
-    G.board.seen.add(4); // Center tile (1,1) = index 4
+    G.board.seen.add(4); // Left edge start (1,0) = index 4
     
-    // Generate initial 3x3 grid
+    // Generate initial 4x4 grid
     generateGrid();
     
     // Initialize starting deck
@@ -101,7 +101,7 @@ export function initializeGame() {
 }
 
 /**
- * Generate a new 3x3 grid with encounters
+ * Generate a new 4x4 grid with encounters
  */
 function generateGrid() {
     G.board.tiles = [];
@@ -109,12 +109,12 @@ function generateGrid() {
     // Get player's entrance position
     const entranceRow = G.board.player.r;
     const entranceCol = G.board.player.c;
-    const entranceIndex = entranceRow * 3 + entranceCol;
+    const entranceIndex = entranceRow * 4 + entranceCol; // 4x4 indexing
     
-    // Create 9 tiles (3x3 grid)
-    for (let i = 0; i < 9; i++) {
-        const row = Math.floor(i / 3);
-        const col = i % 3;
+    // Create 16 tiles (4x4 grid)
+    for (let i = 0; i < 16; i++) {
+        const row = Math.floor(i / 4); // 4x4 math
+        const col = i % 4;
         
         // Entrance tile is always safe/start type
         if (i === entranceIndex) {
@@ -166,7 +166,8 @@ function getRandomEncounterType() {
  */
 function ensureKeyAndDoor() {
     // Find non-start tiles
-    const availableTiles = G.board.tiles.filter((tile, index) => index !== 4);
+    const entranceIndex = G.board.player.r * 4 + G.board.player.c; // 4x4 indexing
+    const availableTiles = G.board.tiles.filter((tile, index) => index !== entranceIndex);
     
     // Place key and door in random available positions
     if (availableTiles.length >= 2) {
@@ -224,8 +225,8 @@ function resetPartyToStart() {
  * Returns true if move was successful
  */
 export function movePlayer(newRow, newCol) {
-    // Check bounds
-    if (newRow < 0 || newRow > 2 || newCol < 0 || newCol > 2) {
+    // Check bounds (now 4x4)
+    if (newRow < 0 || newRow > 3 || newCol < 0 || newCol > 3) {
         return false;
     }
     
@@ -244,8 +245,8 @@ export function movePlayer(newRow, newCol) {
     G.board.player.r = newRow;
     G.board.player.c = newCol;
     
-    // Mark tile as seen
-    const tileIndex = newRow * 3 + newCol;
+    // Mark tile as seen (4x4 indexing)
+    const tileIndex = newRow * 4 + newCol;
     G.board.seen.add(tileIndex);
     G.board.tiles[tileIndex].revealed = true;
     
@@ -259,7 +260,7 @@ export function movePlayer(newRow, newCol) {
  */
 export function getCurrentTile() {
     const { r, c } = G.board.player;
-    const index = r * 3 + c;
+    const index = r * 4 + c; // 4x4 indexing
     return G.board.tiles[index];
 }
 
@@ -565,8 +566,8 @@ export function nextGrid() {
     const exitCol = G.board.player.c;
     
     // Calculate entrance position on new grid (opposite corner)
-    const entranceRow = 2 - exitRow;
-    const entranceCol = 2 - exitCol;
+    const entranceRow = 3 - exitRow; // 4x4 opposite
+    const entranceCol = 3 - exitCol;
     
     G.gridLevel++;
     G.keyFound = false;
@@ -574,8 +575,8 @@ export function nextGrid() {
     // Set player position to calculated entrance (opposite of exit)
     G.board.player = { r: entranceRow, c: entranceCol };
     
-    // Calculate entrance tile index and mark as seen
-    const entranceIndex = entranceRow * 3 + entranceCol;
+    // Calculate entrance tile index and mark as seen (4x4)
+    const entranceIndex = entranceRow * 4 + entranceCol;
     G.board.seen = new Set([entranceIndex]);
     
     // Generate new grid
@@ -594,14 +595,21 @@ export function nextGrid() {
 export function getPositionName(row, col) {
     const positions = {
         '0,0': 'top-left',
-        '0,1': 'top-center', 
-        '0,2': 'top-right',
+        '0,1': 'top-center-left', 
+        '0,2': 'top-center-right',
+        '0,3': 'top-right',
         '1,0': 'middle-left',
-        '1,1': 'center',
-        '1,2': 'middle-right',
-        '2,0': 'bottom-left',
-        '2,1': 'bottom-center',
-        '2,2': 'bottom-right'
+        '1,1': 'middle-center-left',
+        '1,2': 'middle-center-right',
+        '1,3': 'middle-right',
+        '2,0': 'lower-left',
+        '2,1': 'lower-center-left',
+        '2,2': 'lower-center-right', 
+        '2,3': 'lower-right',
+        '3,0': 'bottom-left',
+        '3,1': 'bottom-center-left',
+        '3,2': 'bottom-center-right',
+        '3,3': 'bottom-right'
     };
     
     return positions[`${row},${col}`] || `position (${row},${col})`;
@@ -774,8 +782,8 @@ export function endCombat(victory) {
  * Get tile at specific coordinates
  */
 export function getTileAt(row, col) {
-    if (row < 0 || row > 2 || col < 0 || col > 2) return null;
-    const index = row * 3 + col;
+    if (row < 0 || row > 3 || col < 0 || col > 3) return null; // 4x4 bounds
+    const index = row * 4 + col; // 4x4 indexing
     return G.board.tiles[index];
 }
 
