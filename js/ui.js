@@ -463,15 +463,27 @@ function renderItemEncounter() {
  * Render an ally encounter
  */
 function renderAllyEncounter() {
-    DOM.encounterArea.innerHTML = `
-        <div class="encounter-ally">
-            <h3>🤝 Potential Ally</h3>
-            <p>A warrior offers to join your party...</p>
-        </div>
-    `;
-    DOM.encounterActions.innerHTML = `
-        <button class="btn-primary" data-action="recruit-ally">Recruit</button>
-    `;
+    if (isCurrentTileConsumed()) {
+        // Show consumed state
+        DOM.encounterArea.innerHTML = `
+            <div class="encounter-ally">
+                <h3>🤝 Empty Camp</h3>
+                <p>The ally has moved on. Only traces of their camp remain.</p>
+            </div>
+        `;
+        DOM.encounterActions.innerHTML = ``; // No buttons
+    } else {
+        // Show normal ally encounter
+        DOM.encounterArea.innerHTML = `
+            <div class="encounter-ally">
+                <h3>🤝 Potential Ally</h3>
+                <p>A warrior offers to join your party...</p>
+            </div>
+        `;
+        DOM.encounterActions.innerHTML = `
+            <button class="btn-primary" data-action="recruit-ally">Recruit</button>
+        `;
+    }
 }
 
 /**
