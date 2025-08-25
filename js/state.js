@@ -349,7 +349,8 @@ export function giveRandomItem() {
         player[item.stat] += item.boost;
         addLogEntry(`📦 Found ${item.name}! +${item.boost} ${item.stat.toUpperCase()}! (${item.stat.toUpperCase()}: ${player[item.stat]})`);
     }
-    
+
+    consumeCurrentTile();
     return item;
 }
 
@@ -399,7 +400,8 @@ export function resolveHazard() {
         // Failure - take damage
         damagePartyMember(player.id, hazard.damage);
         addLogEntry(`❌ Failed! The ${hazard.name} caught you!`);
-        
+
+        consumeCurrentTile();
         return { success: false, hazard };
     }
 }
@@ -462,6 +464,7 @@ export function recruitRandomAlly() {
     // Check party size limit
     if (G.party.length >= 4) {
         addLogEntry(`🤝 The ${allyTemplate.name} wants to join, but your party is full!`);
+        consumeCurrentTile();
         return false;
     }
     
@@ -472,7 +475,8 @@ export function recruitRandomAlly() {
     G.equipment[allyTemplate.id] = [];
     
     addLogEntry(`🎉 The ${allyTemplate.name} brings their skills: ${allyTemplate.skills.join(', ')}`);
-    
+
+    consumeCurrentTile();
     return allyTemplate;
 }
 
