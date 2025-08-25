@@ -5,7 +5,7 @@
 
 * Start in center tile.
 * Tiles are dark except visited ones.
-* 3×3 map, randomized but weighted for a set number of events.
+* 4x4 map, randomized but weighted for a set number of events.
 * First tile in each new grid is a **safe room** (heal/buff/shop/etc.).
 
 **2. Explore**
