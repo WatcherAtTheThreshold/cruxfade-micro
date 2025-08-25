@@ -174,17 +174,16 @@ section {
 }
 
 /* 4x4 Game Board - Takes up most of the section */
+/* 4x4 Game Board */
 .board {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  grid-template-rows: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(4, 1fr);
   gap: 10px;
-  width: 400px;
-  height: 400px;
-  margin: 0 auto;
-  padding: 10px;
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: var(--radius);
+  width: 480px;
+  height: 480px;
+  margin: 20px auto;
+  padding: 0;
 }
 
 /* Individual tile styling */
