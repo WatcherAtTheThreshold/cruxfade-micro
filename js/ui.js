@@ -409,15 +409,27 @@ function renderFightEncounter() {
  * Render a hazard encounter
  */
 function renderHazardEncounter() {
-    DOM.encounterArea.innerHTML = `
-        <div class="encounter-hazard">
-            <h3>⚡ Hazard</h3>
-            <p>A dangerous trap lies ahead...</p>
-        </div>
-    `;
-    DOM.encounterActions.innerHTML = `
-        <button class="btn-primary" data-action="resolve-hazard">Navigate Carefully</button>
-    `;
+    if (isCurrentTileConsumed()) {
+        // Show consumed state
+        DOM.encounterArea.innerHTML = `
+            <div class="encounter-hazard">
+                <h3>⚡ Cleared Path</h3>
+                <p>The hazard has been dealt with. The path is now safe.</p>
+            </div>
+        `;
+        DOM.encounterActions.innerHTML = ``; // No buttons
+    } else {
+        // Show normal hazard encounter
+        DOM.encounterArea.innerHTML = `
+            <div class="encounter-hazard">
+                <h3>⚡ Hazard</h3>
+                <p>A dangerous trap lies ahead...</p>
+            </div>
+        `;
+        DOM.encounterActions.innerHTML = `
+            <button class="btn-primary" data-action="resolve-hazard">Navigate Carefully</button>
+        `;
+    }
 }
 
 /**
