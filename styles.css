@@ -177,28 +177,29 @@ section {
 .board {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: var(--gap-cards);
-  aspect-ratio: 1/1; /* Always square */
-  width: 75%; /* Use most of the available width */
-  max-width: 600px; /* Allow it to get much bigger */
-  min-width: 280px; /* Larger minimum size too */
-  margin: 0 auto; /* Center in container */
+  grid-template-rows: repeat(3, 1fr);
+  gap: 10px;
+  width: 400px;
+  height: 400px;
+  margin: 0 auto;
+  padding: 10px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: var(--radius);
 }
 
 /* Individual tile styling */
 .tile {
-  aspect-ratio: 1/1; /* Always square */
   background: var(--tile);
   border: 1px solid var(--surface-border);
   border-radius: var(--radius);
-  display: grid;
-  place-items: center;
-  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
   transition: transform 0.08s ease, background 0.15s ease, box-shadow 0.2s ease;
-  font-size: clamp(1.5rem, 3vw, 2.5rem); /* Larger, more responsive font size */
-  min-height: 50px; /* Smaller minimum for 4x4 */
-  min-width: 50px;
+  font-size: 1.8rem;
+  min-height: 0; /* Reset any conflicting min-height */
+  min-width: 0; /* Reset any conflicting min-width */
 }
 
 .tile:hover {
