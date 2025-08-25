@@ -275,6 +275,20 @@ section {
   background: var(--surface-light);
   border-radius: var(--radius-sm);
   border: 1px solid var(--surface-border);
+  transition: all 0.2s ease; /* Add this to existing rule */
+  cursor: pointer;
+}
+
+.party-member:hover {
+  background: var(--surface);
+  border-color: var(--accent);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(110, 167, 255, 0.2);
+}
+
+.party-member:active {
+  transform: translateY(0px);
+  box-shadow: 0 2px 8px rgba(110, 167, 255, 0.3);
 }
 
 .member-portrait {
