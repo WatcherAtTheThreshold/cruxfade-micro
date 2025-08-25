@@ -8,7 +8,7 @@
    1. CSS CUSTOM PROPERTIES (Theme System)
    2. RESET & BASE STYLES
    3. MAIN CONTAINER & LAYOUT SYSTEM
-   4. EXPLORATION AREA (Top Left - 3x3 Grid)
+   4. EXPLORATION AREA (Top Left - 4x4 Grid)
    5. PARTY STATUS (Top Right - Stats & Cards Combined)
    6. PARTY CARDS (Bottom Left - Overlapping Cards)  
    7. ENCOUNTERS (Bottom Right - Combat & Events)
@@ -157,7 +157,7 @@ section {
 }
 
 /* ================================================================
-   4. EXPLORATION AREA (Top Left - 3x3 Grid)
+   4. EXPLORATION AREA (Top Left - 4x4 Grid)
    ================================================================ */
 
 .exploration-area {
@@ -173,10 +173,10 @@ section {
   gap: 8px;
 }
 
-/* 3x3 Game Board - Takes up most of the section */
+/* 4x4 Game Board - Takes up most of the section */
 .board {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: var(--gap-cards);
   aspect-ratio: 1/1; /* Always square */
   width: 100%;
@@ -196,9 +196,9 @@ section {
   position: relative;
   cursor: pointer;
   transition: transform 0.08s ease, background 0.15s ease, box-shadow 0.2s ease;
-  font-size: clamp(1.2rem, 2vw, 1.8rem); /* Responsive font size */
-  min-height: 60px; /* Smaller minimum */
-  min-width: 60px;
+  font-size: clamp(1.0rem, 2vw, 1.4rem); /* Slightly smaller font for 4x4 */
+  min-height: 50px; /* Smaller minimum for 4x4 */
+  min-width: 50px;
 }
 
 .tile:hover {
