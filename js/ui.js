@@ -500,15 +500,27 @@ function renderAllyEncounter() {
  * Render a key encounter
  */
 function renderKeyEncounter() {
-    DOM.encounterArea.innerHTML = `
-        <div class="encounter-key">
-            <h3>🗝️ Key Found</h3>
-            <p>The key to the next grid lies here!</p>
-        </div>
-    `;
-    DOM.encounterActions.innerHTML = `
-        <button class="btn-primary" data-action="take-key">Take Key</button>
-    `;
+    if (isCurrentTileConsumed()) {
+        // Show consumed state
+        DOM.encounterArea.innerHTML = `
+            <div class="encounter-key">
+                <h3>🗝️ Empty Pedestal</h3>
+                <p>The key has been taken. Only an empty pedestal remains.</p>
+            </div>
+        `;
+        DOM.encounterActions.innerHTML = ``; // No buttons
+    } else {
+        // Show normal key encounter
+        DOM.encounterArea.innerHTML = `
+            <div class="encounter-key">
+                <h3>🗝️ Key Found</h3>
+                <p>The key to the next grid lies here!</p>
+            </div>
+        `;
+        DOM.encounterActions.innerHTML = `
+            <button class="btn-primary" data-action="take-key">Take Key</button>
+        `;
+    }
 }
 
 /**
