@@ -746,6 +746,7 @@ export function endCombat(victory) {
     
     if (victory) {
         addLogEntry(`🎉 Victory! You defeated the ${G.combat.enemy.name}!`);
+         consumeCurrentTile();
         // TODO: Add loot/experience here later
     } else {
         addLogEntry(`💀 Defeat! The ${G.combat.enemy.name} has bested you!`);
