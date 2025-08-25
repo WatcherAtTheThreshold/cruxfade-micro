@@ -39,9 +39,6 @@ let _updateGameCallback = null;
 // ================================================================
 // DOM ELEMENT CACHING
 // ================================================================
-// ================================================================
-// DOM ELEMENT CACHING
-// ================================================================
 
 /**
  * Cache all important DOM elements for performance
@@ -70,13 +67,16 @@ function cacheDOMElements() {
         diceOverlay: document.getElementById('dice-overlay'),
         combatOverlay: document.getElementById('combat-overlay'),
         
-        // All tile elements (will be populated)
+        // All tile elements (will be populated with 16 tiles)
         tiles: []
     };
     
-    // Cache all tile elements
+    // Cache all 16 tile elements for 4x4 grid
     DOM.tiles = Array.from(document.querySelectorAll('.tile'));
+    
+    console.log(`🎯 Cached ${DOM.tiles.length} tiles (expecting 16 for 4x4)`);
 }
+
 // ================================================================
 // MAIN RENDER FUNCTION
 // ================================================================
@@ -98,19 +98,16 @@ export function renderAll() {
 // ================================================================
 // BOARD RENDERING
 // ================================================================
-// ================================================================
-// BOARD RENDERING
-// ================================================================
 
 /**
- * Render the 3x3 game board
+ * Render the 4x4 game board
  */
 function renderBoard() {
     if (!DOM.tiles) return;
     
     DOM.tiles.forEach((tileElement, index) => {
-        const row = Math.floor(index / 3);
-        const col = index % 3;
+        const row = Math.floor(index / 4); // 4x4 math
+        const col = index % 4;
         const tile = G.board.tiles[index];
         
         // Clear previous classes
@@ -189,18 +186,20 @@ function renderPartyStatus() {
         DOM.partyStats.appendChild(memberElement);
     });
 }
+
 /**
  * Create a party member display element
  */
 function createPartyMemberElement(member, isLeader = false) {
     const memberDiv = document.createElement('div');
     memberDiv.className = 'party-member';      
-    memberDiv.style.cursor = 'pointer';  // <-- Add this line
-    memberDiv.addEventListener('click', () => {  // <-- Add this block
-    console.log('🖱️ Clicked party member:', member.name);
-    switchPartyLeader(member.id);
-    _updateGameCallback();
-});
+    memberDiv.style.cursor = 'pointer';
+    memberDiv.addEventListener('click', () => {
+        console.log('🖱️ Clicked party member:', member.name);
+        switchPartyLeader(member.id);
+        _updateGameCallback();
+    });
+    
     const hpColor = member.hp <= member.maxHp * 0.25 ? '#ef6b73' : 
                     member.hp <= member.maxHp * 0.5 ? '#f6d55c' : '#68d391';
     
@@ -291,10 +290,8 @@ function getMemberSkills(member) {
     return skills;
 }
 
-// ui.js
-
 // ================================================================
-// ENCOUNTER AREA RENDERING (Add this entire section)
+// ENCOUNTER AREA RENDERING
 // ================================================================
 
 /**
@@ -345,13 +342,8 @@ function renderEncounterArea() {
     }
 }
 
-// NOTE: The individual functions like renderFightEncounter(), 
-// renderKeyEncounter(), etc., that you've already written are perfect. 
-// This new function just ties them all together.
-
 // ================================================================
-// ENCOUNTER RENDERING FUNCTIONS - Using data-action instead of onclick
-// Replace these functions in your ui.js (around lines 340-420)
+// ENCOUNTER RENDERING FUNCTIONS
 // ================================================================
 
 /**
@@ -369,6 +361,7 @@ function renderFightEncounter() {
         DOM.encounterActions.innerHTML = ``; // No buttons
         return; // Exit early, don't show combat UI
     }
+    
     if (G.combat.active) {
         DOM.encounterArea.innerHTML = `
             <div class="encounter-fight">
@@ -552,6 +545,7 @@ function renderDefaultEncounter() {
     `;
     DOM.encounterActions.innerHTML = '';
 }
+
 // ================================================================
 // HEADER INFO RENDERING
 // ================================================================
@@ -595,8 +589,8 @@ function renderGameLog() {
 function bindTileClickHandlers() {
     DOM.tiles.forEach((tileElement, index) => {
         tileElement.addEventListener('click', () => {
-            const row = Math.floor(index / 3);
-            const col = index % 3;
+            const row = Math.floor(index / 4); // 4x4 math
+            const col = index % 4;
             handleTileClick(row, col);
         });
     });
@@ -742,9 +736,10 @@ function handleTileClick(row, col) {
         addLogEntry('❌ Can only move to adjacent tiles');
         _updateGameCallback(); // Use callback instead of direct import
     } else {
-        console.log('📍 Clicked current player tile');
+        console.log('🔍 Clicked current player tile');
     }
 }
+
 // ================================================================
 // OVERLAY MANAGEMENT
 // ================================================================
