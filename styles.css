@@ -176,12 +176,12 @@ section {
 /* 4x4 Game Board - Takes up most of the section */
 .board {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: var(--gap-cards);
   aspect-ratio: 1/1; /* Always square */
-  width: 100%;
-  max-width: min(100%, 400px); /* Don't get too big */
-  min-width: 240px; /* Don't get too small */
+  width: 90%; /* Use most of the available width */
+  max-width: 600px; /* Allow it to get much bigger */
+  min-width: 300px; /* Larger minimum size too */
   margin: 0 auto; /* Center in container */
 }
 
@@ -196,7 +196,7 @@ section {
   position: relative;
   cursor: pointer;
   transition: transform 0.08s ease, background 0.15s ease, box-shadow 0.2s ease;
-  font-size: clamp(1.0rem, 2vw, 1.4rem); /* Slightly smaller font for 4x4 */
+  font-size: clamp(1.5rem, 3vw, 2.5rem); /* Larger, more responsive font size */
   min-height: 50px; /* Smaller minimum for 4x4 */
   min-width: 50px;
 }
