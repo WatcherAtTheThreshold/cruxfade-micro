@@ -358,7 +358,17 @@ function renderEncounterArea() {
  * Render a fight encounter
  */
 function renderFightEncounter() {
-    // Check if combat is already active
+    // Check if this fight was already won
+    if (isCurrentTileConsumed()) {
+        DOM.encounterArea.innerHTML = `
+            <div class="encounter-fight">
+                <h3>⚔️ Defeated Enemy</h3>
+                <p>The remains of your defeated foe lie here. Nothing left to fight.</p>
+            </div>
+        `;
+        DOM.encounterActions.innerHTML = ``; // No buttons
+        return; // Exit early, don't show combat UI
+    }
     if (G.combat.active) {
         DOM.encounterArea.innerHTML = `
             <div class="encounter-fight">
