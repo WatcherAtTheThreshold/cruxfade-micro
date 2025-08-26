@@ -713,8 +713,35 @@ export function bindEventHandlers(updateGameCallback) {
                     
                 case 'recruit-ally':
                     console.log('🤝 Recruiting ally...');
-                    recruitRandomAlly();  // Call our new function!
-                    _updateGameCallback();
+                    const result = recruitRandomAlly();
+                    
+                    // Check if recruitment caused card overflow
+                    if (result && result.overflow) {
+                        // Ally wants to join but hand is full - show card selection
+                        console.log('⚠️ Ally recruitment caused card overflow');
+                        
+                        // Create a combined card that represents what the ally offers
+                        const combinedCard = {
+                            id: 'ally-offer-' + result.ally.id,
+                            name: `${result.ally.name}'s Cards`,
+                            type: 'ally',
+                            description: `${result.ally.name} offers: ${result.cards.map(c => c.name).join(', ')}`
+                        };
+                        
+                        // Show overflow selection with callback
+                        showCardOverflowSelection(combinedCard, (resolved) => {
+                            if (resolved) {
+                                // Import the resolve function
+                                import('./state.js').then(({ resolvePendingAlly }) => {
+                                    resolvePendingAlly();
+                                    _updateGameCallback();
+                                }).catch(console.error);
+                            }
+                        });
+                    } else {
+                        // Normal recruitment (no overflow)
+                        _updateGameCallback();
+                    }
                     break;
                     
                 case 'take-key':
