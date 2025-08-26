@@ -490,6 +490,42 @@ export function resolveHazard() {
 // ================================================================
 
 /**
+ * Get cards that an ally contributes to the deck
+ */
+function getAllyCards(ally) {
+    const cardSets = {
+        'warrior': [
+            { id: `shield-bash-${ally.id}`, name: 'Shield Bash', type: 'attack', description: '+2 damage and stun enemy for 1 turn' },
+            { id: `taunt-${ally.id}`, name: 'Taunt', type: 'defense', description: 'Force enemy to attack you, reduce damage taken' }
+        ],
+        'mage': [
+            { id: `magic-bolt-${ally.id}`, name: 'Magic Bolt', type: 'attack', description: 'Deal magic damage, bypasses armor' },
+            { id: `heal-${ally.id}`, name: 'Heal', type: 'utility', description: 'Restore HP to party leader' }
+        ],
+        'rogue': [
+            { id: `sneak-attack-${ally.id}`, name: 'Sneak Attack', type: 'attack', description: 'Deal double damage if enemy is unaware' },
+            { id: `dodge-${ally.id}`, name: 'Dodge', type: 'defense', description: 'Avoid the next attack completely' }
+        ],
+        'scout': [
+            { id: `track-${ally.id}`, name: 'Track', type: 'utility', description: 'Reveal hidden encounters on the grid' },
+            { id: `first-aid-${ally.id}`, name: 'First Aid', type: 'utility', description: 'Heal minor wounds during exploration' }
+        ]
+    };
+    
+    // Find the card set for this ally type
+    for (const [type, cards] of Object.entries(cardSets)) {
+        if (ally.tags.includes(type)) {
+            return cards;
+        }
+    }
+    
+    // Default cards if no specific type found
+    return [
+        { id: `help-${ally.id}`, name: 'Helping Hand', type: 'utility', description: 'Generic assistance from your ally' }
+    ];
+}
+
+/**
  * Recruit a random ally to join the party
  */
 export function recruitRandomAlly() {
@@ -547,16 +583,122 @@ export function recruitRandomAlly() {
         return false;
     }
     
+    // Get the cards this ally would contribute
+    const allyCards = getAllyCards(allyTemplate);
+    
+    // Check if adding ally cards would cause overflow
+    const totalNewCards = allyCards.length;
+    const currentHandSize = G.hand.length;
+    const wouldOverflow = currentHandSize + totalNewCards > getMaxHandSize();
+    
+    if (wouldOverflow) {
+        // We need to handle card overflow
+        addLogEntry(`🤝 ${allyTemplate.name} wants to join and offers cards, but your hand is full!`);
+        addLogEntry(`📋 They offer: ${allyCards.map(card => card.name).join(', ')}`);
+        
+        // Store ally and cards for later resolution
+        G._pendingAlly = allyTemplate;
+        G._pendingCards = allyCards;
+        
+        // We'll trigger the overflow UI from the UI layer
+        // For now, just signal that overflow needs to be handled
+        consumeCurrentTile();
+        return { overflow: true, ally: allyTemplate, cards: allyCards };
+    } else {
+        // No overflow - add ally and cards directly
+        return completeAllyRecruitment(allyTemplate, allyCards);
+    }
+}
+
+/**
+ * Complete ally recruitment (called after overflow resolved or if no overflow)
+ */
+export function completeAllyRecruitment(ally, cards) {
     // Add to party
-    addPartyMember(allyTemplate);
+    addPartyMember(ally);
     
     // Add their equipment slot
-    G.equipment[allyTemplate.id] = [];
+    G.equipment[ally.id] = [];
     
-    addLogEntry(`🎉 The ${allyTemplate.name} brings their skills: ${allyTemplate.skills.join(', ')}`);
-
+    // Add their cards to hand
+    let cardsAdded = 0;
+    for (const card of cards) {
+        const result = addCardToHand(card);
+        if (result.success) {
+            cardsAdded++;
+        } else {
+            addLogEntry(`⚠️ Could not add ${card.name} - hand still full!`);
+        }
+    }
+    
+    addLogEntry(`🎉 ${ally.name} joined your party and contributed ${cardsAdded} cards!`);
+    addLogEntry(`🃏 New cards: ${cards.slice(0, cardsAdded).map(card => card.name).join(', ')}`);
+    
     consumeCurrentTile();
-    return allyTemplate;
+    return { success: true, ally, cardsAdded };
+}
+
+/**
+ * Handle pending ally after overflow resolution
+ */
+export function resolvePendingAlly() {
+    if (!G._pendingAlly || !G._pendingCards) {
+        console.error('No pending ally to resolve');
+        return false;
+    }
+    
+    const ally = G._pendingAlly;
+    const cards = G._pendingCards;
+    
+    // Clear pending state
+    G._pendingAlly = null;
+    G._pendingCards = null;
+    
+    // Complete the recruitment
+    return completeAllyRecruitment(ally, cards);
+}
+
+/**
+ * Remove an ally and their associated cards from the game
+ */
+export function removeAlly(allyId) {
+    // Remove from party
+    const allyIndex = G.party.findIndex(member => member.id === allyId);
+    if (allyIndex === -1) return false;
+    
+    const ally = G.party[allyIndex];
+    G.party.splice(allyIndex, 1);
+    
+    // Remove their equipment
+    delete G.equipment[allyId];
+    
+    // Remove their cards from hand and discard pile
+    const cardsRemoved = [];
+    
+    // Remove from hand
+    G.hand = G.hand.filter(card => {
+        if (card.id.includes(allyId)) {
+            cardsRemoved.push(card.name);
+            return false;
+        }
+        return true;
+    });
+    
+    // Remove from discard pile
+    G.discard = G.discard.filter(card => {
+        if (card.id.includes(allyId)) {
+            cardsRemoved.push(card.name);
+            return false;
+        }
+        return true;
+    });
+    
+    addLogEntry(`💀 ${ally.name} has left the party`);
+    if (cardsRemoved.length > 0) {
+        addLogEntry(`🗑️ Lost cards: ${cardsRemoved.join(', ')}`);
+    }
+    
+    return true;
 }
 
 // ================================================================
