@@ -4,7 +4,7 @@
 // ================================================================
 
 // Import core modules
-import { G, initializeGame, addLogEntry } from './state.js';
+import { G, initializeGame, addLogEntry, setGameData } from './state.js';
 import { renderAll, bindEventHandlers } from './ui.js';
 
 // ================================================================
@@ -81,8 +81,8 @@ async function init() {
         // Load game data first
         const gameData = await loadGameData();
         
-        // Pass data to state system (Step 3 will add setGameData function)
-        // setGameData(gameData);
+        // Pass data to state system
+        setGameData(gameData);
         
         // Initialize game state
         initializeGame();
