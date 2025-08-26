@@ -762,7 +762,7 @@ export function forceAddCardToHand(card) {
 
 /**
  * Manually discard a card by ID to make room
- */
+ 
 export function discardCardById(cardId) {
     const cardIndex = G.hand.findIndex(card => card.id === cardId);
     if (cardIndex === -1) return false;
@@ -771,7 +771,7 @@ export function discardCardById(cardId) {
     G.discard.push(discarded);
     addLogEntry(`🗑️ Discarded ${discarded.name}`);
     return true;
-}
+}*/
 
 /**
  * Draw cards from deck to hand (now respects hand limit)
