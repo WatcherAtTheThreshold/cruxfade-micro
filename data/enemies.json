@@ -1,0 +1,26 @@
+{
+  "goblin": {
+    "name": "Goblin",
+    "hp": 4,
+    "atk": 2,
+    "description": "A small, vicious creature"
+  },
+  "orc": {
+    "name": "Orc Warrior", 
+    "hp": 8,
+    "atk": 3,
+    "description": "A battle-hardened brute"
+  },
+  "shadow-wisp": {
+    "name": "Shadow Wisp",
+    "hp": 3,
+    "atk": 2,
+    "description": "A dark spirit that phases in and out"
+  },
+  "orc-champion": {
+    "name": "Orc Champion",
+    "hp": 12,
+    "atk": 4,
+    "description": "A battle-hardened warrior with devastating attacks"
+  }
+}
