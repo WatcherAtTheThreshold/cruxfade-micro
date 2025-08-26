@@ -5,6 +5,27 @@
 // ================================================================
 
 // ================================================================
+// GAME DATA STORAGE
+// ================================================================
+
+/**
+ * Loaded game data from JSON files
+ */
+let GAME_DATA = {
+    enemies: {},
+    encounters: null,
+    items: null
+};
+
+/**
+ * Set the loaded game data
+ */
+export function setGameData(gameData) {
+    GAME_DATA = gameData;
+    console.log('📊 Game data set in state:', GAME_DATA);
+}
+
+// ================================================================
 // GLOBAL GAME STATE OBJECT
 // ================================================================
 
@@ -310,7 +331,6 @@ export function healPartyMember(memberId, amount) {
         addLogEntry(`💚 ${member.name} heals ${healAmount} HP! (${member.hp}/${member.maxHp} HP)`);
     }
 }
-
 
 // ================================================================
 // ITEM SYSTEM FUNCTIONS  
@@ -645,30 +665,13 @@ export function clearLog() {
 // ================================================================
 
 /**
- * Basic enemy data - will move to JSON later
- */
-const ENEMIES = {
-    goblin: {
-        name: 'Goblin',
-        hp: 4,
-        atk: 2,
-        description: 'A small, vicious creature'
-    },
-    orc: {
-        name: 'Orc Warrior', 
-        hp: 8,
-        atk: 3,
-        description: 'A battle-hardened brute'
-    }
-};
-
-/**
  * Start combat with a specific enemy type
  */
 export function startCombat(enemyType = 'goblin') {
-    const enemyTemplate = ENEMIES[enemyType];
+    const enemyTemplate = GAME_DATA.enemies[enemyType];
     if (!enemyTemplate) {
         console.error('Unknown enemy type:', enemyType);
+        console.error('Available enemies:', Object.keys(GAME_DATA.enemies));
         return false;
     }
     
