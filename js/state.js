@@ -381,36 +381,53 @@ export function giveRandomItem() {
     const player = getPartyLeader();
     if (!player) return false;
     
-    // Random item types
-    const items = [
-        { name: 'Health Potion', stat: 'hp', boost: 3, maxBoost: 2 },
-        { name: 'Strength Elixir', stat: 'atk', boost: 1 },
-        { name: 'Magic Crystal', stat: 'mag', boost: 1 },
-        { name: 'Iron Sword', stat: 'atk', boost: 2 },
-        { name: 'Healing Herbs', stat: 'hp', boost: 5, maxBoost: 3 }
-    ];
+    if (!GAME_DATA.items) {
+        // Fallback to old hardcoded system
+        const items = [
+            { name: 'Health Potion', stat: 'hp', boost: 3, maxBoost: 2 },
+            { name: 'Strength Elixir', stat: 'atk', boost: 1 },
+            { name: 'Magic Crystal', stat: 'mag', boost: 1 }
+        ];
+        const item = items[Math.floor(Math.random() * items.length)];
+        applyItemToPlayer(player, item);
+        consumeCurrentTile();
+        return item;
+    }
     
-    // Pick random item
-    const item = items[Math.floor(Math.random() * items.length)];
+    // Use data-driven items
+    const gridKey = `grid-${G.gridLevel}`;
+    const lootTable = GAME_DATA.items.lootTables[gridKey] || GAME_DATA.items.lootTables.basic;
+    const useConsumable = Math.random() < lootTable.consumables;
     
-    // Apply the boost
+    const itemPool = useConsumable ? 
+        GAME_DATA.items.consumables : 
+        GAME_DATA.items.equipment;
+        
+    const itemKeys = Object.keys(itemPool);
+    const itemKey = itemKeys[Math.floor(Math.random() * itemKeys.length)];
+    const item = itemPool[itemKey];
+    
+    applyItemToPlayer(player, item);
+    consumeCurrentTile();
+    return item;
+}
+
+/**
+ * Apply item effects to player
+ */
+function applyItemToPlayer(player, item) {
     if (item.stat === 'hp') {
-        // Health items both heal and increase max HP
         const healAmount = Math.min(item.boost, player.maxHp - player.hp);
         player.hp += healAmount;
         if (item.maxBoost) {
             player.maxHp += item.maxBoost;
-            player.hp += item.maxBoost; // Also increase current HP
+            player.hp += item.maxBoost;
         }
         addLogEntry(`📦 Found ${item.name}! Healed ${healAmount + (item.maxBoost || 0)} HP! (${player.hp}/${player.maxHp} HP)`);
     } else {
-        // Other stats just increase
         player[item.stat] += item.boost;
         addLogEntry(`📦 Found ${item.name}! +${item.boost} ${item.stat.toUpperCase()}! (${item.stat.toUpperCase()}: ${player[item.stat]})`);
     }
-
-    consumeCurrentTile();
-    return item;
 }
 
 // ================================================================
