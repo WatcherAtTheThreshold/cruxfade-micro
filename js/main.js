@@ -16,11 +16,18 @@ import { renderAll, bindEventHandlers } from './ui.js';
  */
 async function loadGameData() {
     try {
+        console.log('📁 Loading game data files...');
+        
         const [enemiesResponse, encountersResponse, itemsResponse] = await Promise.all([
-            fetch('/data/enemies.json'),
-            fetch('/data/encounters.json').catch(() => null), // Optional for now
-            fetch('/data/items.json').catch(() => null)       // Optional for now
+            fetch('./data/enemies.json'),
+            fetch('./data/encounters.json').catch(() => null), // Optional for now
+            fetch('./data/items.json').catch(() => null)       // Optional for now
         ]);
+        
+        // Check if enemies.json loaded successfully
+        if (!enemiesResponse.ok) {
+            throw new Error(`Failed to load enemies.json: ${enemiesResponse.status} ${enemiesResponse.statusText}`);
+        }
         
         const gameData = {
             enemies: await enemiesResponse.json(),
