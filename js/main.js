@@ -8,31 +8,73 @@ import { G, initializeGame, addLogEntry } from './state.js';
 import { renderAll, bindEventHandlers } from './ui.js';
 
 // ================================================================
+// DATA LOADING SYSTEM
+// ================================================================
+
+/**
+ * Load all game data from JSON files
+ */
+async function loadGameData() {
+    try {
+        const [enemiesResponse, encountersResponse, itemsResponse] = await Promise.all([
+            fetch('/data/enemies.json'),
+            fetch('/data/encounters.json').catch(() => null), // Optional for now
+            fetch('/data/items.json').catch(() => null)       // Optional for now
+        ]);
+        
+        const gameData = {
+            enemies: await enemiesResponse.json(),
+            encounters: encountersResponse ? await encountersResponse.json() : null,
+            items: itemsResponse ? await itemsResponse.json() : null
+        };
+        
+        console.log('🎮 Game data loaded:', gameData);
+        return gameData;
+        
+    } catch (error) {
+        console.error('❌ Failed to load game data:', error);
+        throw error;
+    }
+}
+
+// ================================================================
 // MAIN INITIALIZATION
 // ================================================================
 
 /**
  * Initialize the entire game when DOM is loaded
  */
-function init() {
+async function init() {
     console.log('🎮 Cruxfade-Micro starting up...');
     
-    // Initialize game state
-    initializeGame();
-    
-    // Set up UI event handlers and pass updateGame as callback
-    // This breaks the circular dependency by injecting the dependency
-    bindEventHandlers(updateGame);
-    
-    // Initial render of all game elements
-    renderAll();
-    
-    // Add welcome message
-    addLogEntry('Welcome to the grid. Find the key to proceed...');
-    
-    console.log('✅ Game initialized successfully');
-    console.log('🎯 Current state:', G);
+    try {
+        // Load game data first
+        const gameData = await loadGameData();
+        
+        // Pass data to state system (Step 3 will add setGameData function)
+        // setGameData(gameData);
+        
+        // Initialize game state
+        initializeGame();
+        
+        // Set up UI event handlers and pass updateGame as callback
+        bindEventHandlers(updateGame);
+        
+        // Initial render of all game elements
+        renderAll();
+        
+        // Add welcome message
+        addLogEntry('Welcome to the grid. Find the key to proceed...');
+        
+        console.log('✅ Game initialized successfully');
+        console.log('🎯 Current state:', G);
+        
+    } catch (error) {
+        console.error('🚨 Game initialization failed:', error);
+        document.body.innerHTML = '<h1>Failed to load game data. Check console for details.</h1>';
+    }
 }
+
 // ================================================================
 // GAME LOOP & STATE MANAGEMENT
 // ================================================================
