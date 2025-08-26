@@ -19,6 +19,7 @@ import {
     switchPartyLeader,
     consumeCurrentTile,
     isCurrentTileConsumed,
+    getRandomEnemyType,
     // Combat functions
     startCombat,
     playerAttack,
@@ -389,14 +390,18 @@ function renderFightEncounter() {
             }
         `;
     } else {
+        // Get a random enemy type for this encounter
+        const enemyType = getRandomEnemyType();
+        const enemyData = G.combat.enemy || { name: 'Unknown Enemy', description: 'A mysterious foe' };
+        
         // Not in combat yet - show encounter start
         DOM.encounterArea.innerHTML = `
             <div class="encounter-fight">
                 <h3>⚔️ Enemy Encounter</h3>
-                <p>A wild goblin blocks your path!</p>
+                <p>A hostile creature blocks your path!</p>
                 <div class="enemy-preview">
-                    <strong>Goblin</strong><br>
-                    A small, vicious creature
+                    <strong>Grid ${G.gridLevel} Enemy</strong><br>
+                    Prepare for battle...
                 </div>
             </div>
         `;
@@ -644,7 +649,8 @@ export function bindEventHandlers(updateGameCallback) {
             switch(action) {
                 case 'start-combat':
                     console.log('⚔️ Starting combat...');
-                    startCombat('goblin'); // Start with goblin enemy
+                    const enemyType = getRandomEnemyType(); // Use random enemy type
+                    startCombat(enemyType);
                     _updateGameCallback();
                     break;
                     
