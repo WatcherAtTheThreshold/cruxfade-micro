@@ -86,7 +86,7 @@ async function init() {
         setGameData(gameData);
         
         // Initialize RNG with seed
-        const seed = G.seed || generateSeed();
+        const seed = getSeedFromURL();
         G.seed = seed;
         initRNG(seed);
         
@@ -160,13 +160,36 @@ export function generateSeed() {
 }
 
 /**
+ * Get seed from URL parameters or generate random
+ */
+function getSeedFromURL() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const seedParam = urlParams.get('seed');
+    if (seedParam && !isNaN(seedParam)) {
+        return parseInt(seedParam);
+    }
+    return generateSeed();
+}
+
+/**
  * Start a new game with optional seed
  */
 export function newGame(seed = null) {
     G.seed = seed || generateSeed();
+    initRNG(G.seed);
     initializeGame();
     renderAll();
     addLogEntry(`🌱 New game started (Seed: ${G.seed})`);
+}
+
+/**
+ * Restart game with current seed (for testing)
+ */
+export function restartWithSeed() {
+    initRNG(G.seed);
+    initializeGame(); 
+    renderAll();
+    addLogEntry(`🔄 Restarted with seed: ${G.seed}`);
 }
 
 /**
@@ -198,5 +221,6 @@ window.addEventListener('error', (event) => {
 window.CruxfadeMicro = {
     getState: getGameState,
     newGame: newGame,
+    restartWithSeed: restartWithSeed,
     update: updateGame
 };
