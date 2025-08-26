@@ -824,10 +824,10 @@ export function isHandFull() {
 
 /**
  * Get maximum hand size
- */
+ 
 export function getMaxHandSize() {
     return MAX_HAND_SIZE;
-}
+}*/
 
 // ================================================================
 // PARTY LEADERSHIP FUNCTIONS
