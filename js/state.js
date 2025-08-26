@@ -144,3 +144,7 @@ function generateGrid() {
                 row: row,
                 col: col,
                 revealed: true,
+                consumed: false
+            });
+        } else {
+            // Random encounter for other tiles
