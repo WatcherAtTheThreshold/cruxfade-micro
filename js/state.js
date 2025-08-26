@@ -4,6 +4,9 @@
 // Pure functions for controlled state mutations
 // ================================================================
 
+// Import seeded RNG functions
+import { random, randomInt, pickRandom } from './rng.js';
+
 // ================================================================
 // GAME DATA STORAGE
 // ================================================================
@@ -189,13 +192,13 @@ function getRandomEncounterType() {
  */
 function getWeightedRandom(items, weights) {
     const totalWeight = weights.reduce((sum, weight) => sum + weight, 0);
-    let random = Math.random() * totalWeight;
+    let randomValue = random() * totalWeight;
     
     for (let i = 0; i < items.length; i++) {
-        if (random < weights[i]) {
+        if (randomValue < weights[i]) {
             return items[i];
         }
-        random -= weights[i];
+        randomValue -= weights[i];
     }
     
     return items[0]; // fallback
@@ -214,10 +217,10 @@ export function getRandomEnemyType() {
     const enemyPools = gridData.enemyPools;
     
     // 80% chance common, 20% chance rare
-    const useRare = Math.random() < 0.2;
+    const useRare = random() < 0.2;
     const pool = useRare ? enemyPools.rare : enemyPools.common;
     
-    return pool[Math.floor(Math.random() * pool.length)];
+    return pickRandom(pool);
 }
 
 /**
@@ -230,13 +233,13 @@ function ensureKeyAndDoor() {
     
     // Place key and door in random available positions
     if (availableTiles.length >= 2) {
-        const keyIndex = Math.floor(Math.random() * availableTiles.length);
+        const keyIndex = randomInt(0, availableTiles.length - 1);
         availableTiles[keyIndex].type = 'key';
         
         // Remove key tile from available tiles
         availableTiles.splice(keyIndex, 1);
         
-        const doorIndex = Math.floor(Math.random() * availableTiles.length);
+        const doorIndex = randomInt(0, availableTiles.length - 1);
         availableTiles[doorIndex].type = 'door';
     }
 }
@@ -388,7 +391,7 @@ export function giveRandomItem() {
             { name: 'Strength Elixir', stat: 'atk', boost: 1 },
             { name: 'Magic Crystal', stat: 'mag', boost: 1 }
         ];
-        const item = items[Math.floor(Math.random() * items.length)];
+        const item = pickRandom(items);
         applyItemToPlayer(player, item);
         consumeCurrentTile();
         return item;
@@ -397,14 +400,14 @@ export function giveRandomItem() {
     // Use data-driven items
     const gridKey = `grid-${G.gridLevel}`;
     const lootTable = GAME_DATA.items.lootTables[gridKey] || GAME_DATA.items.lootTables.basic;
-    const useConsumable = Math.random() < lootTable.consumables;
+    const useConsumable = random() < lootTable.consumables;
     
     const itemPool = useConsumable ? 
         GAME_DATA.items.consumables : 
         GAME_DATA.items.equipment;
         
     const itemKeys = Object.keys(itemPool);
-    const itemKey = itemKeys[Math.floor(Math.random() * itemKeys.length)];
+    const itemKey = pickRandom(itemKeys);
     const item = itemPool[itemKey];
     
     applyItemToPlayer(player, item);
@@ -451,7 +454,7 @@ export function resolveHazard() {
     ];
     
     // Pick random hazard
-    const hazard = hazards[Math.floor(Math.random() * hazards.length)];
+    const hazard = pickRandom(hazards);
     
     // Roll dice + add best relevant stat
     const roll = rollDice(20); // d20 roll
@@ -466,7 +469,7 @@ export function resolveHazard() {
         addLogEntry(`✅ Success! You avoided the ${hazard.name}!`);
         
         // Small chance of finding something useful
-        if (Math.random() < 0.3) {
+        if (random() < 0.3) {
             addLogEntry(`🎁 You found something useful while navigating!`);
             giveRandomItem();
         }
@@ -535,7 +538,7 @@ export function recruitRandomAlly() {
     ];
     
     // Pick random ally
-    const allyTemplate = allies[Math.floor(Math.random() * allies.length)];
+    const allyTemplate = pickRandom(allies);
     
     // Check party size limit
     if (G.party.length >= 4) {
@@ -751,7 +754,7 @@ export function startCombat(enemyType = 'goblin') {
  * Roll a die with specified number of sides
  */
 export function rollDice(sides = 6) {
-    const result = Math.floor(Math.random() * sides) + 1;
+    const result = randomInt(1, sides);
     G.combat.lastRoll = result;
     addLogEntry(`🎲 Rolled ${result} on d${sides}`);
     return result;
