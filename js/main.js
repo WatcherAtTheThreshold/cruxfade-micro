@@ -6,6 +6,7 @@
 // Import core modules
 import { G, initializeGame, addLogEntry, setGameData } from './state.js';
 import { renderAll, bindEventHandlers } from './ui.js';
+import { initRNG } from './rng.js';
 
 // ================================================================
 // DATA LOADING SYSTEM
@@ -83,6 +84,11 @@ async function init() {
         
         // Pass data to state system
         setGameData(gameData);
+        
+        // Initialize RNG with seed
+        const seed = G.seed || generateSeed();
+        G.seed = seed;
+        initRNG(seed);
         
         // Initialize game state
         initializeGame();
