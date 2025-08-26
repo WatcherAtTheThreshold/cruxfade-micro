@@ -722,6 +722,114 @@ export function discardCardById(cardId) {
 }
 
 // ================================================================
+// CARD SYSTEM FUNCTIONS
+// ================================================================
+
+// Constants
+const MAX_HAND_SIZE = 5;
+
+/**
+ * Add a card to the hand, handling overflow
+ * Returns: { success: boolean, overflow: Card|null }
+ */
+export function addCardToHand(card) {
+    if (G.hand.length < MAX_HAND_SIZE) {
+        // Room in hand - add normally
+        G.hand.push(card);
+        addLogEntry(`🃏 Added ${card.name} to hand`);
+        return { success: true, overflow: null };
+    } else {
+        // Hand is full - need to discard something
+        addLogEntry(`⚠️ Hand full! Must discard a card to add ${card.name}`);
+        return { success: false, overflow: card };
+    }
+}
+
+/**
+ * Force add a card to hand, discarding oldest if needed
+ */
+export function forceAddCardToHand(card) {
+    if (G.hand.length >= MAX_HAND_SIZE) {
+        // Discard the first (oldest) card
+        const discarded = G.hand.shift();
+        G.discard.push(discarded);
+        addLogEntry(`🗑️ Discarded ${discarded.name} (hand was full)`);
+    }
+    
+    G.hand.push(card);
+    addLogEntry(`🃏 Added ${card.name} to hand`);
+}
+
+/**
+ * Manually discard a card by ID to make room
+ */
+export function discardCardById(cardId) {
+    const cardIndex = G.hand.findIndex(card => card.id === cardId);
+    if (cardIndex === -1) return false;
+    
+    const discarded = G.hand.splice(cardIndex, 1)[0];
+    G.discard.push(discarded);
+    addLogEntry(`🗑️ Discarded ${discarded.name}`);
+    return true;
+}
+
+/**
+ * Draw cards from deck to hand (now respects hand limit)
+ */
+export function drawCards(count = 1) {
+    const cardsDrawn = [];
+    const overflowCards = [];
+    
+    for (let i = 0; i < count && G.deck.length > 0; i++) {
+        const card = G.deck.pop();
+        const result = addCardToHand(card);
+        
+        if (result.success) {
+            cardsDrawn.push(card);
+        } else {
+            overflowCards.push(result.overflow);
+        }
+    }
+    
+    return { cardsDrawn, overflowCards };
+}
+
+/**
+ * Play a card by ID
+ */
+export function playCard(cardId) {
+    const cardIndex = G.hand.findIndex(card => card.id === cardId);
+    if (cardIndex === -1) return false;
+    
+    const card = G.hand.splice(cardIndex, 1)[0];
+    G.discard.push(card);
+    
+    addLogEntry(`🃏 Played ${card.name}`);
+    return true;
+}
+
+/**
+ * Get current hand size
+ */
+export function getHandSize() {
+    return G.hand.length;
+}
+
+/**
+ * Check if hand is full
+ */
+export function isHandFull() {
+    return G.hand.length >= MAX_HAND_SIZE;
+}
+
+/**
+ * Get maximum hand size
+ */
+export function getMaxHandSize() {
+    return MAX_HAND_SIZE;
+}
+
+// ================================================================
 // PARTY LEADERSHIP FUNCTIONS
 // ================================================================
 
