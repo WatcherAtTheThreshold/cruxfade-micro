@@ -18,21 +18,44 @@ async function loadGameData() {
     try {
         console.log('📁 Loading game data files...');
         
-        const [enemiesResponse, encountersResponse, itemsResponse] = await Promise.all([
-            fetch('./data/enemies.json'),
-            fetch('./data/encounters.json').catch(() => null), // Optional for now
-            fetch('./data/items.json').catch(() => null)       // Optional for now
-        ]);
+        // Load enemies.json (required)
+        const enemiesResponse = await fetch('./data/enemies.json');
         
-        // Check if enemies.json loaded successfully
         if (!enemiesResponse.ok) {
             throw new Error(`Failed to load enemies.json: ${enemiesResponse.status} ${enemiesResponse.statusText}`);
         }
         
+        const enemies = await enemiesResponse.json();
+        console.log('✅ Enemies loaded:', enemies);
+        
+        // Optional files - don't try to parse if they don't exist
+        let encounters = null;
+        let items = null;
+        
+        try {
+            const encountersResponse = await fetch('./data/encounters.json');
+            if (encountersResponse.ok) {
+                encounters = await encountersResponse.json();
+                console.log('✅ Encounters loaded:', encounters);
+            }
+        } catch (e) {
+            console.log('⚠️ encounters.json not found (optional)');
+        }
+        
+        try {
+            const itemsResponse = await fetch('./data/items.json');
+            if (itemsResponse.ok) {
+                items = await itemsResponse.json();
+                console.log('✅ Items loaded:', items);
+            }
+        } catch (e) {
+            console.log('⚠️ items.json not found (optional)');
+        }
+        
         const gameData = {
-            enemies: await enemiesResponse.json(),
-            encounters: encountersResponse ? await encountersResponse.json() : null,
-            items: itemsResponse ? await itemsResponse.json() : null
+            enemies: enemies,
+            encounters: encounters,
+            items: items
         };
         
         console.log('🎮 Game data loaded:', gameData);
