@@ -166,20 +166,58 @@ function generateGrid() {
  * Get a random encounter type based on current grid level
  */
 function getRandomEncounterType() {
-    const encounters = ['fight', 'hazard', 'item', 'ally', 'empty'];
-    const weights = [3, 2, 2, 1, 1]; // fights most common
+    // If no encounter data loaded, use defaults
+    if (!GAME_DATA.encounters) {
+        const encounters = ['fight', 'hazard', 'item', 'ally', 'empty'];
+        const weights = [3, 2, 2, 1, 1];
+        return getWeightedRandom(encounters, weights);
+    }
     
+    // Use data-driven encounters
+    const gridKey = `grid-${G.gridLevel}`;
+    const gridData = GAME_DATA.encounters[gridKey] || GAME_DATA.encounters['grid-1'];
+    const weights = gridData.encounterWeights;
+    
+    const encounters = Object.keys(weights);
+    const weightValues = Object.values(weights);
+    
+    return getWeightedRandom(encounters, weightValues);
+}
+
+/**
+ * Utility function for weighted random selection
+ */
+function getWeightedRandom(items, weights) {
     const totalWeight = weights.reduce((sum, weight) => sum + weight, 0);
     let random = Math.random() * totalWeight;
     
-    for (let i = 0; i < encounters.length; i++) {
+    for (let i = 0; i < items.length; i++) {
         if (random < weights[i]) {
-            return encounters[i];
+            return items[i];
         }
         random -= weights[i];
     }
     
-    return 'empty'; // fallback
+    return items[0]; // fallback
+}
+
+/**
+ * Get a random enemy type based on current grid
+ */
+export function getRandomEnemyType() {
+    if (!GAME_DATA.encounters) {
+        return 'goblin'; // fallback
+    }
+    
+    const gridKey = `grid-${G.gridLevel}`;
+    const gridData = GAME_DATA.encounters[gridKey] || GAME_DATA.encounters['grid-1'];
+    const enemyPools = gridData.enemyPools;
+    
+    // 80% chance common, 20% chance rare
+    const useRare = Math.random() < 0.2;
+    const pool = useRare ? enemyPools.rare : enemyPools.common;
+    
+    return pool[Math.floor(Math.random() * pool.length)];
 }
 
 /**
