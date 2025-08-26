@@ -561,7 +561,27 @@ function renderDefaultEncounter() {
 function renderHeaderInfo() {
     if (DOM.gridLevel) DOM.gridLevel.textContent = G.gridLevel;
     if (DOM.keysFound) DOM.keysFound.textContent = G.keyFound ? '1' : '0';
-    if (DOM.runSeed) DOM.runSeed.textContent = G.seed;
+    
+    // Make seed clickable for editing
+    if (DOM.runSeed) {
+        DOM.runSeed.textContent = G.seed;
+        DOM.runSeed.style.cursor = 'pointer';
+        DOM.runSeed.title = 'Click to enter a custom seed';
+        
+        // Remove any existing click handlers to prevent duplicates
+        DOM.runSeed.replaceWith(DOM.runSeed.cloneNode(true));
+        DOM.runSeed = document.getElementById('run-seed'); // Re-cache after replace
+        
+        DOM.runSeed.addEventListener('click', () => {
+            const newSeed = prompt('Enter seed (number):', G.seed);
+            if (newSeed !== null && !isNaN(newSeed) && newSeed.trim() !== '') {
+                const seedNum = parseInt(newSeed);
+                console.log('🎲 Starting new game with seed:', seedNum);
+                window.CruxfadeMicro.newGame(seedNum);
+            }
+        });
+    }
+    
     if (DOM.deckCount) DOM.deckCount.textContent = G.deck.length;
     if (DOM.handCount) DOM.handCount.textContent = G.hand.length;
 }
