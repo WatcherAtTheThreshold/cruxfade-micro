@@ -60,6 +60,16 @@
   --font-mono: 'SF Mono', Consolas, monospace;
 }
 
+/* Make seed clickable */
+#run-seed {
+    text-decoration: underline;
+    transition: color 0.2s ease;
+}
+
+#run-seed:hover {
+    color: var(--accent);
+}
+
 /* ================================================================
    2. RESET & BASE STYLES
    ================================================================ */
