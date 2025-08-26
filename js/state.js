@@ -1188,6 +1188,7 @@ export function enemyAttack() {
     
     G.combat.turn = 'player';
     return true;
+}
 /**
  * End combat with victory or defeat
  */
