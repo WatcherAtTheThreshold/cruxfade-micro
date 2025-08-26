@@ -701,6 +701,13 @@ export function removeAlly(allyId) {
     return true;
 }
 
+/**
+ * Get maximum hand size
+ */
+export function getMaxHandSize() {
+    return 5; // MAX_HAND_SIZE constant
+}
+
 // ================================================================
 // PARTY LEADERSHIP FUNCTIONS
 // ================================================================
