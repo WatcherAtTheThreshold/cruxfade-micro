@@ -1,0 +1,85 @@
+{
+  "consumables": {
+    "health-potion": {
+      "name": "Health Potion",
+      "stat": "hp",
+      "boost": 3,
+      "maxBoost": 2,
+      "rarity": "common"
+    },
+    "healing-herbs": {
+      "name": "Healing Herbs",
+      "stat": "hp", 
+      "boost": 5,
+      "maxBoost": 3,
+      "rarity": "common"
+    },
+    "greater-healing-potion": {
+      "name": "Greater Healing Potion",
+      "stat": "hp",
+      "boost": 8,
+      "maxBoost": 4,
+      "rarity": "uncommon"
+    }
+  },
+  "equipment": {
+    "strength-elixir": {
+      "name": "Strength Elixir",
+      "stat": "atk",
+      "boost": 1,
+      "rarity": "common"
+    },
+    "magic-crystal": {
+      "name": "Magic Crystal", 
+      "stat": "mag",
+      "boost": 1,
+      "rarity": "common"
+    },
+    "iron-sword": {
+      "name": "Iron Sword",
+      "stat": "atk",
+      "boost": 2,
+      "rarity": "uncommon"
+    },
+    "enchanted-blade": {
+      "name": "Enchanted Blade",
+      "stat": "atk",
+      "boost": 3,
+      "rarity": "rare"
+    },
+    "power-crystal": {
+      "name": "Power Crystal",
+      "stat": "mag",
+      "boost": 2,
+      "rarity": "uncommon"
+    },
+    "arcane-focus": {
+      "name": "Arcane Focus",
+      "stat": "mag",
+      "boost": 3,
+      "rarity": "rare"
+    }
+  },
+  "lootTables": {
+    "basic": {
+      "consumables": 0.6,
+      "equipment": 0.4
+    },
+    "treasure": {
+      "consumables": 0.3,
+      "equipment": 0.7
+    },
+    "grid-1": {
+      "consumables": 0.7,
+      "equipment": 0.3
+    },
+    "grid-2": {
+      "consumables": 0.5,
+      "equipment": 0.5
+    },
+    "grid-3": {
+      "consumables": 0.4,
+      "equipment": 0.6
+    }
+  }
+}
