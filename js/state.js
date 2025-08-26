@@ -732,111 +732,241 @@ export function switchPartyLeader(memberId) {
 }
 
 // ================================================================
-// CARD SYSTEM FUNCTIONS
+// CARD EFFECTS SYSTEM
 // ================================================================
 
-// Constants
-const MAX_HAND_SIZE = 5;
-
 /**
- * Add a card to the hand, handling overflow
- * Returns: { success: boolean, overflow: Card|null }
+ * Card effect registry - maps effect types to functions
  */
-export function addCardToHand(card) {
-    if (G.hand.length < MAX_HAND_SIZE) {
-        // Room in hand - add normally
-        G.hand.push(card);
-        addLogEntry(`🃏 Added ${card.name} to hand`);
-        return { success: true, overflow: null };
-    } else {
-        // Hand is full - need to discard something
-        addLogEntry(`⚠️ Hand full! Must discard a card to add ${card.name}`);
-        return { success: false, overflow: card };
-    }
-}
-
-/**
- * Force add a card to hand, discarding oldest if needed
- */
-export function forceAddCardToHand(card) {
-    if (G.hand.length >= MAX_HAND_SIZE) {
-        // Discard the first (oldest) card
-        const discarded = G.hand.shift();
-        G.discard.push(discarded);
-        addLogEntry(`🗑️ Discarded ${discarded.name} (hand was full)`);
-    }
-    
-    G.hand.push(card);
-    addLogEntry(`🃏 Added ${card.name} to hand`);
-}
-
-/**
- * Manually discard a card by ID to make room
- */
-export function discardCardById(cardId) {
-    const cardIndex = G.hand.findIndex(card => card.id === cardId);
-    if (cardIndex === -1) return false;
-    
-    const discarded = G.hand.splice(cardIndex, 1)[0];
-    G.discard.push(discarded);
-    addLogEntry(`🗑️ Discarded ${discarded.name}`);
-    return true;
-}
-
-/**
- * Draw cards from deck to hand (now respects hand limit)
- */
-export function drawCards(count = 1) {
-    const cardsDrawn = [];
-    const overflowCards = [];
-    
-    for (let i = 0; i < count && G.deck.length > 0; i++) {
-        const card = G.deck.pop();
-        const result = addCardToHand(card);
-        
-        if (result.success) {
-            cardsDrawn.push(card);
-        } else {
-            overflowCards.push(result.overflow);
+const CARD_EFFECTS = {
+    'basic-strike': (card) => {
+        if (!G.combat.active) {
+            addLogEntry(`⚔️ ${card.name}: No target to attack!`);
+            return false;
         }
+        
+        // Enhanced basic attack - +1 damage bonus
+        const player = getPartyLeader();
+        const roll = rollDice(6);
+        const damage = Math.max(1, player.atk + roll - 2); // Better than normal attack
+        
+        G.combat.enemyHp = Math.max(0, G.combat.enemyHp - damage);
+        addLogEntry(`⚔️ ${card.name}: Dealt ${damage} damage! Enemy HP: ${G.combat.enemyHp}`);
+        
+        if (G.combat.enemyHp <= 0) {
+            endCombat(true);
+        } else {
+            G.combat.turn = 'enemy';
+        }
+        return true;
+    },
+    
+    'shield-bash': (card) => {
+        if (!G.combat.active) {
+            addLogEntry(`🛡️ ${card.name}: No enemy to bash!`);
+            return false;
+        }
+        
+        const player = getPartyLeader();
+        const roll = rollDice(6);
+        const damage = Math.max(2, player.atk + roll - 1); // +2 base damage
+        
+        G.combat.enemyHp = Math.max(0, G.combat.enemyHp - damage);
+        
+        // Add stun effect - enemy loses next turn
+        G.combat.enemyStunned = true;
+        
+        addLogEntry(`🛡️ ${card.name}: Dealt ${damage} damage and stunned the enemy!`);
+        
+        if (G.combat.enemyHp <= 0) {
+            endCombat(true);
+        } else {
+            // Player gets another turn due to stun
+            G.combat.turn = 'player';
+        }
+        return true;
+    },
+    
+    'taunt': (card) => {
+        if (!G.combat.active) {
+            addLogEntry(`🗣️ ${card.name}: No one to taunt!`);
+            return false;
+        }
+        
+        // Reduce incoming damage for next attack
+        G.combat.damageReduction = 2;
+        addLogEntry(`🗣️ ${card.name}: Taunting enemy! Next attack damage reduced by 2.`);
+        
+        G.combat.turn = 'enemy';
+        return true;
+    },
+    
+    'magic-bolt': (card) => {
+        if (!G.combat.active) {
+            addLogEntry(`⚡ ${card.name}: No target for magic!`);
+            return false;
+        }
+        
+        const player = getPartyLeader();
+        const damage = Math.max(2, player.mag + 3); // Magic damage bypasses armor
+        
+        G.combat.enemyHp = Math.max(0, G.combat.enemyHp - damage);
+        addLogEntry(`⚡ ${card.name}: Pure magic damage! Dealt ${damage} damage! Enemy HP: ${G.combat.enemyHp}`);
+        
+        if (G.combat.enemyHp <= 0) {
+            endCombat(true);
+        } else {
+            G.combat.turn = 'enemy';
+        }
+        return true;
+    },
+    
+    'heal': (card) => {
+        const player = getPartyLeader();
+        if (player.hp >= player.maxHp) {
+            addLogEntry(`💚 ${card.name}: Already at full health!`);
+            return false;
+        }
+        
+        const healAmount = Math.min(4, player.maxHp - player.hp);
+        player.hp += healAmount;
+        addLogEntry(`💚 ${card.name}: Healed ${healAmount} HP! (${player.hp}/${player.maxHp} HP)`);
+        
+        return true;
+    },
+    
+    'sneak-attack': (card) => {
+        if (!G.combat.active) {
+            addLogEntry(`🗡️ ${card.name}: No target to ambush!`);
+            return false;
+        }
+        
+        const player = getPartyLeader();
+        const roll = rollDice(6);
+        
+        // Double damage if it's the first attack of combat
+        const isFirstTurn = G.combat.turn === 'player' && !G.combat.lastRoll;
+        const multiplier = isFirstTurn ? 2 : 1;
+        const damage = Math.max(1, (player.atk + roll) * multiplier);
+        
+        G.combat.enemyHp = Math.max(0, G.combat.enemyHp - damage);
+        addLogEntry(`🗡️ ${card.name}: ${isFirstTurn ? 'Perfect ambush! ' : ''}Dealt ${damage} damage!`);
+        
+        if (G.combat.enemyHp <= 0) {
+            endCombat(true);
+        } else {
+            G.combat.turn = 'enemy';
+        }
+        return true;
+    },
+    
+    'dodge': (card) => {
+        if (!G.combat.active) {
+            addLogEntry(`💨 ${card.name}: Nothing to dodge right now.`);
+            return false;
+        }
+        
+        G.combat.dodgeNext = true;
+        addLogEntry(`💨 ${card.name}: Prepared to dodge the next attack!`);
+        
+        G.combat.turn = 'enemy';
+        return true;
+    },
+    
+    'track': (card) => {
+        // Reveal all unrevealed tiles on the current grid
+        let tilesRevealed = 0;
+        G.board.tiles.forEach((tile, index) => {
+            if (!tile.revealed && tile.type !== 'start') {
+                tile.revealed = true;
+                G.board.seen.add(index);
+                tilesRevealed++;
+            }
+        });
+        
+        addLogEntry(`🔍 ${card.name}: Revealed ${tilesRevealed} hidden areas on the grid!`);
+        return tilesRevealed > 0;
+    },
+    
+    'first-aid': (card) => {
+        const player = getPartyLeader();
+        const healAmount = Math.min(2, player.maxHp - player.hp);
+        
+        if (healAmount <= 0) {
+            addLogEntry(`🩹 ${card.name}: No wounds to treat.`);
+            return false;
+        }
+        
+        player.hp += healAmount;
+        addLogEntry(`🩹 ${card.name}: Applied first aid! Healed ${healAmount} HP! (${player.hp}/${player.maxHp} HP)`);
+        return true;
+    },
+    
+    'defend': (card) => {
+        if (!G.combat.active) {
+            addLogEntry(`🛡️ ${card.name}: Nothing to defend against.`);
+            return false;
+        }
+        
+        G.combat.defending = true;
+        addLogEntry(`🛡️ ${card.name}: Defensive stance! Incoming damage halved.`);
+        
+        G.combat.turn = 'enemy';
+        return true;
+    },
+    
+    'move': (card) => {
+        addLogEntry(`👟 ${card.name}: Feeling more agile!`);
+        // For now, just a minor effect - could add movement bonuses later
+        return true;
+    }
+};
+
+/**
+ * Execute a card's effect
+ */
+function executeCardEffect(card) {
+    // Get the base effect type from the card ID
+    let effectType = card.id;
+    
+    // Handle ally-specific cards (remove the ally ID suffix)
+    if (card.id.includes('-warrior-') || card.id.includes('-mage-') || 
+        card.id.includes('-rogue-') || card.id.includes('-scout-')) {
+        effectType = card.id.split('-').slice(0, -2).join('-');
     }
     
-    return { cardsDrawn, overflowCards };
+    // Find the effect function
+    const effectFunction = CARD_EFFECTS[effectType];
+    
+    if (effectFunction) {
+        const success = effectFunction(card);
+        if (success) {
+            addLogEntry(`✨ ${card.name} effect activated!`);
+        }
+        return success;
+    } else {
+        addLogEntry(`❓ ${card.name}: No special effect.`);
+        return false;
+    }
 }
 
 /**
- * Play a card by ID
+ * Play a card by ID (now with real effects!)
  */
 export function playCard(cardId) {
     const cardIndex = G.hand.findIndex(card => card.id === cardId);
     if (cardIndex === -1) return false;
     
     const card = G.hand.splice(cardIndex, 1)[0];
+    
+    // Execute the card's effect before discarding
+    const effectSuccess = executeCardEffect(card);
+    
+    // Always discard the card after use
     G.discard.push(card);
     
-    addLogEntry(`🃏 Played ${card.name}`);
+    addLogEntry(`🃏 Played ${card.name}${effectSuccess ? ' - Effect triggered!' : ''}`);
     return true;
-}
-
-/**
- * Get current hand size
- */
-export function getHandSize() {
-    return G.hand.length;
-}
-
-/**
- * Check if hand is full
- */
-export function isHandFull() {
-    return G.hand.length >= MAX_HAND_SIZE;
-}
-
-/**
- * Get maximum hand size
- */
-export function getMaxHandSize() {
-    return MAX_HAND_SIZE;
 }
 
 // ================================================================
@@ -1005,13 +1135,43 @@ export function playerAttack() {
 }
 
 /**
- * Enemy attacks the player  
+ * Enhanced enemy attack that considers combat modifiers
  */
 export function enemyAttack() {
     if (!G.combat.active) return false;
     
+    // Check if enemy is stunned
+    if (G.combat.enemyStunned) {
+        addLogEntry(`😵 ${G.combat.enemy.name} is stunned and loses their turn!`);
+        G.combat.enemyStunned = false; // Remove stun after missing turn
+        G.combat.turn = 'player';
+        return true;
+    }
+    
+    // Check if player is dodging
+    if (G.combat.dodgeNext) {
+        addLogEntry(`💨 You dodge the ${G.combat.enemy.name}'s attack completely!`);
+        G.combat.dodgeNext = false;
+        G.combat.turn = 'player';
+        return true;
+    }
+    
     const roll = rollDice(6);
-    const damage = Math.max(1, G.combat.enemy.atk + roll - 3);
+    let damage = Math.max(1, G.combat.enemy.atk + roll - 3);
+    
+    // Apply damage reduction from taunt
+    if (G.combat.damageReduction > 0) {
+        damage = Math.max(1, damage - G.combat.damageReduction);
+        addLogEntry(`🛡️ Damage reduced by ${G.combat.damageReduction}!`);
+        G.combat.damageReduction = 0; // Reset after use
+    }
+    
+    // Apply defending modifier
+    if (G.combat.defending) {
+        damage = Math.ceil(damage / 2);
+        addLogEntry(`🛡️ Defending! Damage halved!`);
+        G.combat.defending = false; // Reset after use
+    }
     
     G.combat.playerHp = Math.max(0, G.combat.playerHp - damage);
     
@@ -1028,8 +1188,6 @@ export function enemyAttack() {
     
     G.combat.turn = 'player';
     return true;
-}
-
 /**
  * End combat with victory or defeat
  */
