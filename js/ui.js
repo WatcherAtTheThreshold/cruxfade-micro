@@ -798,3 +798,140 @@ export function closeAllOverlays() {
         overlay.classList.remove('active');
     });
 }
+
+// ================================================================
+// CARD OVERFLOW MANAGEMENT
+// ================================================================
+
+// Store overflow state
+let OVERFLOW_STATE = {
+    active: false,
+    newCard: null,
+    callback: null
+};
+
+/**
+ * Show card overflow selection overlay
+ * @param {Object} newCard - The card that couldn't be added
+ * @param {Function} callback - Called when overflow is resolved
+ */
+export function showCardOverflowSelection(newCard, callback) {
+    OVERFLOW_STATE.active = true;
+    OVERFLOW_STATE.newCard = newCard;
+    OVERFLOW_STATE.callback = callback;
+    
+    renderCardOverflowOverlay();
+    showOverlay('card-overflow-overlay');
+}
+
+/**
+ * Hide card overflow selection overlay
+ */
+export function hideCardOverflowSelection() {
+    OVERFLOW_STATE.active = false;
+    OVERFLOW_STATE.newCard = null;
+    OVERFLOW_STATE.callback = null;
+    
+    hideOverlay('card-overflow-overlay');
+}
+
+/**
+ * Render the card overflow selection overlay
+ */
+function renderCardOverflowOverlay() {
+    if (!OVERFLOW_STATE.active || !OVERFLOW_STATE.newCard) return;
+    
+    const overlay = document.getElementById('card-overflow-overlay');
+    if (!overlay) {
+        console.error('Card overflow overlay not found in DOM');
+        return;
+    }
+    
+    const newCard = OVERFLOW_STATE.newCard;
+    
+    // Create the overlay content
+    overlay.innerHTML = `
+        <div class="overlay-content card-overflow-content">
+            <h3>🃏 Hand Full!</h3>
+            <p>You have 5 cards. Choose a card to discard to make room for:</p>
+            
+            <div class="new-card-preview">
+                <div class="card overflow-new-card">
+                    <div class="card-header">
+                        <strong>${newCard.name}</strong>
+                        <span class="card-type">${newCard.type}</span>
+                    </div>
+                    <div class="card-description">
+                        ${newCard.description || 'A new card to add to your hand.'}
+                    </div>
+                </div>
+            </div>
+            
+            <p class="overflow-instruction">Click a card below to discard it:</p>
+            
+            <div class="overflow-hand">
+                ${G.hand.map((card, index) => `
+                    <div class="card overflow-discard-option" data-card-id="${card.id}" data-card-index="${index}">
+                        <div class="card-header">
+                            <strong>${card.name}</strong>
+                            <span class="card-type">${card.type}</span>
+                        </div>
+                        <div class="card-description">
+                            ${card.description || 'Click to discard this card.'}
+                        </div>
+                    </div>
+                `).join('')}
+            </div>
+        </div>
+    `;
+    
+    // Add click handlers to discard options
+    overlay.querySelectorAll('.overflow-discard-option').forEach(cardElement => {
+        cardElement.addEventListener('click', (e) => {
+            const cardId = cardElement.dataset.cardId;
+            handleOverflowCardSelection(cardId);
+        });
+    });
+}
+
+/**
+ * Handle selection of card to discard during overflow
+ */
+function handleOverflowCardSelection(cardId) {
+    if (!OVERFLOW_STATE.active || !OVERFLOW_STATE.newCard || !OVERFLOW_STATE.callback) {
+        console.error('Invalid overflow state during card selection');
+        return;
+    }
+    
+    // Import the discard function from state
+    import('./state.js').then(({ discardCardById, addCardToHand, addLogEntry }) => {
+        // Discard the selected card
+        const discardSuccess = discardCardById(cardId);
+        
+        if (discardSuccess) {
+            // Add the new card to the now-available slot
+            const result = addCardToHand(OVERFLOW_STATE.newCard);
+            
+            if (result.success) {
+                addLogEntry(`✅ Card overflow resolved!`);
+                
+                // Call the callback to notify completion
+                if (OVERFLOW_STATE.callback) {
+                    OVERFLOW_STATE.callback(true);
+                }
+                
+                // Hide the overlay
+                hideCardOverflowSelection();
+                
+                // Trigger game update
+                _updateGameCallback();
+            } else {
+                console.error('Failed to add card after discard - this should not happen');
+            }
+        } else {
+            console.error('Failed to discard selected card');
+        }
+    }).catch(error => {
+        console.error('Error importing state functions:', error);
+    });
+}
