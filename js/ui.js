@@ -20,6 +20,7 @@ import {
     consumeCurrentTile,
     isCurrentTileConsumed,
     getRandomEnemyType,
+    getMaxHandSize,
     // Combat functions
     startCombat,
     playerAttack,
