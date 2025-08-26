@@ -1,0 +1,44 @@
+{
+  "grid-1": {
+    "name": "Tutorial Grid",
+    "encounterWeights": {
+      "fight": 3,
+      "hazard": 2, 
+      "item": 2,
+      "ally": 1,
+      "empty": 1
+    },
+    "enemyPools": {
+      "common": ["goblin", "shadow-wisp"],
+      "rare": ["orc"]
+    }
+  },
+  "grid-2": {
+    "name": "Deeper Caves", 
+    "encounterWeights": {
+      "fight": 4,
+      "hazard": 2,
+      "item": 2,
+      "ally": 1,
+      "empty": 1
+    },
+    "enemyPools": {
+      "common": ["goblin", "orc"],
+      "rare": ["orc-champion"]
+    }
+  },
+  "grid-3": {
+    "name": "Final Depths",
+    "encounterWeights": {
+      "fight": 5,
+      "hazard": 3,
+      "item": 1,
+      "ally": 1,
+      "empty": 0
+    },
+    "enemyPools": {
+      "common": ["orc", "orc-champion"],
+      "rare": ["orc-champion"]
+    }
+  }
+}
