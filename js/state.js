@@ -708,6 +708,19 @@ export function getMaxHandSize() {
     return 5; // MAX_HAND_SIZE constant
 }
 
+/**
+ * Manually discard a card by ID to make room
+ */
+export function discardCardById(cardId) {
+    const cardIndex = G.hand.findIndex(card => card.id === cardId);
+    if (cardIndex === -1) return false;
+    
+    const discarded = G.hand.splice(cardIndex, 1)[0];
+    G.discard.push(discarded);
+    addLogEntry(`🗑️ Discarded ${discarded.name}`);
+    return true;
+}
+
 // ================================================================
 // PARTY LEADERSHIP FUNCTIONS
 // ================================================================
