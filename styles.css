@@ -16,6 +16,8 @@
    9. UI COMPONENTS (Buttons, Chips, Cards)
    10. RESPONSIVE ADJUSTMENTS
    11. ANIMATIONS & TRANSITIONS
+   12. CARD OVERFLOW OVERLAY STYLES
+
 */
 
 /* ================================================================
@@ -820,6 +822,107 @@ button,
 /* Smooth state transitions */
 .overlay {
   transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+/* ================================================================
+   CARD OVERFLOW OVERLAY STYLES
+   ================================================================ */
+
+/* Card overflow specific overlay content */
+.card-overflow-content {
+    max-width: 600px;
+    width: 95vw;
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
+/* New card preview area */
+.new-card-preview {
+    margin: 16px 0;
+    text-align: center;
+}
+
+.overflow-new-card {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: white;
+    display: inline-block;
+    max-width: 200px;
+    opacity: 0.9;
+}
+
+/* Instruction text */
+.overflow-instruction {
+    margin: 20px 0 12px 0;
+    font-weight: 600;
+    text-align: center;
+    color: var(--accent);
+}
+
+/* Hand of cards to choose from */
+.overflow-hand {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 12px;
+    margin-top: 12px;
+}
+
+/* Discard option cards */
+.overflow-discard-option {
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: 2px solid var(--surface-border);
+}
+
+.overflow-discard-option:hover {
+    transform: translateY(-4px);
+    border-color: var(--bad);
+    box-shadow: 0 8px 24px rgba(239, 107, 115, 0.3);
+    background: rgba(239, 107, 115, 0.1);
+}
+
+/* Card styling for overflow cards */
+.card {
+    background: var(--surface);
+    border: 1px solid var(--surface-border);
+    border-radius: var(--radius);
+    padding: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.card-type {
+    background: var(--surface-border);
+    color: var(--muted);
+    padding: 2px 6px;
+    border-radius: var(--radius-full);
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    font-weight: 600;
+}
+
+.card-description {
+    font-size: 0.85rem;
+    color: var(--muted);
+    line-height: 1.4;
+}
+
+/* Mobile responsive */
+@media (max-width: 700px) {
+    .overflow-hand {
+        grid-template-columns: 1fr;
+    }
+    
+    .card-overflow-content {
+        max-width: 95vw;
+        padding: 16px;
+    }
 }
 
 /* End of Stylesheet */
