@@ -20,9 +20,7 @@
       "boost": 8,
       "maxBoost": 4,
       "rarity": "uncommon"
-    }
-  },
-  "equipment": {
+    },
     "strength-elixir": {
       "name": "Strength Elixir",
       "stat": "atk",
@@ -34,29 +32,77 @@
       "stat": "mag",
       "boost": 1,
       "rarity": "common"
-    },
+    }
+  },
+  "equipment": {
     "iron-sword": {
       "name": "Iron Sword",
-      "stat": "atk",
-      "boost": 2,
-      "rarity": "uncommon"
+      "slot": "weapon",
+      "statBonus": { "atk": 2 },
+      "description": "A sturdy iron blade that increases attack power",
+      "rarity": "common"
     },
     "enchanted-blade": {
       "name": "Enchanted Blade",
-      "stat": "atk",
-      "boost": 3,
+      "slot": "weapon", 
+      "statBonus": { "atk": 3, "mag": 1 },
+      "description": "A magical sword that enhances both physical and magical abilities",
       "rarity": "rare"
+    },
+    "war-hammer": {
+      "name": "War Hammer",
+      "slot": "weapon",
+      "statBonus": { "atk": 4 },
+      "description": "A heavy two-handed weapon that deals massive damage",
+      "rarity": "uncommon"
+    },
+    "leather-armor": {
+      "name": "Leather Armor",
+      "slot": "armor",
+      "statBonus": { "hp": 3 },
+      "description": "Basic protection that increases maximum health",
+      "rarity": "common"
+    },
+    "chain-mail": {
+      "name": "Chain Mail",
+      "slot": "armor",
+      "statBonus": { "hp": 5, "atk": -1 },
+      "description": "Heavy armor that provides excellent protection but limits mobility",
+      "rarity": "uncommon"
+    },
+    "mage-robes": {
+      "name": "Mage Robes",
+      "slot": "armor",
+      "statBonus": { "mag": 3, "hp": 1 },
+      "description": "Enchanted robes that enhance magical abilities",
+      "rarity": "uncommon"
     },
     "power-crystal": {
       "name": "Power Crystal",
-      "stat": "mag",
-      "boost": 2,
+      "slot": "accessory",
+      "statBonus": { "mag": 2 },
+      "description": "A glowing crystal that amplifies magical energy",
+      "rarity": "uncommon"
+    },
+    "berserker-ring": {
+      "name": "Berserker Ring",
+      "slot": "accessory",
+      "statBonus": { "atk": 2, "hp": -2 },
+      "description": "Increases attack power at the cost of health",
+      "rarity": "rare"
+    },
+    "health-amulet": {
+      "name": "Health Amulet",
+      "slot": "accessory",
+      "statBonus": { "hp": 4 },
+      "description": "A protective charm that significantly boosts health",
       "rarity": "uncommon"
     },
     "arcane-focus": {
       "name": "Arcane Focus",
-      "stat": "mag",
-      "boost": 3,
+      "slot": "accessory",
+      "statBonus": { "mag": 3 },
+      "description": "A rare magical item that greatly enhances spellcasting",
       "rarity": "rare"
     }
   },
