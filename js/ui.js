@@ -21,6 +21,7 @@ import {
     isCurrentTileConsumed,
     getRandomEnemyType,
     getMaxHandSize,
+    playCard,  // ← ADD THIS LINE
     // Combat functions
     startCombat,
     playerAttack,
