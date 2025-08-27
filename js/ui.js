@@ -207,14 +207,13 @@ function createPartyMemberElement(member, isLeader = false) {
     memberDiv.className = 'party-member';      
     memberDiv.style.cursor = 'pointer';
     memberDiv.addEventListener('click', (e) => {
-        // Don't switch leader if clicking on equipment slots
-        if (e.target.closest('.equipment-slot')) return;
-        
-        console.log('🖱️ Clicked party member:', member.name);
-        switchPartyLeader(member.id);
-        showEquipmentManagement(memberId, slotType, () => {
-    setTimeout(() => _updateGameCallback(), 50); // Force delayed refresh
-  });
+    // Don't switch leader if clicking on equipment slots
+    if (e.target.closest('.equipment-slot')) return;
+    
+    console.log('🖱️ Clicked party member:', member.name);
+    switchPartyLeader(member.id);
+    _updateGameCallback();
+});
 });
     
     const hpColor = member.hp <= member.maxHp * 0.25 ? '#ef6b73' : 
