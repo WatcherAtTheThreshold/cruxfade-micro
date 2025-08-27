@@ -794,19 +794,7 @@ export function drawCards(count = 1) {
     return { cardsDrawn, overflowCards };
 }
 
-/**
- * Play a card by ID
- */
-export function playCard(cardId) {
-    const cardIndex = G.hand.findIndex(card => card.id === cardId);
-    if (cardIndex === -1) return false;
-    
-    const card = G.hand.splice(cardIndex, 1)[0];
-    G.discard.push(card);
-    
-    addLogEntry(`🃏 Played ${card.name}`);
-    return true;
-}
+
 
 /**
  * Get current hand size
