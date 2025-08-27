@@ -212,8 +212,10 @@ function createPartyMemberElement(member, isLeader = false) {
         
         console.log('🖱️ Clicked party member:', member.name);
         switchPartyLeader(member.id);
-        _updateGameCallback();
-    });
+        showEquipmentManagement(memberId, slotType, () => {
+    setTimeout(() => _updateGameCallback(), 50); // Force delayed refresh
+  });
+});
     
     const hpColor = member.hp <= member.maxHp * 0.25 ? '#ef6b73' : 
                     member.hp <= member.maxHp * 0.5 ? '#f6d55c' : '#68d391';
