@@ -796,7 +796,7 @@ export function drawCards(count = 1) {
 
 /**
  * Play a card by ID
- 
+ */
 export function playCard(cardId) {
     const cardIndex = G.hand.findIndex(card => card.id === cardId);
     if (cardIndex === -1) return false;
@@ -806,7 +806,7 @@ export function playCard(cardId) {
     
     addLogEntry(`🃏 Played ${card.name}`);
     return true;
-}*/
+}
 
 /**
  * Get current hand size
