@@ -21,7 +21,12 @@ import {
     isCurrentTileConsumed,
     getRandomEnemyType,
     getMaxHandSize,
-    playCard,  // ← ADD THIS LINE
+    playCard,
+    // Equipment functions
+    equipItem,
+    unequipItem,
+    getEquippedItem,
+    isEquipment,
     // Combat functions
     startCombat,
     playerAttack,
