@@ -74,7 +74,8 @@ function cacheDOMElements() {
         overlaySystem: document.getElementById('overlay-system'),
         diceOverlay: document.getElementById('dice-overlay'),
         combatOverlay: document.getElementById('combat-overlay'),
-        cardOverflowOverlay: document.getElementById('card-overflow-overlay'), 
+        cardOverflowOverlay: document.getElementById('card-overflow-overlay'),
+        equipmentManagementOverlay: document.getElementById('equipment-management-overlay'),
         
         // All tile elements (will be populated with 16 tiles)
         tiles: []
