@@ -1004,3 +1004,208 @@ function handleOverflowCardSelection(cardId) {
         console.error('Error importing state functions:', error);
     });
 }
+
+// ================================================================
+// EQUIPMENT MANAGEMENT
+// ================================================================
+
+// Store equipment management state
+let EQUIPMENT_STATE = {
+    active: false,
+    memberId: null,
+    slot: null,
+    callback: null
+};
+
+/**
+ * Show equipment management overlay
+ * @param {String} memberId - ID of party member
+ * @param {String} slot - Equipment slot (weapon/armor/accessory)
+ * @param {Function} callback - Called when management is complete
+ */
+export function showEquipmentManagement(memberId, slot, callback) {
+    EQUIPMENT_STATE.active = true;
+    EQUIPMENT_STATE.memberId = memberId;
+    EQUIPMENT_STATE.slot = slot;
+    EQUIPMENT_STATE.callback = callback;
+    
+    renderEquipmentManagementOverlay();
+    showOverlay('equipment-management-overlay');
+}
+
+/**
+ * Hide equipment management overlay
+ */
+export function hideEquipmentManagement() {
+    EQUIPMENT_STATE.active = false;
+    EQUIPMENT_STATE.memberId = null;
+    EQUIPMENT_STATE.slot = null;
+    EQUIPMENT_STATE.callback = null;
+    
+    hideOverlay('equipment-management-overlay');
+}
+
+/**
+ * Render the equipment management overlay
+ */
+function renderEquipmentManagementOverlay() {
+    if (!EQUIPMENT_STATE.active || !EQUIPMENT_STATE.memberId || !EQUIPMENT_STATE.slot) return;
+    
+    const overlay = document.getElementById('equipment-management-overlay');
+    if (!overlay) {
+        console.error('Equipment management overlay not found in DOM');
+        return;
+    }
+    
+    const member = G.party.find(m => m.id === EQUIPMENT_STATE.memberId);
+    if (!member) return;
+    
+    const slotName = EQUIPMENT_STATE.slot.charAt(0).toUpperCase() + EQUIPMENT_STATE.slot.slice(1);
+    const slotIcon = EQUIPMENT_STATE.slot === 'weapon' ? '⚔️' : 
+                    EQUIPMENT_STATE.slot === 'armor' ? '🛡️' : '💎';
+    
+    // Get currently equipped item
+    const currentItem = getEquippedItem(EQUIPMENT_STATE.memberId, EQUIPMENT_STATE.slot);
+    
+    // Get available items of this type from inventory (for now, just show unequip option)
+    const availableItems = getAvailableItemsForSlot(EQUIPMENT_STATE.slot);
+    
+    // Create the overlay content
+    overlay.innerHTML = `
+        <div class="overlay-content equipment-management-content">
+            <h3>${slotIcon} ${member.name}'s ${slotName}</h3>
+            
+            <div class="current-equipment">
+                <h4>Currently Equipped:</h4>
+                ${currentItem ? `
+                    <div class="equipment-item current-item">
+                        <div class="item-header">
+                            <strong>${currentItem.name}</strong>
+                            <span class="item-rarity ${currentItem.rarity}">${currentItem.rarity}</span>
+                        </div>
+                        <div class="item-description">${currentItem.description || 'No description available.'}</div>
+                        <div class="item-stats">
+                            ${Object.entries(currentItem.statBonus || {}).map(([stat, bonus]) => 
+                                `<span class="stat-bonus ${bonus > 0 ? 'positive' : 'negative'}">
+                                    ${bonus > 0 ? '+' : ''}${bonus} ${stat.toUpperCase()}
+                                </span>`
+                            ).join('')}
+                        </div>
+                        <button class="btn-secondary unequip-btn" data-action="unequip">
+                            Unequip ${currentItem.name}
+                        </button>
+                    </div>
+                ` : `
+                    <div class="equipment-item empty-slot">
+                        <p>No ${EQUIPMENT_STATE.slot} equipped</p>
+                    </div>
+                `}
+            </div>
+            
+            ${availableItems.length > 0 ? `
+                <div class="available-equipment">
+                    <h4>Available ${slotName}s:</h4>
+                    <div class="equipment-options">
+                        ${availableItems.map(item => `
+                            <div class="equipment-item available-item" data-item-id="${item.id}">
+                                <div class="item-header">
+                                    <strong>${item.name}</strong>
+                                    <span class="item-rarity ${item.rarity}">${item.rarity}</span>
+                                </div>
+                                <div class="item-description">${item.description || 'No description available.'}</div>
+                                <div class="item-stats">
+                                    ${Object.entries(item.statBonus || {}).map(([stat, bonus]) => 
+                                        `<span class="stat-bonus ${bonus > 0 ? 'positive' : 'negative'}">
+                                            ${bonus > 0 ? '+' : ''}${bonus} ${stat.toUpperCase()}
+                                        </span>`
+                                    ).join('')}
+                                </div>
+                                <button class="btn-primary equip-btn" data-action="equip" data-item-id="${item.id}">
+                                    Equip ${item.name}
+                                </button>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            ` : ''}
+            
+            <div class="equipment-actions">
+                <button class="btn-secondary close-btn" data-action="close">Close</button>
+            </div>
+        </div>
+    `;
+    
+    // Add click handlers
+    overlay.querySelectorAll('button[data-action]').forEach(button => {
+        button.addEventListener('click', (e) => {
+            const action = button.dataset.action;
+            const itemId = button.dataset.itemId;
+            handleEquipmentAction(action, itemId);
+        });
+    });
+}
+
+/**
+ * Handle equipment management actions
+ */
+function handleEquipmentAction(action, itemId) {
+    const memberId = EQUIPMENT_STATE.memberId;
+    const slot = EQUIPMENT_STATE.slot;
+    
+    switch(action) {
+        case 'unequip':
+            const unequipped = unequipItem(memberId, slot);
+            if (unequipped) {
+                // For now, unequipped items are just removed (later: add to inventory)
+                addLogEntry(`📦 ${unequipped.name} was unequipped`);
+            }
+            hideEquipmentManagement();
+            if (EQUIPMENT_STATE.callback) EQUIPMENT_STATE.callback();
+            break;
+            
+        case 'equip':
+            // For now, we'll simulate having the item (later: check inventory)
+            const itemData = getItemById(itemId);
+            if (itemData) {
+                equipItem(memberId, itemData);
+                hideEquipmentManagement();
+                if (EQUIPMENT_STATE.callback) EQUIPMENT_STATE.callback();
+            }
+            break;
+            
+        case 'close':
+            hideEquipmentManagement();
+            break;
+    }
+}
+
+/**
+ * Get available items for a specific slot (placeholder - later connect to inventory)
+ */
+function getAvailableItemsForSlot(slot) {
+    // For now, return some sample items based on slot type
+    // Later this will check actual inventory
+    
+    if (!GAME_DATA.items || !GAME_DATA.items.equipment) return [];
+    
+    const allEquipment = GAME_DATA.items.equipment;
+    const available = [];
+    
+    // Get a few sample items of the correct slot type
+    Object.entries(allEquipment).forEach(([id, item]) => {
+        if (item.slot === slot) {
+            available.push({...item, id});
+        }
+    });
+    
+    // Limit to 3 items for now to keep UI manageable
+    return available.slice(0, 3);
+}
+
+/**
+ * Get item data by ID (placeholder)
+ */
+function getItemById(itemId) {
+    if (!GAME_DATA.items || !GAME_DATA.items.equipment) return null;
+    return {...GAME_DATA.items.equipment[itemId], id: itemId};
+}
