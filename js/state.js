@@ -1373,3 +1373,223 @@ export function isCurrentTileConsumed() {
     const currentTile = getCurrentTile();
     return currentTile ? currentTile.consumed : false;
 }
+
+// ================================================================
+// EQUIPMENT SYSTEM FUNCTIONS
+// ================================================================
+
+/**
+ * Equipment slot types
+ */
+const EQUIPMENT_SLOTS = {
+    WEAPON: 'weapon',
+    ARMOR: 'armor', 
+    ACCESSORY: 'accessory'
+};
+
+/**
+ * Get a party member's base stats (without equipment bonuses)
+ */
+function getBaseStats(member) {
+    // Store original stats when member is created
+    if (!member.baseStats) {
+        member.baseStats = {
+            hp: member.maxHp,
+            atk: member.atk,
+            mag: member.mag
+        };
+    }
+    return member.baseStats;
+}
+
+/**
+ * Calculate total stats including equipment bonuses
+ */
+function calculateTotalStats(member) {
+    const baseStats = getBaseStats(member);
+    const equipment = G.equipment[member.id] || [];
+    
+    let totalStats = {
+        hp: baseStats.hp,
+        atk: baseStats.atk,
+        mag: baseStats.mag
+    };
+    
+    // Add equipment bonuses
+    equipment.forEach(item => {
+        if (item.statBonus) {
+            Object.keys(item.statBonus).forEach(stat => {
+                if (totalStats[stat] !== undefined) {
+                    totalStats[stat] += item.statBonus[stat];
+                }
+            });
+        }
+    });
+    
+    return totalStats;
+}
+
+/**
+ * Update a party member's displayed stats based on equipment
+ */
+function updateMemberStats(member) {
+    const totalStats = calculateTotalStats(member);
+    
+    // Update current stats (but preserve current HP if lower)
+    const oldMaxHp = member.maxHp;
+    member.atk = totalStats.atk;
+    member.mag = totalStats.mag;
+    member.maxHp = totalStats.hp;
+    
+    // Handle HP changes carefully
+    if (totalStats.hp !== oldMaxHp) {
+        const hpDifference = totalStats.hp - oldMaxHp;
+        member.hp = Math.max(1, member.hp + hpDifference); // Don't let HP go to 0 from equipment
+        member.hp = Math.min(member.hp, member.maxHp); // Cap at new max
+    }
+}
+
+/**
+ * Equip an item to a party member
+ */
+export function equipItem(memberId, item) {
+    const member = G.party.find(m => m.id === memberId);
+    if (!member) {
+        addLogEntry(`❌ Cannot find party member ${memberId}`);
+        return false;
+    }
+    
+    if (!item.slot) {
+        addLogEntry(`❌ ${item.name} is not equipable!`);
+        return false;
+    }
+    
+    // Initialize equipment array if needed
+    if (!G.equipment[memberId]) {
+        G.equipment[memberId] = [];
+    }
+    
+    // Check if slot is already occupied
+    const existingItem = G.equipment[memberId].find(equipped => equipped.slot === item.slot);
+    if (existingItem) {
+        addLogEntry(`⚠️ ${member.name} already has ${existingItem.name} equipped in ${item.slot} slot!`);
+        addLogEntry(`🔄 Replacing ${existingItem.name} with ${item.name}`);
+        
+        // Remove the old item
+        G.equipment[memberId] = G.equipment[memberId].filter(equipped => equipped.slot !== item.slot);
+    }
+    
+    // Equip the new item
+    G.equipment[memberId].push(item);
+    updateMemberStats(member);
+    
+    addLogEntry(`⚔️ ${member.name} equipped ${item.name}!`);
+    
+    // Show stat changes
+    const totalStats = calculateTotalStats(member);
+    addLogEntry(`📊 Stats: ATK ${totalStats.atk}, MAG ${totalStats.mag}, HP ${member.hp}/${member.maxHp}`);
+    
+    return true;
+}
+
+/**
+ * Unequip an item from a party member
+ */
+export function unequipItem(memberId, slot) {
+    const member = G.party.find(m => m.id === memberId);
+    if (!member) return false;
+    
+    const equipment = G.equipment[memberId] || [];
+    const itemToUnequip = equipment.find(item => item.slot === slot);
+    
+    if (!itemToUnequip) {
+        addLogEntry(`❌ ${member.name} has nothing equipped in ${slot} slot`);
+        return false;
+    }
+    
+    // Remove the item
+    G.equipment[memberId] = equipment.filter(item => item.slot !== slot);
+    updateMemberStats(member);
+    
+    addLogEntry(`🗑️ ${member.name} unequipped ${itemToUnequip.name}`);
+    return itemToUnequip;
+}
+
+/**
+ * Get equipped item in a specific slot for a member
+ */
+export function getEquippedItem(memberId, slot) {
+    const equipment = G.equipment[memberId] || [];
+    return equipment.find(item => item.slot === slot) || null;
+}
+
+/**
+ * Check if an item is equipment (has a slot)
+ */
+export function isEquipment(item) {
+    return item.slot !== undefined;
+}
+
+/**
+ * Enhanced item giving that handles equipment vs consumables
+ */
+export function giveRandomItem() {
+    const player = getPartyLeader();
+    if (!player) return false;
+    
+    if (!GAME_DATA.items) {
+        // Fallback to old hardcoded system
+        const items = [
+            { name: 'Health Potion', stat: 'hp', boost: 3, maxBoost: 2 },
+            { name: 'Strength Elixir', stat: 'atk', boost: 1 },
+            { name: 'Magic Crystal', stat: 'mag', boost: 1 }
+        ];
+        const item = pickRandom(items);
+        applyItemToPlayer(player, item);
+        consumeCurrentTile();
+        return item;
+    }
+    
+    // Use data-driven items
+    const gridKey = `grid-${G.gridLevel}`;
+    const lootTable = GAME_DATA.items.lootTables[gridKey] || GAME_DATA.items.lootTables.basic;
+    const useConsumable = random() < lootTable.consumables;
+    
+    const itemPool = useConsumable ? 
+        GAME_DATA.items.consumables : 
+        GAME_DATA.items.equipment;
+        
+    const itemKeys = Object.keys(itemPool);
+    const itemKey = pickRandom(itemKeys);
+    const item = itemPool[itemKey];
+    
+    // Handle equipment vs consumables differently
+    if (isEquipment(item)) {
+        // Equipment - try to equip automatically to party leader
+        const equipped = equipItem(player.id, item);
+        if (!equipped) {
+            // If couldn't equip, treat as consumable
+            applyItemToPlayer(player, item);
+        }
+    } else {
+        // Consumable - apply immediately
+        applyItemToPlayer(player, item);
+    }
+    
+    consumeCurrentTile();
+    return item;
+}
+
+/**
+ * Initialize equipment tracking for all party members
+ */
+export function initializeEquipment() {
+    G.party.forEach(member => {
+        if (!G.equipment[member.id]) {
+            G.equipment[member.id] = [];
+        }
+        
+        // Ensure base stats are stored
+        getBaseStats(member);
+    });
+}
