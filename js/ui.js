@@ -22,6 +22,7 @@ import {
     getRandomEnemyType,
     getMaxHandSize,
     playCard,
+    getAvailableEquipmentForSlot,
     // Equipment functions
     equipItem,
     unequipItem,
@@ -1202,8 +1203,8 @@ function handleEquipmentAction(action, itemId) {
  * Get available items for a specific slot (placeholder - later connect to inventory)
  */
 function getAvailableItemsForSlot(slot) {
-    // For now, return some sample items based on slot type
-    // Later this will check actual inventory
+    return getAvailableEquipmentForSlot(slot);
+}
     
     if (!GAME_DATA.items || !GAME_DATA.items.equipment) return [];
     
