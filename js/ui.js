@@ -247,10 +247,24 @@ function getCharacterIcon(member) {
 function renderPartyHand() {
     if (!DOM.partyHand) return;
     
-    DOM.partyHand.innerHTML = '';
+    DOM.partyHand.innerHTML = '<h4>Hand (' + G.hand.length + '/5)</h4>';
     
-    G.party.forEach((member, index) => {
-        const cardElement = createPartyCardElement(member, index === 0);
+    G.hand.forEach((card, index) => {
+        const cardElement = document.createElement('div');
+        cardElement.className = 'playable-card';
+        cardElement.style.cursor = 'pointer';
+        cardElement.innerHTML = `
+            <strong>${card.name}</strong>
+            <div class="card-type">${card.type}</div>
+        `;
+        
+        // Make card clickable
+        cardElement.addEventListener('click', () => {
+            console.log('🃏 Playing card:', card.name);
+            playCard(card.id);
+            _updateGameCallback();
+        });
+        
         DOM.partyHand.appendChild(cardElement);
     });
 }
