@@ -207,6 +207,12 @@ function createPartyMemberElement(member, isLeader = false) {
     const hpColor = member.hp <= member.maxHp * 0.25 ? '#ef6b73' : 
                     member.hp <= member.maxHp * 0.5 ? '#f6d55c' : '#68d391';
     
+    // Get equipped items for this member
+    const equipment = G.equipment[member.id] || [];
+    const weapon = equipment.find(item => item.slot === 'weapon');
+    const armor = equipment.find(item => item.slot === 'armor');
+    const accessory = equipment.find(item => item.slot === 'accessory');
+    
     memberDiv.innerHTML = `
         <div class="member-portrait">
             <img src="./images/portraits/${member.id}.png" alt="${member.name}" 
@@ -219,6 +225,20 @@ function createPartyMemberElement(member, isLeader = false) {
                 <span class="hp">❤️ <strong style="color: ${hpColor}">${member.hp}</strong>/${member.maxHp}</span>
                 <span class="atk">⚔️ <strong>${member.atk}</strong></span>
                 <span class="mag">✨ <strong>${member.mag}</strong></span>
+            </div>
+            <div class="equipment-display">
+                <div class="equipment-slot weapon-slot">
+                    <span class="slot-icon">⚔️</span>
+                    <span class="equipment-name">${weapon ? weapon.name : 'None'}</span>
+                </div>
+                <div class="equipment-slot armor-slot">
+                    <span class="slot-icon">🛡️</span>
+                    <span class="equipment-name">${armor ? armor.name : 'None'}</span>
+                </div>
+                <div class="equipment-slot accessory-slot">
+                    <span class="slot-icon">💎</span>
+                    <span class="equipment-name">${accessory ? accessory.name : 'None'}</span>
+                </div>
             </div>
         </div>
         ${isLeader ? '<div class="leader-marker">LEADER</div>' : ''}
