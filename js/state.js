@@ -379,25 +379,7 @@ export function healPartyMember(memberId, amount) {
 // ITEM SYSTEM FUNCTIONS  
 // ================================================================
 
-/**
- * Give the player a random stat boost item
- */
-export function giveRandomItem() {
-    const player = getPartyLeader();
-    if (!player) return false;
-    
-    if (!GAME_DATA.items) {
-        // Fallback to old hardcoded system
-        const items = [
-            { name: 'Health Potion', stat: 'hp', boost: 3, maxBoost: 2 },
-            { name: 'Strength Elixir', stat: 'atk', boost: 1 },
-            { name: 'Magic Crystal', stat: 'mag', boost: 1 }
-        ];
-        const item = pickRandom(items);
-        applyItemToPlayer(player, item);
-        consumeCurrentTile();
-        return item;
-    }
+
     
     // Use data-driven items
     const gridKey = `grid-${G.gridLevel}`;
