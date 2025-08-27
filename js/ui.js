@@ -1177,18 +1177,18 @@ function handleEquipmentAction(action, itemId) {
         case 'unequip':
             const unequipped = unequipItem(memberId, slot);
             if (unequipped) {
-                // For now, unequipped items are just removed (later: add to inventory)
                 addLogEntry(`📦 ${unequipped.name} was unequipped`);
+                console.log('🔧 Equipment after unequip:', G.equipment[memberId]); // DEBUG
             }
             hideEquipmentManagement();
             if (EQUIPMENT_STATE.callback) EQUIPMENT_STATE.callback();
             break;
             
         case 'equip':
-            // For now, we'll simulate having the item (later: check inventory)
             const itemData = getItemById(itemId);
             if (itemData) {
                 equipItem(memberId, itemData);
+                console.log('🔧 Equipment after change:', G.equipment[memberId]); // DEBUG
                 hideEquipmentManagement();
                 if (EQUIPMENT_STATE.callback) EQUIPMENT_STATE.callback();
             }
@@ -1199,7 +1199,6 @@ function handleEquipmentAction(action, itemId) {
             break;
     }
 }
-
 /**
  * Get available items for a specific slot (placeholder - later connect to inventory)
  */
