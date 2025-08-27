@@ -1206,10 +1206,7 @@ function getAvailableItemsForSlot(slot) {
     return getAvailableEquipmentForSlot(slot);
 }
     
-    if (!GAME_DATA.items || !GAME_DATA.items.equipment) return [];
-    
-    const allEquipment = GAME_DATA.items.equipment;
-    const available = [];
+   
     
     // Get a few sample items of the correct slot type
     Object.entries(allEquipment).forEach(([id, item]) => {
