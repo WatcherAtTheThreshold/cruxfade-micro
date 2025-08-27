@@ -189,101 +189,108 @@ function isPlayerCurrentTile(row, col) {
  * Render party member stats and info
  */
 function renderPartyStatus() {
-    if (!DOM.partyStats) return;
-    
-    DOM.partyStats.innerHTML = '';
-    
-    G.party.forEach((member, index) => {
-        const memberElement = createPartyMemberElement(member, index === 0);
-        DOM.partyStats.appendChild(memberElement);
-    });
+  if (!DOM.partyStats) return;
+
+  DOM.partyStats.innerHTML = '';
+
+  G.party.forEach((member, index) => {
+    const memberElement = createPartyMemberElement(member, index === 0);
+    DOM.partyStats.appendChild(memberElement);
+  });
 }
 
 /**
  * Create a party member display element
  */
 function createPartyMemberElement(member, isLeader = false) {
-    const memberDiv = document.createElement('div');
-    memberDiv.className = 'party-member';      
-    memberDiv.style.cursor = 'pointer';
-    memberDiv.addEventListener('click', (e) => {
-    // Don't switch leader if clicking on equipment slots
-    if (e.target.closest('.equipment-slot')) return;
-    
+  const memberDiv = document.createElement('div');
+  memberDiv.className = 'party-member';
+  memberDiv.style.cursor = 'pointer';
+
+  // Compute display values
+  const hpColor =
+    member.hp <= member.maxHp * 0.25 ? '#ef6b73' :
+    member.hp <= member.maxHp * 0.5  ? '#f6d55c' :
+                                        '#68d391';
+
+  // Equipped items
+  const equipment = G.equipment[member.id] || [];
+  const weapon    = equipment.find(item => item.slot === 'weapon');
+  const armor     = equipment.find(item => item.slot === 'armor');
+  const accessory = equipment.find(item => item.slot === 'accessory');
+
+  // Build DOM
+  memberDiv.innerHTML = `
+    <div class="member-portrait">
+      <img src="./images/portraits/${member.id}.png" alt="${member.name}"
+           onerror="this.style.display='none'; this.nextElementSibling.style.display='inline'">
+      <span class="portrait-fallback">${getCharacterIcon(member)}</span>
+    </div>
+    <div class="member-info">
+      <strong>${member.name}</strong>
+      <div class="stats">
+        <span class="hp">❤️ <strong style="color:${hpColor}">${member.hp}</strong>/${member.maxHp}</span>
+        <span class="atk">⚔️ <strong>${member.atk}</strong></span>
+        <span class="mag">✨ <strong>${member.mag}</strong></span>
+      </div>
+      <div class="equipment-display">
+        <div class="equipment-slot weapon-slot clickable-slot"
+             data-member-id="${member.id}" data-slot="weapon" title="Click to manage weapon">
+          <span class="slot-icon">⚔️</span>
+          <span class="equipment-name">${weapon ? weapon.name : 'None'}</span>
+        </div>
+        <div class="equipment-slot armor-slot clickable-slot"
+             data-member-id="${member.id}" data-slot="armor" title="Click to manage armor">
+          <span class="slot-icon">🛡️</span>
+          <span class="equipment-name">${armor ? armor.name : 'None'}</span>
+        </div>
+        <div class="equipment-slot accessory-slot clickable-slot"
+             data-member-id="${member.id}" data-slot="accessory" title="Click to manage accessory">
+          <span class="slot-icon">💎</span>
+          <span class="equipment-name">${accessory ? accessory.name : 'None'}</span>
+        </div>
+      </div>
+    </div>
+    ${isLeader ? '<div class="leader-marker">LEADER</div>' : ''}
+  `;
+
+  // Click to switch leader (but ignore clicks on equipment slots)
+  memberDiv.addEventListener('click', (e) => {
+    if (e.target.closest('.clickable-slot')) return;
     console.log('🖱️ Clicked party member:', member.name);
     switchPartyLeader(member.id);
     _updateGameCallback();
- });
-}
-    
-    const hpColor = member.hp <= member.maxHp * 0.25 ? '#ef6b73' : 
-                    member.hp <= member.maxHp * 0.5 ? '#f6d55c' : '#68d391';
-    
-    // Get equipped items for this member
-    const equipment = G.equipment[member.id] || [];
-    const weapon = equipment.find(item => item.slot === 'weapon');
-    const armor = equipment.find(item => item.slot === 'armor');
-    const accessory = equipment.find(item => item.slot === 'accessory');
-    
-    memberDiv.innerHTML = `
-        <div class="member-portrait">
-            <img src="./images/portraits/${member.id}.png" alt="${member.name}" 
-                 onerror="this.style.display='none'; this.nextElementSibling.style.display='inline'">
-            <span class="portrait-fallback">${getCharacterIcon(member)}</span>
-        </div>
-        <div class="member-info">
-            <strong>${member.name}</strong>
-            <div class="stats">
-                <span class="hp">❤️ <strong style="color: ${hpColor}">${member.hp}</strong>/${member.maxHp}</span>
-                <span class="atk">⚔️ <strong>${member.atk}</strong></span>
-                <span class="mag">✨ <strong>${member.mag}</strong></span>
-            </div>
-            <div class="equipment-display">
-                <div class="equipment-slot weapon-slot clickable-slot" data-member-id="${member.id}" data-slot="weapon" title="Click to manage weapon">
-                    <span class="slot-icon">⚔️</span>
-                    <span class="equipment-name">${weapon ? weapon.name : 'None'}</span>
-                </div>
-                <div class="equipment-slot armor-slot clickable-slot" data-member-id="${member.id}" data-slot="armor" title="Click to manage armor">
-                    <span class="slot-icon">🛡️</span>
-                    <span class="equipment-name">${armor ? armor.name : 'None'}</span>
-                </div>
-                <div class="equipment-slot accessory-slot clickable-slot" data-member-id="${member.id}" data-slot="accessory" title="Click to manage accessory">
-                    <span class="slot-icon">💎</span>
-                    <span class="equipment-name">${accessory ? accessory.name : 'None'}</span>
-                </div>
-            </div>
-        </div>
-        ${isLeader ? '<div class="leader-marker">LEADER</div>' : ''}
-    `;
-    
-    // Add click handlers to equipment slots
-    const equipmentSlots = memberDiv.querySelectorAll('.clickable-slot');
-    equipmentSlots.forEach(slot => {
-        slot.addEventListener('click', (e) => {
-            e.stopPropagation(); // Prevent parent click
-            const memberId = slot.dataset.memberId;
-            const slotType = slot.dataset.slot;
-            
-            console.log(`🎒 Managing ${slotType} for ${member.name}`);
-            showEquipmentManagement(memberId, slotType, () => {
-                _updateGameCallback(); // Refresh UI when equipment changes
-            });
-        });
+  });
+
+  // Add click handlers to equipment slots
+  const equipmentSlots = memberDiv.querySelectorAll('.clickable-slot');
+  equipmentSlots.forEach(slot => {
+    slot.addEventListener('click', (e) => {
+      e.stopPropagation(); // Prevent parent click
+      const memberId = slot.dataset.memberId;
+      const slotType = slot.dataset.slot;
+
+      console.log(`🎒 Managing ${slotType} for ${member.name}`);
+      showEquipmentManagement(memberId, slotType, () => {
+        _updateGameCallback(); // Refresh UI when equipment changes
+      });
     });
-    
-    return memberDiv;
+  });
+
+  return memberDiv;
 }
 
 /**
  * Get appropriate icon for character type
  */
 function getCharacterIcon(member) {
-    if (member.tags.includes('leader')) return '⚔️';
-    if (member.tags.includes('warrior')) return '🛡️';
-    if (member.tags.includes('mage')) return '🔮';
-    if (member.tags.includes('rogue')) return '🗡️';
-    return '👤';
+  if (member.tags.includes('leader'))  return '⚔️';
+  if (member.tags.includes('warrior')) return '🛡️';
+  if (member.tags.includes('mage'))    return '🔮';
+  if (member.tags.includes('rogue'))   return '🗡️';
+  return '👤';
 }
+
 
 // ================================================================
 // PARTY HAND RENDERING
