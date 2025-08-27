@@ -17,6 +17,7 @@
    10. RESPONSIVE ADJUSTMENTS
    11. ANIMATIONS & TRANSITIONS
    12. CARD OVERFLOW OVERLAY STYLES
+   13. EQUIPMENT DISPLAY STYLES
 
 */
 
@@ -922,6 +923,90 @@ button,
     .card-overflow-content {
         max-width: 95vw;
         padding: 16px;
+    }
+}
+
+/* ================================================================
+   EQUIPMENT DISPLAY STYLES
+   ================================================================ */
+
+/* Equipment display container */
+.equipment-display {
+    margin-top: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+/* Individual equipment slots */
+.equipment-slot {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.8rem;
+    padding: 2px 4px;
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.05);
+}
+
+/* Equipment slot icons */
+.slot-icon {
+    width: 16px;
+    text-align: center;
+    font-size: 0.9rem;
+}
+
+/* Equipment names */
+.equipment-name {
+    color: var(--muted);
+    font-size: 0.75rem;
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* Equipped item styling */
+.equipment-slot:has(.equipment-name:not([data-empty])) .equipment-name {
+    color: var(--ink);
+    font-weight: 500;
+}
+
+/* Different slot styling */
+.weapon-slot {
+    border-left: 3px solid #ff6b6b;
+}
+
+.armor-slot {
+    border-left: 3px solid #4ecdc4;
+}
+
+.accessory-slot {
+    border-left: 3px solid #ffe66d;
+}
+
+/* Empty slot styling */
+.equipment-slot .equipment-name:contains("None") {
+    color: var(--muted);
+    font-style: italic;
+    opacity: 0.7;
+}
+
+/* Responsive adjustments */
+@media (max-width: 700px) {
+    .equipment-display {
+        margin-top: 6px;
+        gap: 3px;
+    }
+    
+    .equipment-slot {
+        font-size: 0.75rem;
+        padding: 1px 3px;
+    }
+    
+    .equipment-name {
+        font-size: 0.7rem;
     }
 }
 
