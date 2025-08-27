@@ -24,6 +24,7 @@ import {
     playCard,
     getAvailableEquipmentForSlot,
     // Equipment functions
+    getEquipmentById,
     equipItem,
     unequipItem,
     getEquippedItem,
