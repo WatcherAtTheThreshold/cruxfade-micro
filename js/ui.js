@@ -203,7 +203,10 @@ function createPartyMemberElement(member, isLeader = false) {
     const memberDiv = document.createElement('div');
     memberDiv.className = 'party-member';      
     memberDiv.style.cursor = 'pointer';
-    memberDiv.addEventListener('click', () => {
+    memberDiv.addEventListener('click', (e) => {
+        // Don't switch leader if clicking on equipment slots
+        if (e.target.closest('.equipment-slot')) return;
+        
         console.log('🖱️ Clicked party member:', member.name);
         switchPartyLeader(member.id);
         _updateGameCallback();
@@ -232,15 +235,15 @@ function createPartyMemberElement(member, isLeader = false) {
                 <span class="mag">✨ <strong>${member.mag}</strong></span>
             </div>
             <div class="equipment-display">
-                <div class="equipment-slot weapon-slot">
+                <div class="equipment-slot weapon-slot clickable-slot" data-member-id="${member.id}" data-slot="weapon" title="Click to manage weapon">
                     <span class="slot-icon">⚔️</span>
                     <span class="equipment-name">${weapon ? weapon.name : 'None'}</span>
                 </div>
-                <div class="equipment-slot armor-slot">
+                <div class="equipment-slot armor-slot clickable-slot" data-member-id="${member.id}" data-slot="armor" title="Click to manage armor">
                     <span class="slot-icon">🛡️</span>
                     <span class="equipment-name">${armor ? armor.name : 'None'}</span>
                 </div>
-                <div class="equipment-slot accessory-slot">
+                <div class="equipment-slot accessory-slot clickable-slot" data-member-id="${member.id}" data-slot="accessory" title="Click to manage accessory">
                     <span class="slot-icon">💎</span>
                     <span class="equipment-name">${accessory ? accessory.name : 'None'}</span>
                 </div>
@@ -248,6 +251,21 @@ function createPartyMemberElement(member, isLeader = false) {
         </div>
         ${isLeader ? '<div class="leader-marker">LEADER</div>' : ''}
     `;
+    
+    // Add click handlers to equipment slots
+    const equipmentSlots = memberDiv.querySelectorAll('.clickable-slot');
+    equipmentSlots.forEach(slot => {
+        slot.addEventListener('click', (e) => {
+            e.stopPropagation(); // Prevent parent click
+            const memberId = slot.dataset.memberId;
+            const slotType = slot.dataset.slot;
+            
+            console.log(`🎒 Managing ${slotType} for ${member.name}`);
+            showEquipmentManagement(memberId, slotType, () => {
+                _updateGameCallback(); // Refresh UI when equipment changes
+            });
+        });
+    });
     
     return memberDiv;
 }
