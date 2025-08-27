@@ -1214,6 +1214,5 @@ function getAvailableItemsForSlot(slot) {
  * Get item data by ID (placeholder)
  */
 function getItemById(itemId) {
-    if (!GAME_DATA.items || !GAME_DATA.items.equipment) return null;
-    return {...GAME_DATA.items.equipment[itemId], id: itemId};
+    return getEquipmentById(itemId);
 }
