@@ -1208,17 +1208,7 @@ function getAvailableItemsForSlot(slot) {
     
    
     
-    // Get a few sample items of the correct slot type
-    Object.entries(allEquipment).forEach(([id, item]) => {
-        if (item.slot === slot) {
-            available.push({...item, id});
-        }
-    });
-    
-    // Limit to 3 items for now to keep UI manageable
-    return available.slice(0, 3);
-}
-
+   
 /**
  * Get item data by ID (placeholder)
  */
