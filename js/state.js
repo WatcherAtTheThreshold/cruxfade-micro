@@ -381,23 +381,7 @@ export function healPartyMember(memberId, amount) {
 
 
     
-    // Use data-driven items
-    const gridKey = `grid-${G.gridLevel}`;
-    const lootTable = GAME_DATA.items.lootTables[gridKey] || GAME_DATA.items.lootTables.basic;
-    const useConsumable = random() < lootTable.consumables;
-    
-    const itemPool = useConsumable ? 
-        GAME_DATA.items.consumables : 
-        GAME_DATA.items.equipment;
-        
-    const itemKeys = Object.keys(itemPool);
-    const itemKey = pickRandom(itemKeys);
-    const item = itemPool[itemKey];
-    
-    applyItemToPlayer(player, item);
-    consumeCurrentTile();
-    return item;
-}
+ 
 
 /**
  * Apply item effects to player
