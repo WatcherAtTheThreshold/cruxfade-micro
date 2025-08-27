@@ -1561,3 +1561,23 @@ export function initializeEquipment() {
         getBaseStats(member);
     });
 }
+
+/**
+ * Get available equipment items for a specific slot type
+ */
+export function getAvailableEquipmentForSlot(slot) {
+    if (!GAME_DATA.items || !GAME_DATA.items.equipment) return [];
+    
+    const allEquipment = GAME_DATA.items.equipment;
+    const available = [];
+    
+    // Get items of the correct slot type
+    Object.entries(allEquipment).forEach(([id, item]) => {
+        if (item.slot === slot) {
+            available.push({...item, id});
+        }
+    });
+    
+    // Limit to 3 items for now to keep UI manageable
+    return available.slice(0, 3);
+}
