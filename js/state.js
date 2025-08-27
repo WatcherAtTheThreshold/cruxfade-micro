@@ -1346,6 +1346,15 @@ export function isCurrentTileConsumed() {
 // EQUIPMENT SYSTEM FUNCTIONS
 // ================================================================
 
+ /**
+ * Get equipment item data by ID
+ */
+export function getEquipmentById(itemId) {
+    if (!GAME_DATA.items || !GAME_DATA.items.equipment) return null;
+    const item = GAME_DATA.items.equipment[itemId];
+    return item ? {...item, id: itemId} : null;
+}
+
 /**
  * Equipment slot types
  */
