@@ -121,9 +121,11 @@ export function initializeGame() {
     // Reset party to starting state
     resetPartyToStart();
     
+    // Initialize equipment system
+    initializeEquipment();
+    
     console.log('🔄 Game state initialized');
 }
-
 /**
  * Generate a new 4x4 grid with encounters
  */
