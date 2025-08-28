@@ -96,7 +96,8 @@ export const G = {
         bossId: null,         // Which boss we're fighting
         currentPhase: 0,      // Current phase index
         phaseComplete: false, // Current phase finished
-        defeated: false       // Boss fully defeated
+        defeated: false,      // Boss fully defeated
+        enemyIndex: 0         // Current enemy in sequential fight
     },
     
     // Game over flag
@@ -127,7 +128,8 @@ export function initializeGame() {
         bossId: null,
         currentPhase: 0,
         phaseComplete: false,
-        defeated: false
+        defeated: false,
+        enemyIndex: 0
     };
     
     // Initialize player position to left edge start (1,0)
@@ -248,6 +250,7 @@ function generateBossGrid() {
     G.boss.currentPhase = 0;
     G.boss.phaseComplete = false;
     G.boss.defeated = false;
+    G.boss.enemyIndex = 0;
     
     // Create a simple grid with just the boss encounter in center
     G.board.tiles = [];
@@ -344,9 +347,24 @@ function startBossPhaseFight(phase) {
         return true;
     }
     
-    // For now, start combat with first enemy
-    // TODO: Handle sequential/group fights
-    const enemyType = phase.enemies[0];
+    // Get current enemy in the sequence
+    const currentEnemyIndex = G.boss.enemyIndex || 0;
+    
+    if (currentEnemyIndex >= phase.enemies.length) {
+        // All enemies defeated - complete phase
+        addLogEntry('⚔️ All enemies defeated!');
+        completeBossPhase();
+        return true;
+    }
+    
+    const enemyType = phase.enemies[currentEnemyIndex];
+    const remaining = phase.enemies.length - currentEnemyIndex;
+    
+    addLogEntry(`⚔️ Fighting enemy ${currentEnemyIndex + 1} of ${phase.enemies.length}: ${enemyType}`);
+    if (remaining > 1) {
+        addLogEntry(`📋 ${remaining - 1} enemies remain after this one...`);
+    }
+    
     return startCombat(enemyType);
 }
 
@@ -413,6 +431,7 @@ export function completeBossPhase() {
     
     G.boss.phaseComplete = true;
     G.boss.currentPhase++;
+    G.boss.enemyIndex = 0; // Reset enemy index for next phase
     
     // Check if boss is fully defeated
     if (G.boss.currentPhase >= bossData.phases.length) {
@@ -588,8 +607,25 @@ export function endCombat(victory) {
         
         // Check if this was a boss fight
         if (G.combat.bossPhase) {
-            // Boss phase complete
-            completeBossPhase();
+            // Check if this is a sequential fight phase
+            const phase = getCurrentBossPhase();
+            
+            if (phase && phase.type === 'fight' && phase.enemies && phase.enemies.length > 1) {
+                // Sequential fight - advance to next enemy
+                G.boss.enemyIndex = (G.boss.enemyIndex || 0) + 1;
+                
+                if (G.boss.enemyIndex >= phase.enemies.length) {
+                    // All enemies in sequence defeated - complete phase
+                    completeBossPhase();
+                } else {
+                    // More enemies to fight - start next enemy
+                    addLogEntry(`📋 Enemy defeated! Continuing with next enemy...`);
+                    // Don't complete phase yet, let player move and click boss tile again
+                }
+            } else {
+                // Single enemy fight or final boss - complete phase
+                completeBossPhase();
+            }
         } else {
             // Normal combat
             consumeCurrentTile();
