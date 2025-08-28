@@ -29,9 +29,10 @@ async function loadGameData() {
         const enemies = await enemiesResponse.json();
         console.log('✅ Enemies loaded:', enemies);
         
-        // Optional files - don't try to parse if they don't exist
+        // Optional files - don't fail if they don't exist
         let encounters = null;
         let items = null;
+        let bosses = null; // NEW: Boss data
         
         try {
             const encountersResponse = await fetch('./data/encounters.json');
@@ -53,10 +54,23 @@ async function loadGameData() {
             console.log('⚠️ items.json not found (optional)');
         }
         
+        // NEW: Load bosses.json
+        try {
+            const bossesResponse = await fetch('./data/bosses.json');
+            if (bossesResponse.ok) {
+                bosses = await bossesResponse.json();
+                console.log('✅ Bosses loaded:', bosses);
+                console.log('💀 Available bosses:', Object.keys(bosses).filter(key => key !== 'boss-enemies'));
+            }
+        } catch (e) {
+            console.log('⚠️ bosses.json not found (boss encounters disabled)');
+        }
+        
         const gameData = {
             enemies: enemies,
             encounters: encounters,
-            items: items
+            items: items,
+            bosses: bosses  // NEW: Include boss data
         };
         
         console.log('🎮 Game data loaded:', gameData);
@@ -99,8 +113,14 @@ async function init() {
         // Initial render of all game elements
         renderAll();
         
-        // Add welcome message
+        // Add welcome message with boss hint
         addLogEntry('Welcome to the grid. Find the key to proceed...');
+        
+        // NEW: Show boss availability info
+        if (gameData.bosses) {
+            const bossCount = Object.keys(gameData.bosses).filter(key => key !== 'boss-enemies').length;
+            addLogEntry(`💀 ${bossCount} epic bosses await in the deeper grids...`);
+        }
         
         console.log('✅ Game initialized successfully');
         console.log('🎯 Current state:', G);
@@ -130,6 +150,12 @@ export function updateGame() {
  * Check if the game should end (win/lose conditions)
  */
 function checkGameEndConditions() {
+    // NEW: Check victory condition first
+    if (G.victory) {
+        // Game won - don't trigger other end conditions
+        return;
+    }
+    
     // Check if player party leader is dead
     const leader = G.party.find(member => member.id === 'you');
     if (!leader || leader.hp <= 0) {
@@ -139,9 +165,11 @@ function checkGameEndConditions() {
         return;
     }
     
-    // Check win condition (placeholder for now)
-    if (G.gridLevel > 3) {
+    // OLD: Basic win condition (now handled by boss system)
+    // Keep as fallback for games without boss data
+    if (G.gridLevel > 6 && !G.victory) {
         G.over = true;
+        G.victory = true;
         addLogEntry('🏆 Victory! You have conquered all grids!');
         renderAll();
         return;
@@ -180,6 +208,13 @@ export function newGame(seed = null) {
     initializeGame();
     renderAll();
     addLogEntry(`🌱 New game started (Seed: ${G.seed})`);
+    
+    // NEW: Show boss info on new game
+    const gameData = G._gameData || {};
+    if (gameData.bosses) {
+        const bossCount = Object.keys(gameData.bosses).filter(key => key !== 'boss-enemies').length;
+        addLogEntry(`💀 ${bossCount} epic bosses await in Grid 4+...`);
+    }
 }
 
 /**
@@ -197,6 +232,26 @@ export function restartWithSeed() {
  */
 export function getGameState() {
     return G;
+}
+
+// NEW: Export boss testing functions for development
+export function debugBoss() {
+    if (!G.boss.active) {
+        // Force trigger boss encounter
+        G.gridLevel = 4;
+        initializeGame();
+        renderAll();
+        addLogEntry('🐛 DEBUG: Forced boss encounter!');
+    } else {
+        console.log('🐛 Current boss state:', G.boss);
+    }
+}
+
+export function debugVictory() {
+    G.victory = true;
+    G.over = true;
+    addLogEntry('🐛 DEBUG: Forced victory state!');
+    renderAll();
 }
 
 // ================================================================
@@ -217,10 +272,13 @@ window.addEventListener('error', (event) => {
     addLogEntry(`❌ Error: ${event.error.message}`);
 });
 
-// Make some functions available globally for debugging
+// Make functions available globally for debugging and testing
 window.CruxfadeMicro = {
     getState: getGameState,
     newGame: newGame,
     restartWithSeed: restartWithSeed,
-    update: updateGame
+    update: updateGame,
+    // NEW: Boss debugging functions
+    debugBoss: debugBoss,
+    debugVictory: debugVictory
 };
