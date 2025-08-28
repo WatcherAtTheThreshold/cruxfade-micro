@@ -1,0 +1,210 @@
+{
+  "shadow-lord": {
+    "name": "The Shadow Lord",
+    "description": "An ancient entity that feeds on the darkness between worlds",
+    "unlockLevel": 4,
+    "phases": [
+      {
+        "id": "minions",
+        "name": "Shadow Minions",
+        "type": "fight",
+        "description": "Twisted creatures emerge from the shadows to defend their master",
+        "enemies": ["shadow-wisp", "shadow-wisp", "goblin"],
+        "sequentialFights": true,
+        "flavorText": "Dark creatures surge from the void as you approach the Shadow Lord's sanctum...",
+        "victoryText": "The minions dissolve back into shadow. The path ahead grows darker..."
+      },
+      {
+        "id": "arena-hazard", 
+        "name": "Collapsing Sanctum",
+        "type": "hazard",
+        "description": "The Shadow Lord's presence destabilizes reality itself",
+        "hazardType": "reality-collapse",
+        "difficulty": 15,
+        "damage": 4,
+        "preferredStat": "mag",
+        "flavorText": "The ground cracks and reality tears as the Shadow Lord's power warps the very fabric of existence...",
+        "successText": "You navigate the collapsing reality with careful precision!",
+        "failureText": "The unstable reality tears at your essence!"
+      },
+      {
+        "id": "final-boss",
+        "name": "The Shadow Lord",
+        "type": "boss-fight",
+        "description": "The ancient Shadow Lord reveals its true form",
+        "enemy": "shadow-lord-final",
+        "flavorText": "The Shadow Lord emerges from the darkness, its form shifting between nightmare and void...",
+        "victoryText": "The Shadow Lord lets out a final wail as it dissolves into nothingness. Light returns to the realm!",
+        "defeatText": "The shadows consume everything. Your quest ends in darkness..."
+      }
+    ],
+    "victoryRewards": {
+      "gold": 100,
+      "experience": 250,
+      "completionMessage": "🏆 Victory! You have banished the Shadow Lord and restored light to the realm!",
+      "unlocks": ["shadow-crystal", "lord-slayer-title"]
+    }
+  },
+  
+  "crystal-tyrant": {
+    "name": "The Crystal Tyrant", 
+    "description": "A massive crystalline being that has corrupted the deep caverns",
+    "unlockLevel": 5,
+    "phases": [
+      {
+        "id": "crystal-guardians",
+        "name": "Crystal Guardians",
+        "type": "fight", 
+        "description": "Living crystal constructs block your path",
+        "enemies": ["crystal-guardian", "crystal-guardian"],
+        "sequentialFights": false,
+        "flavorText": "Massive crystal beings animate around the Tyrant's throne, their faceted forms gleaming with malevolent energy...",
+        "victoryText": "The crystal guardians shatter into harmless fragments. The Tyrant roars in anger..."
+      },
+      {
+        "id": "prismatic-maze",
+        "name": "Prismatic Labyrinth", 
+        "type": "hazard",
+        "description": "Navigate through a maze of deadly light prisms",
+        "hazardType": "light-maze",
+        "difficulty": 16,
+        "damage": 5,
+        "preferredStat": "atk",
+        "flavorText": "The Tyrant creates a labyrinth of burning light that cuts through armor and flesh alike...",
+        "successText": "You weave through the deadly beams with warrior's precision!",
+        "failureText": "The searing light finds its mark, burning deep!"
+      },
+      {
+        "id": "final-boss",
+        "name": "The Crystal Tyrant",
+        "type": "boss-fight",
+        "description": "The Crystal Tyrant attacks with devastating crystalline magic",
+        "enemy": "crystal-tyrant-final",
+        "flavorText": "The Crystal Tyrant rises to its full height, its crystalline form refracting the light into deadly rainbow patterns...",
+        "victoryText": "The Crystal Tyrant's form begins to crack and split. With a sound like breaking mountains, it shatters completely!",
+        "defeatText": "You are trapped forever within the Tyrant's crystal prison..."
+      }
+    ],
+    "victoryRewards": {
+      "gold": 150,
+      "experience": 350,
+      "completionMessage": "🏆 Victory! You have shattered the Crystal Tyrant and freed the deep caverns!",
+      "unlocks": ["prismatic-shard", "tyrant-breaker-title"]
+    }
+  },
+
+  "void-empress": {
+    "name": "The Void Empress",
+    "description": "The ultimate evil that seeks to unmake all existence", 
+    "unlockLevel": 6,
+    "phases": [
+      {
+        "id": "void-spawn",
+        "name": "Spawn of the Void",
+        "type": "fight",
+        "description": "Creatures of pure nothingness assault your party",
+        "enemies": ["void-spawn", "void-spawn", "void-wraith"],
+        "sequentialFights": true,
+        "flavorText": "Beings of absolute nothingness materialize from the Empress's dark will, seeking to erase your very existence...",
+        "victoryText": "The void spawn retreat into nothingness, but the Empress's laughter echoes through the emptiness..."
+      },
+      {
+        "id": "reality-storm",
+        "name": "Reality Storm",
+        "type": "hazard", 
+        "description": "Survive the Empress's attempt to unmake reality itself",
+        "hazardType": "existence-storm",
+        "difficulty": 18,
+        "damage": 6,
+        "preferredStat": "mag",
+        "flavorText": "The Void Empress unleashes a storm of pure entropy that threatens to erase you from existence...",
+        "successText": "Your will to exist proves stronger than the void! Reality holds firm around you!",
+        "failureText": "Parts of your being begin to fade as the void takes hold..."
+      },
+      {
+        "id": "ally-sacrifice",
+        "name": "The Final Stand",
+        "type": "party-choice",
+        "description": "Your allies offer to sacrifice themselves to weaken the Empress",
+        "flavorText": "As the Void Empress prepares her final assault, your allies step forward, ready to give everything for victory...",
+        "mechanicText": "Choose: Fight alone with wounded party, or let allies sacrifice themselves for advantage"
+      },
+      {
+        "id": "final-boss",
+        "name": "The Void Empress",
+        "type": "boss-fight", 
+        "description": "The final battle against the destroyer of worlds",
+        "enemy": "void-empress-final",
+        "flavorText": "The Void Empress stands before you in her terrible glory, reality bending and breaking around her presence...",
+        "victoryText": "The Void Empress screams as light pierces her darkness. Existence itself breathes a sigh of relief as she fades away!",
+        "defeatText": "Everything fades to nothing. The Empress has won, and existence itself comes to an end..."
+      }
+    ],
+    "victoryRewards": {
+      "gold": 200,
+      "experience": 500,
+      "completionMessage": "🏆 ULTIMATE VICTORY! You have defeated the Void Empress and saved all of existence!",
+      "unlocks": ["void-heart", "savior-of-existence-title"],
+      "gameComplete": true
+    }
+  },
+
+  "boss-enemies": {
+    "shadow-lord-final": {
+      "name": "The Shadow Lord",
+      "hp": 25,
+      "atk": 6,
+      "mag": 4,
+      "description": "An ancient entity wreathed in living darkness",
+      "abilities": ["shadow-strike", "darkness-heal", "fear-aura"],
+      "resistances": ["physical-25%"],
+      "weaknesses": ["magic"]
+    },
+    
+    "crystal-tyrant-final": {
+      "name": "The Crystal Tyrant", 
+      "hp": 30,
+      "atk": 7,
+      "mag": 3,
+      "description": "A massive crystalline being of immense power",
+      "abilities": ["crystal-spike", "prismatic-blast", "armor-shatter"],
+      "resistances": ["magic-50%"],
+      "weaknesses": ["physical"]
+    },
+    
+    "void-empress-final": {
+      "name": "The Void Empress",
+      "hp": 40, 
+      "atk": 8,
+      "mag": 6,
+      "description": "The ultimate destroyer of existence itself",
+      "abilities": ["void-drain", "reality-tear", "existence-erase"],
+      "resistances": ["physical-25%", "magic-25%"],
+      "immunities": ["fear", "charm"]
+    },
+
+    "crystal-guardian": {
+      "name": "Crystal Guardian",
+      "hp": 12,
+      "atk": 4, 
+      "mag": 2,
+      "description": "A living crystal construct animated by the Tyrant's will"
+    },
+
+    "void-spawn": {
+      "name": "Void Spawn",
+      "hp": 8,
+      "atk": 3,
+      "mag": 3,
+      "description": "A creature of pure nothingness given form"
+    },
+
+    "void-wraith": {
+      "name": "Void Wraith", 
+      "hp": 10,
+      "atk": 4,
+      "mag": 4,
+      "description": "A spirit consumed by the void's hunger"
+    }
+  }
+}
