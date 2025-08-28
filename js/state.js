@@ -600,15 +600,21 @@ export function nextGrid() {
  * End combat with victory or defeat (modified for boss handling)
  */
 export function endCombat(victory) {
+    console.log('🐛 DEBUG: endCombat called with victory:', victory, 'combat active:', G.combat.active);
+    
     if (!G.combat.active) return;
     
     if (victory) {
         addLogEntry(`🎉 Victory! You defeated the ${G.combat.enemy.name}!`);
         
+        console.log('🐛 DEBUG: Checking if boss fight - bossPhase:', !!G.combat.bossPhase, 'boss active:', G.boss.active);
+        
         // Check if this was a boss fight
         if (G.combat.bossPhase) {
             // Check if this is a sequential fight phase
             const phase = getCurrentBossPhase();
+            
+            console.log('🐛 DEBUG: Boss fight detected - phase:', phase?.type, 'enemies:', phase?.enemies?.length);
             
             if (phase && phase.type === 'fight' && phase.enemies && phase.enemies.length > 1) {
                 // Sequential fight - advance to next enemy
@@ -626,15 +632,18 @@ export function endCombat(victory) {
                     const remaining = phase.enemies.length - G.boss.enemyIndex;
                     addLogEntry(`✅ Enemy defeated! ${remaining} enemies remain in this phase.`);
                     addLogEntry(`💀 Return to the boss encounter to continue fighting!`);
+                    console.log('🐛 DEBUG: Not consuming tile - more enemies to fight');
                     // Don't consume tile yet - let player click boss tile again
                 }
             } else {
                 // Single enemy fight or final boss - complete phase and consume
+                console.log('🐛 DEBUG: Single boss fight or final boss');
                 consumeCurrentTile();
                 completeBossPhase();
             }
         } else {
             // Normal combat - consume tile
+            console.log('🐛 DEBUG: Normal combat - consuming tile');
             consumeCurrentTile();
         }
     } else {
@@ -652,6 +661,8 @@ export function endCombat(victory) {
             G.over = true;
         }
     }
+    
+    console.log('🐛 DEBUG: Resetting combat state');
     
     // Reset combat state
     G.combat.active = false;
@@ -1642,7 +1653,10 @@ export function playerAttack() {
     G.combat.enemyHp = Math.max(0, G.combat.enemyHp - damage);
     addLogEntry(`⚔️ You attack for ${damage} damage! Enemy HP: ${G.combat.enemyHp}`);
     
+    console.log('🐛 DEBUG: Attack complete - enemyHp:', G.combat.enemyHp, 'should call endCombat:', G.combat.enemyHp <= 0);
+    
     if (G.combat.enemyHp <= 0) {
+        console.log('🐛 DEBUG: Calling endCombat(true)');
         endCombat(true);
         return true;
     }
