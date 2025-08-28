@@ -4,14 +4,14 @@
 // Pure functions for controlled state mutations
 // ================================================================
 
-// Import seeded RNG functions
+/*// Import seeded RNG functions
 import { random, randomInt, pickRandom } from './rng.js';
 
 // ================================================================
 // GAME DATA STORAGE
 // ================================================================
 
-/**
+*
  * Loaded game data from JSON files
  */
 let GAME_DATA = {
