@@ -272,6 +272,7 @@ function createPartyMemberElement(member, isLeader = false) {
 
       console.log(`🎒 Managing ${slotType} for ${member.name}`);
       showEquipmentManagement(memberId, slotType, () => {
+         renderPartyStatus();  
         _updateGameCallback(); // Refresh UI when equipment changes
       });
     });
