@@ -390,6 +390,8 @@ function renderEncounterArea() {
         return;
     }
 
+    console.log('🐛 DEBUG: Rendering encounter for tile:', tile.type, 'consumed:', tile.consumed, 'combat active:', G.combat.active);
+
     // If we're in active combat, always show combat UI regardless of tile type
     if (G.combat.active) {
         renderFightEncounter();
