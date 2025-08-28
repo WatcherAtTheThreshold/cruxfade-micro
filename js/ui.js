@@ -448,6 +448,8 @@ function renderBossEncounter() {
     const boss = getCurrentBoss();
     const phase = getCurrentBossPhase();
     
+    console.log('🐛 DEBUG: Boss encounter render - boss:', boss?.name, 'phase:', phase?.name, 'enemyIndex:', G.boss.enemyIndex);
+    
     if (!boss || !phase) {
         renderBossIntro();
         return;
