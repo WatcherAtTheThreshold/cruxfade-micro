@@ -509,20 +509,47 @@ function renderBossPhaseFight(boss, phase) {
         return;
     }
     
-    DOM.encounterArea.innerHTML = `
-        <div class="encounter-boss-phase">
-            <h3>💀 ${boss.name}</h3>
-            <h4>⚔️ Phase: ${phase.name}</h4>
-            <p class="phase-description">${phase.description}</p>
-            <div class="phase-enemies">
-                <p><strong>Enemies:</strong> ${phase.enemies.join(', ')}</p>
-            </div>
-        </div>
-    `;
+    // Check if we're in middle of sequential fights
+    const currentEnemy = G.boss.enemyIndex || 0;
+    const totalEnemies = phase.enemies ? phase.enemies.length : 0;
+    const isSequential = totalEnemies > 1;
     
-    DOM.encounterActions.innerHTML = `
-        <button class="btn-primary" data-action="start-boss-phase">Start Combat</button>
-    `;
+    if (isSequential && currentEnemy > 0) {
+        // Middle of sequential fight
+        DOM.encounterArea.innerHTML = `
+            <div class="encounter-boss-phase">
+                <h3>💀 ${boss.name}</h3>
+                <h4>⚔️ Phase: ${phase.name}</h4>
+                <p class="phase-description">Sequential battle in progress...</p>
+                <div class="phase-progress">
+                    <p><strong>Progress:</strong> ${currentEnemy} of ${totalEnemies} enemies defeated</p>
+                    <p><strong>Next Enemy:</strong> ${phase.enemies[currentEnemy]}</p>
+                    <p><strong>Remaining:</strong> ${totalEnemies - currentEnemy} enemies</p>
+                </div>
+            </div>
+        `;
+        
+        DOM.encounterActions.innerHTML = `
+            <button class="btn-primary" data-action="start-boss-phase">Continue Fighting!</button>
+        `;
+    } else {
+        // Beginning of fight phase
+        DOM.encounterArea.innerHTML = `
+            <div class="encounter-boss-phase">
+                <h3>💀 ${boss.name}</h3>
+                <h4>⚔️ Phase: ${phase.name}</h4>
+                <p class="phase-description">${phase.description}</p>
+                <div class="phase-enemies">
+                    <p><strong>Enemies:</strong> ${phase.enemies.join(', ')}</p>
+                    ${isSequential ? `<p><em>You must defeat all ${totalEnemies} enemies in sequence!</em></p>` : ''}
+                </div>
+            </div>
+        `;
+        
+        DOM.encounterActions.innerHTML = `
+            <button class="btn-primary" data-action="start-boss-phase">Start Combat</button>
+        `;
+    }
 }
 
 /**
