@@ -17,7 +17,8 @@ import { random, randomInt, pickRandom } from './rng.js';
 let GAME_DATA = {
     enemies: {},
     encounters: null,
-    items: null
+    items: null,
+    bosses: null  // NEW: Boss encounter data
 };
 
 /**
@@ -89,8 +90,20 @@ export const G = {
         lastRoll: null
     },
     
+    // NEW: Boss encounter state
+    boss: {
+        active: false,        // Currently in a boss sequence
+        bossId: null,         // Which boss we're fighting
+        currentPhase: 0,      // Current phase index
+        phaseComplete: false, // Current phase finished
+        defeated: false       // Boss fully defeated
+    },
+    
     // Game over flag
-    over: false
+    over: false,
+    
+    // NEW: Victory state
+    victory: false
 };
 
 // ================================================================
@@ -105,7 +118,17 @@ export function initializeGame() {
     G.gridLevel = 1;
     G.keyFound = false;
     G.over = false;
+    G.victory = false;
     G.log = [];
+    
+    // Reset boss state
+    G.boss = {
+        active: false,
+        bossId: null,
+        currentPhase: 0,
+        phaseComplete: false,
+        defeated: false
+    };
     
     // Initialize player position to left edge start (1,0)
     G.board.player = { r: 1, c: 0 };
@@ -126,11 +149,18 @@ export function initializeGame() {
     
     console.log('🔄 Game state initialized');
 }
+
 /**
  * Generate a new 4x4 grid with encounters
  */
 function generateGrid() {
     G.board.tiles = [];
+    
+    // Check if this should be a boss encounter
+    if (shouldTriggerBoss()) {
+        generateBossGrid();
+        return;
+    }
     
     // Get player's entrance position
     const entranceRow = G.board.player.r;
@@ -166,6 +196,433 @@ function generateGrid() {
     // Ensure we have exactly one key and one door
     ensureKeyAndDoor();
 }
+
+// ================================================================
+// NEW: BOSS SYSTEM FUNCTIONS
+// ================================================================
+
+/**
+ * Check if current grid level should trigger a boss encounter
+ */
+function shouldTriggerBoss() {
+    return G.gridLevel >= 4 && GAME_DATA.bosses;
+}
+
+/**
+ * Get the appropriate boss for current grid level
+ */
+function getBossForLevel(level) {
+    if (!GAME_DATA.bosses) return null;
+    
+    // Match boss to grid level based on unlockLevel
+    for (const [bossId, bossData] of Object.entries(GAME_DATA.bosses)) {
+        if (bossId === 'boss-enemies') continue; // Skip enemy definitions
+        if (bossData.unlockLevel === level) {
+            return { id: bossId, data: bossData };
+        }
+    }
+    
+    // Fallback to first available boss
+    const firstBoss = Object.entries(GAME_DATA.bosses)[0];
+    if (firstBoss && firstBoss[0] !== 'boss-enemies') {
+        return { id: firstBoss[0], data: firstBoss[1] };
+    }
+    
+    return null;
+}
+
+/**
+ * Generate a boss encounter grid
+ */
+function generateBossGrid() {
+    const boss = getBossForLevel(G.gridLevel);
+    if (!boss) {
+        console.error('No boss found for grid level:', G.gridLevel);
+        generateGrid(); // Fallback to normal grid
+        return;
+    }
+    
+    // Initialize boss state
+    G.boss.active = true;
+    G.boss.bossId = boss.id;
+    G.boss.currentPhase = 0;
+    G.boss.phaseComplete = false;
+    G.boss.defeated = false;
+    
+    // Create a simple grid with just the boss encounter in center
+    G.board.tiles = [];
+    
+    for (let i = 0; i < 16; i++) {
+        const row = Math.floor(i / 4);
+        const col = i % 4;
+        
+        // Player starts at entrance (left edge)
+        if (row === G.board.player.r && col === G.board.player.c) {
+            G.board.tiles.push({
+                type: 'start',
+                row: row,
+                col: col,
+                revealed: true,
+                consumed: false
+            });
+        }
+        // Boss encounter in center (tile 5 or 6)
+        else if (i === 5) { // Center-left tile
+            G.board.tiles.push({
+                type: 'boss-encounter',
+                row: row,
+                col: col,
+                revealed: false,
+                consumed: false,
+                bossId: boss.id
+            });
+        }
+        // Empty tiles elsewhere
+        else {
+            G.board.tiles.push({
+                type: 'empty',
+                row: row,
+                col: col,
+                revealed: false,
+                consumed: false
+            });
+        }
+    }
+    
+    addLogEntry(`💀 You have entered the ${boss.data.name}'s domain...`);
+    addLogEntry(`📖 ${boss.data.description}`);
+}
+
+/**
+ * Start the current boss phase
+ */
+export function startBossPhase() {
+    if (!G.boss.active || !G.boss.bossId) {
+        console.error('No active boss encounter');
+        return false;
+    }
+    
+    const bossData = GAME_DATA.bosses[G.boss.bossId];
+    if (!bossData || !bossData.phases) {
+        console.error('Invalid boss data');
+        return false;
+    }
+    
+    const phase = bossData.phases[G.boss.currentPhase];
+    if (!phase) {
+        console.error('Invalid phase index:', G.boss.currentPhase);
+        return false;
+    }
+    
+    // Show phase intro text
+    addLogEntry(`⚡ ${phase.name}`);
+    addLogEntry(`📜 ${phase.flavorText}`);
+    
+    // Handle different phase types
+    switch (phase.type) {
+        case 'fight':
+            return startBossPhaseFight(phase);
+        case 'hazard':
+            return startBossPhaseHazard(phase);
+        case 'boss-fight':
+            return startBossPhaseFinal(phase);
+        case 'party-choice':
+            return startBossPhaseChoice(phase);
+        default:
+            console.error('Unknown boss phase type:', phase.type);
+            return false;
+    }
+}
+
+/**
+ * Start a fight phase (minions)
+ */
+function startBossPhaseFight(phase) {
+    if (!phase.enemies || phase.enemies.length === 0) {
+        addLogEntry('⚔️ No enemies to fight - phase complete!');
+        completeBossPhase();
+        return true;
+    }
+    
+    // For now, start combat with first enemy
+    // TODO: Handle sequential/group fights
+    const enemyType = phase.enemies[0];
+    return startCombat(enemyType);
+}
+
+/**
+ * Start a hazard phase  
+ */
+function startBossPhaseHazard(phase) {
+    // Use the enhanced hazard system with boss-specific parameters
+    const hazardData = {
+        name: phase.name,
+        difficulty: phase.difficulty || 15,
+        damage: phase.damage || 3,
+        stat: phase.preferredStat || 'atk',
+        successText: phase.successText,
+        failureText: phase.failureText
+    };
+    
+    return resolveBossHazard(hazardData);
+}
+
+/**
+ * Start the final boss fight phase
+ */
+function startBossPhaseFinal(phase) {
+    if (!phase.enemy) {
+        console.error('Boss fight phase missing enemy');
+        return false;
+    }
+    
+    // Get boss enemy data
+    const bossEnemyData = GAME_DATA.bosses['boss-enemies'][phase.enemy];
+    if (!bossEnemyData) {
+        console.error('Boss enemy not found:', phase.enemy);
+        return false;
+    }
+    
+    // Start combat with boss
+    return startBossCombat(bossEnemyData, phase);
+}
+
+/**
+ * Start a choice phase (placeholder)
+ */
+function startBossPhaseChoice(phase) {
+    addLogEntry('🤔 ' + phase.mechanicText);
+    // For now, auto-proceed - TODO: implement choice UI
+    completeBossPhase();
+    return true;
+}
+
+/**
+ * Complete the current boss phase
+ */
+export function completeBossPhase() {
+    if (!G.boss.active) return;
+    
+    const bossData = GAME_DATA.bosses[G.boss.bossId];
+    const phase = bossData.phases[G.boss.currentPhase];
+    
+    // Show phase completion text
+    if (phase.victoryText) {
+        addLogEntry(`✅ ${phase.victoryText}`);
+    }
+    
+    G.boss.phaseComplete = true;
+    G.boss.currentPhase++;
+    
+    // Check if boss is fully defeated
+    if (G.boss.currentPhase >= bossData.phases.length) {
+        defeatBoss();
+    } else {
+        addLogEntry('📈 Phase complete. Preparing for next challenge...');
+    }
+}
+
+/**
+ * Handle boss defeat and victory
+ */
+function defeatBoss() {
+    const bossData = GAME_DATA.bosses[G.boss.bossId];
+    
+    G.boss.defeated = true;
+    G.victory = true;
+    G.over = true;
+    
+    // Show victory messages
+    addLogEntry(`🎉 ${bossData.victoryRewards.completionMessage}`);
+    
+    if (bossData.victoryRewards.gold) {
+        addLogEntry(`💰 Gained ${bossData.victoryRewards.gold} gold!`);
+    }
+    
+    if (bossData.victoryRewards.experience) {
+        addLogEntry(`⭐ Gained ${bossData.victoryRewards.experience} experience!`);
+    }
+    
+    // Check if game is complete
+    if (bossData.victoryRewards.gameComplete) {
+        addLogEntry('🏁 Game Complete! You have saved all of existence!');
+    }
+    
+    console.log('🏆 Boss defeated! Victory achieved!');
+}
+
+/**
+ * Enhanced hazard resolver for boss encounters
+ */
+function resolveBossHazard(hazardData) {
+    const player = getPartyLeader();
+    if (!player) return false;
+    
+    const roll = rollDice(20);
+    const statBonus = player[hazardData.stat];
+    const total = roll + statBonus;
+    
+    addLogEntry(`⚡ ${hazardData.name}! Rolling to overcome... (d20 + ${hazardData.stat.toUpperCase()})`);
+    addLogEntry(`🎲 Rolled ${roll} + ${statBonus} = ${total} (need ${hazardData.difficulty}+)`);
+    
+    if (total >= hazardData.difficulty) {
+        addLogEntry(`✅ ${hazardData.successText || 'Success! You overcame the hazard!'}`);
+        completeBossPhase();
+        return { success: true };
+    } else {
+        const damage = hazardData.damage;
+        damagePartyMember(player.id, damage);
+        addLogEntry(`❌ ${hazardData.failureText || 'Failed! The hazard damages you!'}`);
+        
+        // Continue to next phase even on failure (boss fights are forgiving)
+        completeBossPhase();
+        return { success: false };
+    }
+}
+
+/**
+ * Start combat with a boss enemy
+ */
+function startBossCombat(bossEnemyData, phase) {
+    const player = getPartyLeader();
+    if (!player) return false;
+    
+    G.combat.active = true;
+    G.combat.enemy = { ...bossEnemyData };
+    G.combat.playerHp = player.hp;
+    G.combat.enemyHp = bossEnemyData.hp;
+    G.combat.turn = 'player';
+    G.combat.lastRoll = null;
+    
+    // Store phase data for special handling
+    G.combat.bossPhase = phase;
+    
+    addLogEntry(`💀 Final battle with ${bossEnemyData.name}!`);
+    addLogEntry(`📊 Boss HP: ${bossEnemyData.hp} | Your HP: ${player.hp}`);
+    
+    return true;
+}
+
+/**
+ * Check if player is currently in a boss encounter
+ */
+export function isInBossEncounter() {
+    return G.boss.active;
+}
+
+/**
+ * Get current boss phase data
+ */
+export function getCurrentBossPhase() {
+    if (!G.boss.active || !G.boss.bossId) return null;
+    
+    const bossData = GAME_DATA.bosses[G.boss.bossId];
+    if (!bossData || !bossData.phases) return null;
+    
+    return bossData.phases[G.boss.currentPhase];
+}
+
+/**
+ * Get current boss data
+ */
+export function getCurrentBoss() {
+    if (!G.boss.active || !G.boss.bossId) return null;
+    return GAME_DATA.bosses[G.boss.bossId];
+}
+
+// ================================================================
+// MODIFIED: GRID PROGRESSION FUNCTIONS
+// ================================================================
+
+/**
+ * Progress to the next grid (modified to handle bosses)
+ */
+export function nextGrid() {
+    if (!G.keyFound && !isInBossEncounter()) {
+        addLogEntry('🚪 You need the key to proceed!');
+        return false;
+    }
+    
+    // Get current player position (exit door location)
+    const exitRow = G.board.player.r;
+    const exitCol = G.board.player.c;
+    
+    // Calculate entrance position on new grid (opposite corner)
+    const entranceRow = 3 - exitRow; // 4x4 opposite
+    const entranceCol = 3 - exitCol;
+    
+    G.gridLevel++;
+    G.keyFound = false;
+    
+    // Set player position to calculated entrance (opposite of exit)
+    G.board.player = { r: entranceRow, c: entranceCol };
+    
+    // Calculate entrance tile index and mark as seen (4x4)
+    const entranceIndex = entranceRow * 4 + entranceCol;
+    G.board.seen = new Set([entranceIndex]);
+    
+    // Generate new grid (will detect boss automatically)
+    generateGrid();
+    
+    // Make sure the entrance tile is revealed
+    G.board.tiles[entranceIndex].revealed = true;
+    
+    const gridType = shouldTriggerBoss() ? 'Boss Domain' : `Grid Level ${G.gridLevel}`;
+    addLogEntry(`🌟 Entered ${gridType}! (Entered from ${getPositionName(entranceRow, entranceCol)})`);
+    
+    return true;
+}
+
+// ================================================================
+// MODIFIED: COMBAT SYSTEM FUNCTIONS  
+// ================================================================
+
+/**
+ * End combat with victory or defeat (modified for boss handling)
+ */
+export function endCombat(victory) {
+    if (!G.combat.active) return;
+    
+    if (victory) {
+        addLogEntry(`🎉 Victory! You defeated the ${G.combat.enemy.name}!`);
+        
+        // Check if this was a boss fight
+        if (G.combat.bossPhase) {
+            // Boss phase complete
+            completeBossPhase();
+        } else {
+            // Normal combat
+            consumeCurrentTile();
+        }
+    } else {
+        addLogEntry(`💀 Defeat! The ${G.combat.enemy.name} has bested you!`);
+        
+        // Check if game should end
+        if (G.combat.playerHp <= 0) {
+            // If in boss fight, show boss defeat message
+            if (G.combat.bossPhase) {
+                const phase = G.combat.bossPhase;
+                if (phase.defeatText) {
+                    addLogEntry(`💀 ${phase.defeatText}`);
+                }
+            }
+            G.over = true;
+        }
+    }
+    
+    // Reset combat state
+    G.combat.active = false;
+    G.combat.enemy = null;
+    G.combat.playerHp = 0;
+    G.combat.enemyHp = 0;
+    G.combat.turn = 'player';
+    G.combat.lastRoll = null;
+    G.combat.bossPhase = null; // Clear boss phase data
+}
+
+// ================================================================
+// EXISTING FUNCTIONS (unchanged)
+// ================================================================
 
 /**
  * Get a random encounter type based on current grid level
@@ -378,10 +835,6 @@ export function healPartyMember(memberId, amount) {
 // ================================================================
 // ITEM SYSTEM FUNCTIONS  
 // ================================================================
-
-
-    
- 
 
 /**
  * Apply item effects to player
@@ -661,7 +1114,7 @@ export function removeAlly(allyId) {
         return true;
     });
     
-    addLogEntry(`💀 ${ally.name} has left the party`);
+    addLogEntry(`👋 ${ally.name} has left the party`);
     if (cardsRemoved.length > 0) {
         addLogEntry(`🗑️ Lost cards: ${cardsRemoved.join(', ')}`);
     }
@@ -729,19 +1182,6 @@ export function forceAddCardToHand(card) {
 }
 
 /**
- * Manually discard a card by ID to make room
- 
-export function discardCardById(cardId) {
-    const cardIndex = G.hand.findIndex(card => card.id === cardId);
-    if (cardIndex === -1) return false;
-    
-    const discarded = G.hand.splice(cardIndex, 1)[0];
-    G.discard.push(discarded);
-    addLogEntry(`🗑️ Discarded ${discarded.name}`);
-    return true;
-}*/
-
-/**
  * Draw cards from deck to hand (now respects hand limit)
  */
 export function drawCards(count = 1) {
@@ -762,8 +1202,6 @@ export function drawCards(count = 1) {
     return { cardsDrawn, overflowCards };
 }
 
-
-
 /**
  * Get current hand size
  */
@@ -777,13 +1215,6 @@ export function getHandSize() {
 export function isHandFull() {
     return G.hand.length >= MAX_HAND_SIZE;
 }
-
-/**
- * Get maximum hand size
- 
-export function getMaxHandSize() {
-    return MAX_HAND_SIZE;
-}*/
 
 // ================================================================
 // PARTY LEADERSHIP FUNCTIONS
@@ -1053,10 +1484,6 @@ export function playCard(cardId) {
     return true;
 }
 
-// ================================================================
-// GRID PROGRESSION FUNCTIONS
-// ================================================================
-
 /**
  * Found the key for this grid
  */
@@ -1064,43 +1491,6 @@ export function foundKey() {
     G.keyFound = true;
     addLogEntry('🗝️ Found the key! The door is now accessible.');
     consumeCurrentTile();
-}
-
-/**
- * Progress to the next grid
- */
-export function nextGrid() {
-    if (!G.keyFound) {
-        addLogEntry('🚪 You need the key to proceed!');
-        return false;
-    }
-    
-    // Get current player position (exit door location)
-    const exitRow = G.board.player.r;
-    const exitCol = G.board.player.c;
-    
-    // Calculate entrance position on new grid (opposite corner)
-    const entranceRow = 3 - exitRow; // 4x4 opposite
-    const entranceCol = 3 - exitCol;
-    
-    G.gridLevel++;
-    G.keyFound = false;
-    
-    // Set player position to calculated entrance (opposite of exit)
-    G.board.player = { r: entranceRow, c: entranceCol };
-    
-    // Calculate entrance tile index and mark as seen (4x4)
-    const entranceIndex = entranceRow * 4 + entranceCol;
-    G.board.seen = new Set([entranceIndex]);
-    
-    // Generate new grid
-    generateGrid();
-    
-    // Make sure the entrance tile is revealed
-    G.board.tiles[entranceIndex].revealed = true;
-    
-    addLogEntry(`🌟 Entered Grid Level ${G.gridLevel}! (Entered from ${getPositionName(entranceRow, entranceCol)})`);
-    return true;
 }
 
 /**
@@ -1272,32 +1662,6 @@ export function enemyAttack() {
     
     G.combat.turn = 'player';
     return true;
-}
-/**
- * End combat with victory or defeat
- */
-export function endCombat(victory) {
-    if (!G.combat.active) return;
-    
-    if (victory) {
-        addLogEntry(`🎉 Victory! You defeated the ${G.combat.enemy.name}!`);
-         consumeCurrentTile();
-        // TODO: Add loot/experience here later
-    } else {
-        addLogEntry(`💀 Defeat! The ${G.combat.enemy.name} has bested you!`);
-        // Check if game should end
-        if (G.combat.playerHp <= 0) {
-            G.over = true;
-        }
-    }
-    
-    // Reset combat state
-    G.combat.active = false;
-    G.combat.enemy = null;
-    G.combat.playerHp = 0;
-    G.combat.enemyHp = 0;
-    G.combat.turn = 'player';
-    G.combat.lastRoll = null;
 }
 
 // ================================================================
