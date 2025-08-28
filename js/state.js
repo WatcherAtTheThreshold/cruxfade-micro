@@ -614,23 +614,27 @@ export function endCombat(victory) {
                 // Sequential fight - advance to next enemy
                 G.boss.enemyIndex = (G.boss.enemyIndex || 0) + 1;
                 
+                console.log('🐛 DEBUG: Advanced enemyIndex to:', G.boss.enemyIndex, 'out of', phase.enemies.length);
+                
                 if (G.boss.enemyIndex >= phase.enemies.length) {
-                    // All enemies in sequence defeated - complete phase
+                    // All enemies in sequence defeated - complete phase AND consume tile
                     addLogEntry(`⚔️ All minions defeated! Phase complete!`);
+                    consumeCurrentTile(); // Only consume when phase is fully complete
                     completeBossPhase();
                 } else {
-                    // More enemies to fight
+                    // More enemies to fight - DON'T consume tile
                     const remaining = phase.enemies.length - G.boss.enemyIndex;
                     addLogEntry(`✅ Enemy defeated! ${remaining} enemies remain in this phase.`);
                     addLogEntry(`💀 Return to the boss encounter to continue fighting!`);
-                    // Don't complete phase yet - player needs to click boss tile again
+                    // Don't consume tile yet - let player click boss tile again
                 }
             } else {
-                // Single enemy fight or final boss - complete phase
+                // Single enemy fight or final boss - complete phase and consume
+                consumeCurrentTile();
                 completeBossPhase();
             }
         } else {
-            // Normal combat
+            // Normal combat - consume tile
             consumeCurrentTile();
         }
     } else {
