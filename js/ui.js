@@ -518,7 +518,9 @@ function renderBossPhaseFight(boss, phase) {
     const totalEnemies = phase.enemies ? phase.enemies.length : 0;
     const isSequential = totalEnemies > 1;
     
-    if (isSequential && currentEnemy > 0) {
+    console.log('🐛 DEBUG: Rendering boss fight phase - currentEnemy:', currentEnemy, 'totalEnemies:', totalEnemies);
+    
+    if (isSequential && currentEnemy > 0 && currentEnemy < totalEnemies) {
         // Middle of sequential fight
         DOM.encounterArea.innerHTML = `
             <div class="encounter-boss-phase">
@@ -536,6 +538,16 @@ function renderBossPhaseFight(boss, phase) {
         DOM.encounterActions.innerHTML = `
             <button class="btn-primary" data-action="start-boss-phase">Continue Fighting!</button>
         `;
+    } else if (currentEnemy >= totalEnemies) {
+        // Phase should be complete - this shouldn't happen
+        DOM.encounterArea.innerHTML = `
+            <div class="encounter-boss-phase">
+                <h3>💀 ${boss.name}</h3>
+                <h4>✅ Phase Complete: ${phase.name}</h4>
+                <p>All enemies in this phase have been defeated!</p>
+            </div>
+        `;
+        DOM.encounterActions.innerHTML = ``;
     } else {
         // Beginning of fight phase
         DOM.encounterArea.innerHTML = `
