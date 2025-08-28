@@ -33,7 +33,13 @@ import {
     startCombat,
     playerAttack,
     enemyAttack,
-    rollDice
+    rollDice,
+    // NEW: Boss system functions
+    isInBossEncounter,
+    getCurrentBossPhase,
+    getCurrentBoss,
+    startBossPhase,
+    completeBossPhase
 } from './state.js';
 
 // ================================================================
@@ -104,6 +110,11 @@ export function renderAll() {
     renderHeaderInfo();
     renderGameLog();
     
+    // NEW: Check if victory screen should be shown
+    if (G.victory && G.over) {
+        showVictoryScreen();
+    }
+    
     console.log('🎨 UI rendered');
 }
 
@@ -168,7 +179,9 @@ function getTileDisplayContent(tile) {
         ally: '🤝',
         key: '🗝️',
         door: '🚪',
-        empty: '·'
+        empty: '·',
+        // NEW: Boss encounter icon
+        'boss-encounter': '💀'
     };
     
     return icons[tile.type] || '?';
@@ -272,7 +285,6 @@ function createPartyMemberElement(member, isLeader = false) {
 
       console.log(`🎒 Managing ${slotType} for ${member.name}`);
       showEquipmentManagement(memberId, slotType, () => {
-         renderPartyStatus();  
         _updateGameCallback(); // Refresh UI when equipment changes
       });
     });
@@ -404,6 +416,10 @@ function renderEncounterArea() {
         case 'door':
             renderDoorEncounter();
             break;
+        // NEW: Boss encounter rendering
+        case 'boss-encounter':
+            renderBossEncounter();
+            break;
         case 'start':
         case 'empty':
             renderDefaultEncounter();
@@ -416,7 +432,201 @@ function renderEncounterArea() {
 }
 
 // ================================================================
-// ENCOUNTER RENDERING FUNCTIONS
+// NEW: BOSS ENCOUNTER RENDERING
+// ================================================================
+
+/**
+ * Render a boss encounter based on current boss state
+ */
+function renderBossEncounter() {
+    if (!isInBossEncounter()) {
+        // Not in boss encounter - shouldn't happen
+        renderDefaultEncounter();
+        return;
+    }
+    
+    const boss = getCurrentBoss();
+    const phase = getCurrentBossPhase();
+    
+    if (!boss || !phase) {
+        renderBossIntro();
+        return;
+    }
+    
+    // Render based on current phase type
+    switch (phase.type) {
+        case 'fight':
+            renderBossPhaseFight(boss, phase);
+            break;
+        case 'hazard':
+            renderBossPhaseHazard(boss, phase);
+            break;
+        case 'boss-fight':
+            renderBossPhaseFinal(boss, phase);
+            break;
+        case 'party-choice':
+            renderBossPhaseChoice(boss, phase);
+            break;
+        default:
+            renderBossIntro();
+            break;
+    }
+}
+
+/**
+ * Render boss encounter intro (before phases start)
+ */
+function renderBossIntro() {
+    const boss = getCurrentBoss();
+    if (!boss) {
+        renderDefaultEncounter();
+        return;
+    }
+    
+    DOM.encounterArea.innerHTML = `
+        <div class="encounter-boss-intro">
+            <h3>💀 ${boss.name}</h3>
+            <p class="boss-description">${boss.description}</p>
+            <div class="boss-warning">
+                <p><strong>⚠️ Epic Boss Encounter</strong></p>
+                <p>This will be a multi-phase battle. Prepare your party!</p>
+            </div>
+        </div>
+    `;
+    
+    DOM.encounterActions.innerHTML = `
+        <button class="btn-primary" data-action="start-boss-sequence">Begin Boss Encounter</button>
+    `;
+}
+
+/**
+ * Render a boss fight phase (minions)
+ */
+function renderBossPhaseFight(boss, phase) {
+    if (G.combat.active) {
+        // Show normal combat UI
+        renderFightEncounter();
+        return;
+    }
+    
+    DOM.encounterArea.innerHTML = `
+        <div class="encounter-boss-phase">
+            <h3>💀 ${boss.name}</h3>
+            <h4>⚔️ Phase: ${phase.name}</h4>
+            <p class="phase-description">${phase.description}</p>
+            <div class="phase-enemies">
+                <p><strong>Enemies:</strong> ${phase.enemies.join(', ')}</p>
+            </div>
+        </div>
+    `;
+    
+    DOM.encounterActions.innerHTML = `
+        <button class="btn-primary" data-action="start-boss-phase">Start Combat</button>
+    `;
+}
+
+/**
+ * Render a boss hazard phase
+ */
+function renderBossPhaseHazard(boss, phase) {
+    DOM.encounterArea.innerHTML = `
+        <div class="encounter-boss-phase">
+            <h3>💀 ${boss.name}</h3>
+            <h4>⚡ Phase: ${phase.name}</h4>
+            <p class="phase-description">${phase.description}</p>
+            <div class="phase-difficulty">
+                <p><strong>Challenge:</strong> Difficulty ${phase.difficulty} (${phase.preferredStat.toUpperCase()} check)</p>
+                <p><strong>Risk:</strong> ${phase.damage} damage on failure</p>
+            </div>
+        </div>
+    `;
+    
+    DOM.encounterActions.innerHTML = `
+        <button class="btn-primary" data-action="start-boss-phase">Face the Challenge</button>
+    `;
+}
+
+/**
+ * Render final boss fight phase
+ */
+function renderBossPhaseFinal(boss, phase) {
+    if (G.combat.active) {
+        // Show enhanced boss combat UI
+        renderBossFinalCombat(boss, phase);
+        return;
+    }
+    
+    DOM.encounterArea.innerHTML = `
+        <div class="encounter-boss-final">
+            <h3>💀 ${boss.name}</h3>
+            <h4>⚡ FINAL PHASE: ${phase.name}</h4>
+            <p class="phase-description">${phase.description}</p>
+            <div class="final-boss-warning">
+                <p><strong>🔥 FINAL BATTLE</strong></p>
+                <p>This is your last chance. Use all your party members strategically!</p>
+            </div>
+        </div>
+    `;
+    
+    DOM.encounterActions.innerHTML = `
+        <button class="btn-primary" data-action="start-boss-phase">Face ${boss.name}!</button>
+    `;
+}
+
+/**
+ * Render boss choice phase (placeholder)
+ */
+function renderBossPhaseChoice(boss, phase) {
+    DOM.encounterArea.innerHTML = `
+        <div class="encounter-boss-choice">
+            <h3>💀 ${boss.name}</h3>
+            <h4>🤔 Phase: ${phase.name}</h4>
+            <p class="phase-description">${phase.description}</p>
+            <p class="choice-text">${phase.mechanicText}</p>
+        </div>
+    `;
+    
+    DOM.encounterActions.innerHTML = `
+        <button class="btn-primary" data-action="complete-boss-phase">Continue</button>
+    `;
+}
+
+/**
+ * Render enhanced final boss combat UI
+ */
+function renderBossFinalCombat(boss, phase) {
+    DOM.encounterArea.innerHTML = `
+        <div class="encounter-boss-final-combat">
+            <h3>💀 FINAL BATTLE: ${G.combat.enemy.name}</h3>
+            <div class="boss-combat-status">
+                <div class="combatant player">
+                    <strong>${G.party[0].name} (Leader)</strong><br>
+                    ❤️ ${G.combat.playerHp} HP
+                </div>
+                <div class="vs">VS</div>
+                <div class="combatant boss-enemy">
+                    <strong>${G.combat.enemy.name}</strong><br>
+                    ❤️ ${G.combat.enemyHp}/${G.combat.enemy.hp} HP
+                </div>
+            </div>
+            ${G.combat.lastRoll ? `<p>🎲 Last roll: ${G.combat.lastRoll}</p>` : ''}
+            <div class="boss-combat-tip">
+                <p><strong>💡 Tip:</strong> Switch party leaders to manage HP strategically!</p>
+            </div>
+            <p class="turn-indicator">${G.combat.turn === 'player' ? '⚔️ Your turn!' : '💀 Boss turn...'}</p>
+        </div>
+    `;
+    
+    DOM.encounterActions.innerHTML = `
+        ${G.combat.turn === 'player' ? 
+            '<button class="btn-primary" data-action="player-attack">Attack!</button>' :
+            '<button class="btn-secondary" data-action="enemy-turn">Continue...</button>'
+        }
+    `;
+}
+
+// ================================================================
+// ENCOUNTER RENDERING FUNCTIONS (existing)
 // ================================================================
 
 /**
@@ -624,6 +834,134 @@ function renderDefaultEncounter() {
 }
 
 // ================================================================
+// NEW: VICTORY SCREEN
+// ================================================================
+
+/**
+ * Show victory screen overlay
+ */
+function showVictoryScreen() {
+    const boss = getCurrentBoss();
+    
+    // Create victory overlay if it doesn't exist
+    let victoryOverlay = document.getElementById('victory-overlay');
+    if (!victoryOverlay) {
+        victoryOverlay = document.createElement('div');
+        victoryOverlay.id = 'victory-overlay';
+        victoryOverlay.className = 'overlay victory-overlay';
+        DOM.overlaySystem.appendChild(victoryOverlay);
+    }
+    
+    // Get victory stats
+    const partySize = G.party.length;
+    const survivingMembers = G.party.filter(member => member.hp > 0).length;
+    const bossName = boss ? boss.name : 'Unknown Boss';
+    const gridLevel = G.gridLevel;
+    const seed = G.seed;
+    
+    victoryOverlay.innerHTML = `
+        <div class="overlay-content victory-content">
+            <h2>🏆 VICTORY!</h2>
+            <div class="victory-boss">
+                <h3>You have defeated ${bossName}!</h3>
+                ${boss && boss.victoryRewards ? `
+                    <p class="victory-message">${boss.victoryRewards.completionMessage}</p>
+                ` : ''}
+            </div>
+            
+            <div class="victory-stats">
+                <h4>📊 Run Statistics</h4>
+                <div class="stat-grid">
+                    <div class="stat-item">
+                        <strong>Grid Level:</strong> ${gridLevel}
+                    </div>
+                    <div class="stat-item">
+                        <strong>Party Size:</strong> ${partySize}
+                    </div>
+                    <div class="stat-item">
+                        <strong>Survivors:</strong> ${survivingMembers}/${partySize}
+                    </div>
+                    <div class="stat-item">
+                        <strong>Seed:</strong> ${seed}
+                    </div>
+                </div>
+            </div>
+            
+            ${boss && boss.victoryRewards ? `
+                <div class="victory-rewards">
+                    <h4>🎁 Rewards</h4>
+                    ${boss.victoryRewards.gold ? `<p>💰 Gold: ${boss.victoryRewards.gold}</p>` : ''}
+                    ${boss.victoryRewards.experience ? `<p>⭐ Experience: ${boss.victoryRewards.experience}</p>` : ''}
+                    ${boss.victoryRewards.unlocks ? `
+                        <p>🔓 Unlocked: ${boss.victoryRewards.unlocks.join(', ')}</p>
+                    ` : ''}
+                </div>
+            ` : ''}
+            
+            <div class="victory-actions">
+                <button class="btn-primary" data-action="new-game">New Game</button>
+                <button class="btn-secondary" data-action="same-seed">Play Same Seed</button>
+                <button class="btn-secondary" data-action="share-seed">Share Seed</button>
+            </div>
+            
+            ${boss && boss.victoryRewards && boss.victoryRewards.gameComplete ? `
+                <div class="game-complete">
+                    <h3>🎉 GAME COMPLETE!</h3>
+                    <p>You have saved all of existence! Thank you for playing!</p>
+                </div>
+            ` : ''}
+        </div>
+    `;
+    
+    // Add event handlers for victory actions
+    victoryOverlay.querySelectorAll('button[data-action]').forEach(button => {
+        button.addEventListener('click', (e) => {
+            const action = button.dataset.action;
+            handleVictoryAction(action);
+        });
+    });
+    
+    // Show the victory overlay
+    victoryOverlay.classList.add('active');
+}
+
+/**
+ * Handle victory screen actions
+ */
+function handleVictoryAction(action) {
+    switch (action) {
+        case 'new-game':
+            // Start a new game with random seed
+            if (window.CruxfadeMicro && window.CruxfadeMicro.newGame) {
+                window.CruxfadeMicro.newGame();
+            }
+            closeAllOverlays();
+            break;
+            
+        case 'same-seed':
+            // Restart with the same seed
+            if (window.CruxfadeMicro && window.CruxfadeMicro.restartWithSeed) {
+                window.CruxfadeMicro.restartWithSeed();
+            }
+            closeAllOverlays();
+            break;
+            
+        case 'share-seed':
+            // Copy seed to clipboard and show URL
+            const seed = G.seed;
+            const url = `${window.location.origin}${window.location.pathname}?seed=${seed}`;
+            
+            navigator.clipboard.writeText(url).then(() => {
+                alert(`Victory seed copied to clipboard!\n\nSeed: ${seed}\nURL: ${url}`);
+            }).catch(() => {
+                // Fallback if clipboard fails
+                prompt('Copy this URL to share your victorious run:', url);
+            });
+            break;
+    }
+}
+
+// ================================================================
 // HEADER INFO RENDERING
 // ================================================================
 
@@ -631,7 +969,17 @@ function renderDefaultEncounter() {
  * Render header information (grid level, keys, seed, etc.)
  */
 function renderHeaderInfo() {
-    if (DOM.gridLevel) DOM.gridLevel.textContent = G.gridLevel;
+    // Show boss level indicator if in boss encounter
+    if (DOM.gridLevel) {
+        if (isInBossEncounter()) {
+            DOM.gridLevel.textContent = `${G.gridLevel} (BOSS)`;
+            DOM.gridLevel.style.color = '#ef6b73'; // Red color for boss
+        } else {
+            DOM.gridLevel.textContent = G.gridLevel;
+            DOM.gridLevel.style.color = ''; // Reset color
+        }
+    }
+    
     if (DOM.keysFound) DOM.keysFound.textContent = G.keyFound ? '1' : '0';
     
     // Make seed clickable for editing
@@ -739,6 +1087,26 @@ export function bindEventHandlers(updateGameCallback) {
             
             // Handle the action
             switch(action) {
+                // NEW: Boss system actions
+                case 'start-boss-sequence':
+                    console.log('💀 Starting boss sequence...');
+                    startBossPhase();
+                    _updateGameCallback();
+                    break;
+                    
+                case 'start-boss-phase':
+                    console.log('⚡ Starting boss phase...');
+                    startBossPhase();
+                    _updateGameCallback();
+                    break;
+                    
+                case 'complete-boss-phase':
+                    console.log('✅ Completing boss phase...');
+                    completeBossPhase();
+                    _updateGameCallback();
+                    break;
+                
+                // Existing actions
                 case 'start-combat':
                     console.log('⚔️ Starting combat...');
                     const enemyType = getRandomEnemyType(); // Use random enemy type
