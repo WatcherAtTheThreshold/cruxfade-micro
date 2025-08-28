@@ -616,11 +616,14 @@ export function endCombat(victory) {
                 
                 if (G.boss.enemyIndex >= phase.enemies.length) {
                     // All enemies in sequence defeated - complete phase
+                    addLogEntry(`⚔️ All minions defeated! Phase complete!`);
                     completeBossPhase();
                 } else {
-                    // More enemies to fight - start next enemy
-                    addLogEntry(`📋 Enemy defeated! Continuing with next enemy...`);
-                    // Don't complete phase yet, let player move and click boss tile again
+                    // More enemies to fight
+                    const remaining = phase.enemies.length - G.boss.enemyIndex;
+                    addLogEntry(`✅ Enemy defeated! ${remaining} enemies remain in this phase.`);
+                    addLogEntry(`💀 Return to the boss encounter to continue fighting!`);
+                    // Don't complete phase yet - player needs to click boss tile again
                 }
             } else {
                 // Single enemy fight or final boss - complete phase
