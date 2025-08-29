@@ -515,6 +515,7 @@ section {
 
 .party-card {
   width: 120px;
+  height: 150px; 
   margin-left: -15px;
   transition: transform 0.2s ease, z-index 0.2s ease, box-shadow 0.2s ease;
   position: relative;
