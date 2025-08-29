@@ -1100,11 +1100,11 @@ function renderHeaderInfo() {
 function renderGameLog() {
     if (!DOM.gameLog) return;
     
-    // Show last 10 log entries
-    const recentLogs = G.log.slice(-10);
+    // Show last 15 log entries (increased from 10)
+    const recentLogs = G.log.slice(-15);
     DOM.gameLog.innerHTML = recentLogs.map(entry => `<p>${entry}</p>`).join('');
     
-    // Auto-scroll to bottom
+    // Auto-scroll to bottom to show latest messages
     DOM.gameLog.scrollTop = DOM.gameLog.scrollHeight;
 }
 
