@@ -481,6 +481,24 @@ function renderEncounterArea() {
     }
 }
 
+/**
+ * Render game over screen in encounter area
+ */
+function renderGameOverScreen() {
+    DOM.encounterArea.innerHTML = `
+        <div class="encounter-game-over">
+            <h3>💀 Game Over</h3>
+            <p>All party members have fallen.</p>
+            <p class="game-over-stats">Grid Level: ${G.gridLevel} | Seed: ${G.seed}</p>
+        </div>
+    `;
+    
+    DOM.encounterActions.innerHTML = `
+        <button class="btn-primary" onclick="window.CruxfadeMicro.newGame()">New Game</button>
+        <button class="btn-secondary" onclick="window.CruxfadeMicro.restartWithSeed()">Same Seed</button>
+    `;
+}
+
 // ================================================================
 // NEW: BOSS ENCOUNTER RENDERING
 // ================================================================
