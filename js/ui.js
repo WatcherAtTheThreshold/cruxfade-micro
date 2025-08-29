@@ -794,45 +794,44 @@ function renderFightEncounter() {
             </div>
         `;
         DOM.encounterActions.innerHTML = ``; // No buttons
-        return; // Exit early, don't show combat UI
+        return;
     }
     
-  if (G.combat.active) {
-    // Get the current party leader's name
-    const currentLeader = G.party[0];
-    const leaderName = currentLeader ? currentLeader.name : 'You';
-    
-    DOM.encounterArea.innerHTML = `
-        <div class="encounter-fight">
-            <h3>⚔️ Combat: ${G.combat.enemy.name}</h3>
-            <div class="combat-status">
-                <div class="combatant">
-                    <strong>${leaderName}</strong><br>
-                    ❤️ ${G.combat.playerHp} HP
+    if (G.combat.active) {
+        // DURING COMBAT - Show attack and flee buttons
+        const currentLeader = G.party[0];
+        const leaderName = currentLeader ? currentLeader.name : 'You';
+        
+        DOM.encounterArea.innerHTML = `
+            <div class="encounter-fight">
+                <h3>⚔️ Combat: ${G.combat.enemy.name}</h3>
+                <div class="combat-status">
+                    <div class="combatant">
+                        <strong>${leaderName}</strong><br>
+                        ❤️ ${G.combat.playerHp} HP
+                    </div>
+                    <div class="vs">VS</div>
+                    <div class="combatant">
+                        <strong>${G.combat.enemy.name}</strong><br>
+                        ❤️ ${G.combat.enemyHp} HP
+                    </div>
                 </div>
-                <div class="vs">VS</div>
-                <div class="combatant">
-                    <strong>${G.combat.enemy.name}</strong><br>
-                    ❤️ ${G.combat.enemyHp} HP
-                </div>
+                ${G.combat.lastRoll ? `<p>🎲 Last roll: ${G.combat.lastRoll}</p>` : ''}
+                <p>${G.combat.turn === 'player' ? `${leaderName}'s turn!` : 'Enemy turn...'}</p>
             </div>
-            ${G.combat.lastRoll ? `<p>🎲 Last roll: ${G.combat.lastRoll}</p>` : ''}
-            <p>${G.combat.turn === 'player' ? `${leaderName}'s turn!` : 'Enemy turn...'}</p>
-        </div>
-    `;
+        `;
         
         DOM.encounterActions.innerHTML = `
             ${G.combat.turn === 'player' ? 
-                '<button class="btn-primary" data-action="player-attack">Attack!</button>' :
+                '<button class="btn-primary" data-action="player-attack">Attack!</button>' +
+                '<button class="btn-secondary" data-action="flee-encounter">Flee</button>' :
                 '<button class="btn-secondary" data-action="enemy-turn">Continue...</button>'
             }
         `;
     } else {
-        // Get a random enemy type for this encounter
+        // BEFORE COMBAT - Only show fight button (no flee option)
         const enemyType = getRandomEnemyType();
-        const enemyData = G.combat.enemy || { name: 'Unknown Enemy', description: 'A mysterious foe' };
         
-        // Not in combat yet - show encounter start
         DOM.encounterArea.innerHTML = `
             <div class="encounter-fight">
                 <h3>⚔️ Enemy Encounter</h3>
@@ -846,8 +845,8 @@ function renderFightEncounter() {
         
         DOM.encounterActions.innerHTML = `
             <button class="btn-primary" data-action="start-combat">Fight!</button>
-            <button class="btn-secondary" data-action="flee-encounter">Flee</button>
         `;
+        // NO FLEE BUTTON - can't flee before combat starts
     }
 }
 
