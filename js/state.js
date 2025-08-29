@@ -843,9 +843,14 @@ export function isCurrentTileCompleted() {
     // Empty tiles are completed when stepped on
     if (currentTile.type === 'empty') return true;
     
-    // Door tiles: you can always move AWAY from doors, even without key
-    // The key requirement only applies to using the door to proceed to next grid
+    // Door tiles: you can always move away from doors
     if (currentTile.type === 'door') return true;
+    
+    // Fight tiles: completed if consumed OR if not in active combat
+    // (allows movement after successful flee or before engaging)
+    if (currentTile.type === 'fight') {
+        return currentTile.consumed || !G.combat.active;
+    }
     
     // All other tiles check consumed status
     return currentTile.consumed === true;
