@@ -1036,7 +1036,7 @@ export function resolveHazard() {
             addLogEntry(`🎁 You found something useful while navigating!`);
             giveRandomItem();
         }
-        
+        consumeCurrentTile();
         return { success: true, hazard };
     } else {
         // Failure - take damage
