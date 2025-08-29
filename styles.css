@@ -496,7 +496,7 @@ section {
 
 .party-cards {
   position: relative;
-  min-height: auto; /* Allow it to be compact */
+  min-height: 100px; /* Card Size */
 }
 
 .deck-info {
@@ -510,7 +510,7 @@ section {
   margin-left: 20px;
   flex: 1;
   align-items: flex-start;
-  min-height: auto; /* More compact */
+  min-height: 100px; /* Card Size */
 }
 
 .party-card {
