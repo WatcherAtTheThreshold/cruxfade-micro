@@ -213,13 +213,30 @@ function renderPartyStatus() {
   });
 }
 
+
 /**
  * Create a party member display element
  */
 function createPartyMemberElement(member, isLeader = false) {
   const memberDiv = document.createElement('div');
   memberDiv.className = 'party-member';
-  memberDiv.style.cursor = 'pointer';
+  
+  // Check if member is fallen (dead)
+  const isFallen = member.hp <= 0;
+  
+  if (isFallen) {
+    memberDiv.classList.add('fallen');
+    memberDiv.style.cursor = 'default'; // No clicking on dead members
+  } else {
+    memberDiv.style.cursor = 'pointer';
+  }
+
+  // Compute display values
+  const hpColor = isFallen ? '#666' : // Grey for dead
+    member.hp <= member.maxHp * 0.25 ? '#ef6b73' :
+    member.hp <= member.maxHp * 0.5  ? '#f6d55c' :
+                                        '#68d391';
+
 
   // Compute display values
   const hpColor =
@@ -267,36 +284,34 @@ function createPartyMemberElement(member, isLeader = false) {
         </div>
       </div>
     </div>
-    ${isLeader ? '<div class="leader-marker" style="padding: 1px 4px; font-size: 0.6rem;">LEADER</div>' : ''}
+   ${isLeader && !isFallen ? '<div class="leader-marker">LEADER</div>' : 
+      isFallen ? '<div class="fallen-marker">FALLEN</div>' : ''}
   `;
 
-  // Reduce overall padding on the member div
-  memberDiv.style.padding = '4px';
-  memberDiv.style.gap = '8px';
+  // Only add click handlers for living members
+  if (!isFallen) {
+    memberDiv.addEventListener('click', (e) => {
+      if (e.target.closest('.clickable-slot')) return;
+      switchPartyLeader(member.id);
+      _updateGameCallback();
+    });
 
-  // Click to switch leader (but ignore clicks on equipment slots)
-  memberDiv.addEventListener('click', (e) => {
-    if (e.target.closest('.clickable-slot')) return;
-    console.log('🖱️ Clicked party member:', member.name);
-    switchPartyLeader(member.id);
-    _updateGameCallback();
-  });
+    // Add equipment management clicks (ONLY for living members)
+    const equipmentSlots = memberDiv.querySelectorAll('.clickable-slot');
+    equipmentSlots.forEach(slot => {
+      slot.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const memberId = slot.dataset.memberId;
+        const slotType = slot.dataset.slot;
 
-  // Add click handlers to equipment slots
-  const equipmentSlots = memberDiv.querySelectorAll('.clickable-slot');
-  equipmentSlots.forEach(slot => {
-    slot.addEventListener('click', (e) => {
-      e.stopPropagation(); // Prevent parent click
-      const memberId = slot.dataset.memberId;
-      const slotType = slot.dataset.slot;
-
-      console.log(`🎒 Managing ${slotType} for ${member.name}`);
-      showEquipmentManagement(memberId, slotType, () => {
-        _updateGameCallback(); // Refresh UI when equipment changes
+        console.log(`🎒 Managing ${slotType} for ${member.name}`);
+        showEquipmentManagement(memberId, slotType, () => {
+          _updateGameCallback();
+        });
       });
     });
-  });
-
+  }
+  
   return memberDiv;
 }
 
