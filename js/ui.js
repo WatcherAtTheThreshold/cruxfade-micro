@@ -418,9 +418,20 @@ function getMemberSkills(member) {
 
 /**
  * Renders the encounter area based on the player's current tile.
- * This function acts as a dispatcher.
  */
 function renderEncounterArea() {
+    // NEW: Check for game over first - show game over screen instead of encounters
+    if (G.over && !G.victory) {
+        renderGameOverScreen();
+        return;
+    }
+    
+    // NEW: Check for victory screen
+    if (G.victory && G.over) {
+        // Victory screen is handled elsewhere
+        return;
+    }
+    
     const tile = getCurrentTile();
     if (!tile) {
         renderDefaultEncounter();
