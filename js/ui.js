@@ -725,20 +725,29 @@ function renderFightEncounter() {
         return; // Exit early, don't show combat UI
     }
     
-    if (G.combat.active) {
-        DOM.encounterArea.innerHTML = `
-            <div class="encounter-fight">
-                <h3>⚔️ Combat: ${G.combat.enemy.name}</h3>
-                <div class="combat-status">
-                   <div class="combatant">
-                   <strong>${leaderName}</strong><br>
-                  ❤️ ${G.combat.playerHp} HP
-                   </div>
+  if (G.combat.active) {
+    // Get the current party leader's name
+    const currentLeader = G.party[0];
+    const leaderName = currentLeader ? currentLeader.name : 'You';
+    
+    DOM.encounterArea.innerHTML = `
+        <div class="encounter-fight">
+            <h3>⚔️ Combat: ${G.combat.enemy.name}</h3>
+            <div class="combat-status">
+                <div class="combatant">
+                    <strong>${leaderName}</strong><br>
+                    ❤️ ${G.combat.playerHp} HP
                 </div>
-                ${G.combat.lastRoll ? `<p>🎲 Last roll: ${G.combat.lastRoll}</p>` : ''}
-                <p>${G.combat.turn === 'player' ? `${leaderName}'s turn!` : 'Enemy turn...'}</p>
+                <div class="vs">VS</div>
+                <div class="combatant">
+                    <strong>${G.combat.enemy.name}</strong><br>
+                    ❤️ ${G.combat.enemyHp} HP
+                </div>
             </div>
-        `;
+            ${G.combat.lastRoll ? `<p>🎲 Last roll: ${G.combat.lastRoll}</p>` : ''}
+            <p>${G.combat.turn === 'player' ? `${leaderName}'s turn!` : 'Enemy turn...'}</p>
+        </div>
+    `;
         
         DOM.encounterActions.innerHTML = `
             ${G.combat.turn === 'player' ? 
