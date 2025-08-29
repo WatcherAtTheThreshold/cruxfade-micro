@@ -136,58 +136,49 @@ async function init() {
 // ================================================================
 
 /**
- * Main game update cycle - called after any state change
- */
-export function updateGame() {
-    // Re-render all UI elements to reflect state changes
-    renderAll();
-    
-    // Check win/lose conditions
-    checkGameEndConditions();
-}
-
-/**
  * Check if the game should end (win/lose conditions)
  */
 function checkGameEndConditions() {
-    // NEW: Check victory condition first
+    // Check victory condition first
     if (G.victory) {
-        // Game won - don't trigger other end conditions
         return;
     }
     
-    // NEW: Check if ALL party members are dead (true game over)
+    // Get all living party members
     const livingMembers = G.party.filter(member => member.hp > 0);
     
+    // If everyone is dead, game over
     if (livingMembers.length === 0) {
-        // Everyone is dead - true game over
         G.over = true;
         addLogEntry('💀 Game Over! All party members have fallen.');
         renderAll();
         return;
     }
     
-    // NEW: Auto-switch leader if current leader is dead but others live
+    // If current leader is dead but others are alive, switch leader
     const currentLeader = G.party[0];
     if (currentLeader && currentLeader.hp <= 0 && livingMembers.length > 0) {
-        // Current leader is dead but others are alive - auto-switch
-        const newLeader = livingMembers[0];
+        // Find the first living member
+        const newLeaderIndex = G.party.findIndex(member => member.hp > 0);
         
-        // Import the switchPartyLeader function and use it
-        import('./state.js').then(({ switchPartyLeader, addLogEntry }) => {
-            switchPartyLeader(newLeader.id);
+        if (newLeaderIndex > 0) {
+            // Move living member to position 0 (leader spot)
+            const newLeader = G.party[newLeaderIndex];
+            G.party.splice(newLeaderIndex, 1); // Remove from current position
+            G.party.unshift(newLeader); // Add to front
+            
             addLogEntry(`💔 ${currentLeader.name} has fallen! ${newLeader.name} takes leadership!`);
             
             // Update combat HP if in combat
             if (G.combat.active) {
                 G.combat.playerHp = newLeader.hp;
             }
-        }).catch(console.error);
+        }
         
         return; // Don't end game - we have a new leader
     }
     
-    // OLD: Basic win condition (fallback for games without boss data)
+    // Fallback win condition
     if (G.gridLevel > 6 && !G.victory) {
         G.over = true;
         G.victory = true;
