@@ -312,106 +312,148 @@ function getCharacterIcon(member) {
 
 
 // ================================================================
-// PARTY HAND RENDERING
+// PARTY HAND RENDERING (Updated for Two-Click System)
 // ================================================================
 
+// Track selected card state
+let selectedCardId = null;
+
 /**
- * Render the overlapping party card display
+ * Render the overlapping party card display with two-click system
  */
 function renderPartyHand() {
     if (!DOM.partyHand) return;
     
+    // Clear previous content
     DOM.partyHand.innerHTML = `<h4 style="margin-bottom: 8px;">Hand (${G.hand.length}/5)</h4>`;
     
-    // Create a more compact card container
+    // Create card container
     const cardContainer = document.createElement('div');
-    cardContainer.style.display = 'flex';
-    cardContainer.style.flexWrap = 'wrap';
-    cardContainer.style.gap = '4px';
-    cardContainer.style.maxHeight = '120px';
-    cardContainer.style.overflowY = 'auto';
+    cardContainer.className = 'party-hand-cards';
+    cardContainer.style.cssText = `
+        display: flex;
+        align-items: flex-end;
+        padding-left: 10px;
+        min-height: 120px;
+        position: relative;
+    `;
     
+    // Create each card
     G.hand.forEach((card, index) => {
         const cardElement = document.createElement('div');
         cardElement.className = 'playable-card-compact';
-        cardElement.style.cssText = `
-            background: #162236;
-            border: 1px solid #2a3b5f;
-            border-radius: 6px;
-            padding: 4px 6px;
-            cursor: pointer;
-            font-size: 0.75rem;
-            min-width: 70px;
-            text-align: center;
-            transition: all 0.2s ease;
-        `;
+        cardElement.dataset.cardId = card.id;
         
+        // Add selected state if this card is selected
+        if (selectedCardId === card.id) {
+            cardElement.classList.add('selected');
+        }
+        
+        // Card content
         cardElement.innerHTML = `
-            <div style="font-weight: 600; margin-bottom: 2px;">${card.name}</div>
-            <div style="font-size: 0.65rem; color: #9aa0a6;">${card.type}</div>
+            <h4>${card.name}</h4>
+            <div class="card-type">${card.type}</div>
         `;
         
-        // Hover effect
-        cardElement.addEventListener('mouseenter', () => {
-            cardElement.style.transform = 'translateY(-2px)';
-            cardElement.style.backgroundColor = '#1e2a3a';
-        });
-        cardElement.addEventListener('mouseleave', () => {
-            cardElement.style.transform = 'translateY(0)';
-            cardElement.style.backgroundColor = '#162236';
-        });
-        
-        // Make card clickable
-        cardElement.addEventListener('click', () => {
-            console.log('🃏 Playing card:', card.name);
-            playCard(card.id);
-            _updateGameCallback();
+        // Add click handler for two-click system
+        cardElement.addEventListener('click', (e) => {
+            e.stopPropagation(); // Prevent event bubbling
+            handleCardClick(card.id, cardElement);
         });
         
         cardContainer.appendChild(cardElement);
     });
     
     DOM.partyHand.appendChild(cardContainer);
+    
+    // Add click-away handler to deselect cards
+    addClickAwayHandler();
 }
 
 /**
- * Create a party member card element
+ * Handle card click for two-click system
  */
-function createPartyCardElement(member, isLeader = false) {
-    const cardDiv = document.createElement('div');
-    cardDiv.className = `party-card ${isLeader ? 'leader' : ''}`;
-    
-    // Get member's skills/cards
-    const skills = getMemberSkills(member);
-    const skillsHtml = skills.map(skill => `<span class="skill">${skill}</span>`).join('');
-    
-    cardDiv.innerHTML = `
-        <div class="card-portrait">${getCharacterIcon(member)}</div>
-        <div class="card-content">
-            <h4>${member.name}</h4>
-            <div class="card-skills">
-                ${skillsHtml}
-            </div>
-        </div>
+function handleCardClick(cardId, cardElement) {
+    if (selectedCardId === cardId) {
+        // Second click on same card - USE the card
+        console.log('🃏 Using card:', cardId);
+        playCard(cardId);
+        selectedCardId = null; // Reset selection
+        _updateGameCallback();
+    } else {
+        // First click or different card - SELECT the card
+        console.log('🃏 Selecting card:', cardId);
+        selectedCardId = cardId;
+        
+        // Visual feedback: re-render to show selected state
+        renderPartyHand();
+        
+        // Optional: Show tooltip or feedback
+        showCardSelectionFeedback(cardElement);
+    }
+}
+
+/**
+ * Show visual feedback when card is selected
+ */
+function showCardSelectionFeedback(cardElement) {
+    // Create temporary feedback element
+    const feedback = document.createElement('div');
+    feedback.textContent = 'Click again to use';
+    feedback.style.cssText = `
+        position: absolute;
+        top: -25px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: var(--accent);
+        color: white;
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-size: 0.7rem;
+        pointer-events: none;
+        z-index: 10;
+        opacity: 0;
+        transition: opacity 0.2s ease;
     `;
     
-    return cardDiv;
+    cardElement.style.position = 'relative';
+    cardElement.appendChild(feedback);
+    
+    // Animate in
+    setTimeout(() => feedback.style.opacity = '1', 10);
+    
+    // Remove after 2 seconds
+    setTimeout(() => {
+        if (feedback.parentNode) {
+            feedback.remove();
+        }
+    }, 2000);
 }
 
 /**
- * Get skills/abilities for a party member
+ * Add click-away handler to deselect cards when clicking elsewhere
  */
-function getMemberSkills(member) {
-    // For now, return basic skills - will be expanded with card system
-    const skills = ['Basic Strike'];
+function addClickAwayHandler() {
+    // Remove existing handler to prevent duplicates
+    document.removeEventListener('click', handleClickAway);
     
-    if (member.tags.includes('leader')) skills.push('Command');
-    if (member.tags.includes('warrior')) skills.push('Shield Bash');
-    if (member.tags.includes('mage')) skills.push('Magic Bolt');
-    
-    return skills;
+    // Add new handler
+    document.addEventListener('click', handleClickAway);
 }
 
+/**
+ * Handle clicks outside of cards to deselect
+ */
+function handleClickAway(e) {
+    // Check if click was outside party hand area
+    if (!e.target.closest('.party-hand-section')) {
+        if (selectedCardId !== null) {
+            console.log('🃏 Deselecting card due to click away');
+            selectedCardId = null;
+            renderPartyHand(); // Re-render to remove selected state
+        }
+    }
+}
 // ================================================================
 // ENCOUNTER AREA RENDERING
 // ================================================================
