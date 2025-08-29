@@ -843,7 +843,12 @@ export function isCurrentTileCompleted() {
     // Empty tiles are completed when stepped on
     if (currentTile.type === 'empty') return true;
     
-    // Check if tile is consumed (completed)
+    // Door tiles are completed if you have the key OR if you used the door
+    if (currentTile.type === 'door') {
+        return G.keyFound || currentTile.consumed;
+    }
+    
+    // All other tiles check consumed status
     return currentTile.consumed === true;
 }
 
