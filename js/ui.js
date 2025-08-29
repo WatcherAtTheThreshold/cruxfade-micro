@@ -238,12 +238,6 @@ function createPartyMemberElement(member, isLeader = false) {
                                         '#68d391';
 
 
-  // Compute display values
-  const hpColor =
-    member.hp <= member.maxHp * 0.25 ? '#ef6b73' :
-    member.hp <= member.maxHp * 0.5  ? '#f6d55c' :
-                                        '#68d391';
-
   // Equipped items
   const equipment = G.equipment[member.id] || [];
   const weapon    = equipment.find(item => item.slot === 'weapon');
