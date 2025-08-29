@@ -1728,16 +1728,21 @@ export function attemptFlee() {
     }
     
     const player = getPartyLeader();
+    const enemyName = G.combat.enemy.name; // SAVE NAME FIRST before clearing
     const roll = rollDice(20); // d20 roll
     const statBonus = player.atk; // Use ATK for "fighting your way out"
     const total = roll + statBonus;
     const difficulty = 12 + G.combat.enemy.atk; // Harder to flee from stronger enemies
     
-    addLogEntry(`🏃 Attempting to flee... (d20 + ATK vs ${difficulty})`);
+    addLogEntry(`🏃 Attempting to flee from ${enemyName}... (d20 + ATK vs ${difficulty})`);
     addLogEntry(`🎲 Rolled ${roll} + ${statBonus} = ${total}`);
     
     if (total >= difficulty) {
         // Success - end combat but DON'T consume tile
+        addLogEntry(`✅ Successfully escaped from ${enemyName}!`);
+        addLogEntry(`⚠️ The ${enemyName} remains - you can fight it again later`);
+        
+        // Reset combat state
         G.combat.active = false;
         G.combat.enemy = null;
         G.combat.playerHp = 0;
@@ -1746,9 +1751,6 @@ export function attemptFlee() {
         G.combat.lastRoll = null;
         G.combat.bossPhase = null;
         
-        addLogEntry(`✅ Successfully escaped from ${G.combat.enemy?.name || 'combat'}!`);
-        addLogEntry(`⚠️ The enemy remains - you can try fighting again later`);
-        
         return { success: true };
     } else {
         // Failure - take damage and stay in combat
@@ -1756,7 +1758,8 @@ export function attemptFlee() {
         G.combat.playerHp = Math.max(0, G.combat.playerHp - damage);
         player.hp = G.combat.playerHp;
         
-        addLogEntry(`❌ Failed to escape! Took ${damage} damage trying to flee!`);
+        addLogEntry(`❌ Failed to escape! Took ${damage} damage while trying to flee!`);
+        addLogEntry(`💥 The ${enemyName} punishes your escape attempt!`);
         
         // Check if failure killed the player
         if (G.combat.playerHp <= 0) {
