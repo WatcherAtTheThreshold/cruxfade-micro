@@ -232,40 +232,44 @@ function createPartyMemberElement(member, isLeader = false) {
   const armor     = equipment.find(item => item.slot === 'armor');
   const accessory = equipment.find(item => item.slot === 'accessory');
 
-  // Build DOM
+  // Build compact DOM - reduce padding and spacing
   memberDiv.innerHTML = `
-    <div class="member-portrait">
+    <div class="member-portrait" style="width: 32px; height: 32px;">
       <img src="./images/portraits/${member.id}.png" alt="${member.name}"
            onerror="this.style.display='none'; this.nextElementSibling.style.display='inline'">
-      <span class="portrait-fallback">${getCharacterIcon(member)}</span>
+      <span class="portrait-fallback" style="font-size: 1rem;">${getCharacterIcon(member)}</span>
     </div>
-    <div class="member-info">
-      <strong>${member.name}</strong>
-      <div class="stats">
+    <div class="member-info" style="flex: 1;">
+      <strong style="font-size: 0.85rem;">${member.name}</strong>
+      <div class="stats" style="gap: 8px; font-size: 0.75rem;">
         <span class="hp">❤️ <strong style="color:${hpColor}">${member.hp}</strong>/${member.maxHp}</span>
         <span class="atk">⚔️ <strong>${member.atk}</strong></span>
         <span class="mag">✨ <strong>${member.mag}</strong></span>
       </div>
-      <div class="equipment-display">
-        <div class="equipment-slot weapon-slot clickable-slot"
+      <div class="equipment-display" style="margin-top: 4px; gap: 2px;">
+        <div class="equipment-slot weapon-slot clickable-slot" style="padding: 1px 3px; font-size: 0.65rem;"
              data-member-id="${member.id}" data-slot="weapon" title="Click to manage weapon">
-          <span class="slot-icon">⚔️</span>
+          <span class="slot-icon" style="width: 12px;">⚔️</span>
           <span class="equipment-name">${weapon ? weapon.name : 'None'}</span>
         </div>
-        <div class="equipment-slot armor-slot clickable-slot"
+        <div class="equipment-slot armor-slot clickable-slot" style="padding: 1px 3px; font-size: 0.65rem;"
              data-member-id="${member.id}" data-slot="armor" title="Click to manage armor">
-          <span class="slot-icon">🛡️</span>
+          <span class="slot-icon" style="width: 12px;">🛡️</span>
           <span class="equipment-name">${armor ? armor.name : 'None'}</span>
         </div>
-        <div class="equipment-slot accessory-slot clickable-slot"
+        <div class="equipment-slot accessory-slot clickable-slot" style="padding: 1px 3px; font-size: 0.65rem;"
              data-member-id="${member.id}" data-slot="accessory" title="Click to manage accessory">
-          <span class="slot-icon">💎</span>
+          <span class="slot-icon" style="width: 12px;">💎</span>
           <span class="equipment-name">${accessory ? accessory.name : 'None'}</span>
         </div>
       </div>
     </div>
-    ${isLeader ? '<div class="leader-marker">LEADER</div>' : ''}
+    ${isLeader ? '<div class="leader-marker" style="padding: 1px 4px; font-size: 0.6rem;">LEADER</div>' : ''}
   `;
+
+  // Reduce overall padding on the member div
+  memberDiv.style.padding = '4px';
+  memberDiv.style.gap = '8px';
 
   // Click to switch leader (but ignore clicks on equipment slots)
   memberDiv.addEventListener('click', (e) => {
@@ -315,16 +319,45 @@ function getCharacterIcon(member) {
 function renderPartyHand() {
     if (!DOM.partyHand) return;
     
-    DOM.partyHand.innerHTML = '<h4>Hand (' + G.hand.length + '/5)</h4>';
+    DOM.partyHand.innerHTML = `<h4 style="margin-bottom: 8px;">Hand (${G.hand.length}/5)</h4>`;
+    
+    // Create a more compact card container
+    const cardContainer = document.createElement('div');
+    cardContainer.style.display = 'flex';
+    cardContainer.style.flexWrap = 'wrap';
+    cardContainer.style.gap = '4px';
+    cardContainer.style.maxHeight = '120px';
+    cardContainer.style.overflowY = 'auto';
     
     G.hand.forEach((card, index) => {
         const cardElement = document.createElement('div');
-        cardElement.className = 'playable-card';
-        cardElement.style.cursor = 'pointer';
-        cardElement.innerHTML = `
-            <strong>${card.name}</strong>
-            <div class="card-type">${card.type}</div>
+        cardElement.className = 'playable-card-compact';
+        cardElement.style.cssText = `
+            background: #162236;
+            border: 1px solid #2a3b5f;
+            border-radius: 6px;
+            padding: 4px 6px;
+            cursor: pointer;
+            font-size: 0.75rem;
+            min-width: 70px;
+            text-align: center;
+            transition: all 0.2s ease;
         `;
+        
+        cardElement.innerHTML = `
+            <div style="font-weight: 600; margin-bottom: 2px;">${card.name}</div>
+            <div style="font-size: 0.65rem; color: #9aa0a6;">${card.type}</div>
+        `;
+        
+        // Hover effect
+        cardElement.addEventListener('mouseenter', () => {
+            cardElement.style.transform = 'translateY(-2px)';
+            cardElement.style.backgroundColor = '#1e2a3a';
+        });
+        cardElement.addEventListener('mouseleave', () => {
+            cardElement.style.transform = 'translateY(0)';
+            cardElement.style.backgroundColor = '#162236';
+        });
         
         // Make card clickable
         cardElement.addEventListener('click', () => {
@@ -333,8 +366,10 @@ function renderPartyHand() {
             _updateGameCallback();
         });
         
-        DOM.partyHand.appendChild(cardElement);
+        cardContainer.appendChild(cardElement);
     });
+    
+    DOM.partyHand.appendChild(cardContainer);
 }
 
 /**
