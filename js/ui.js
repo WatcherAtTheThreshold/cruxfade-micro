@@ -11,6 +11,7 @@ import {
     foundKey, 
     nextGrid, 
     addLogEntry,
+    attemptFlee,
     getTileAt,
     isAdjacentToPlayer,
     giveRandomItem,
@@ -29,8 +30,7 @@ import {
     unequipItem,
     getEquippedItem,
     isEquipment,
-    // Combat functions
-    attemptFlee, 
+    // Combat functions 
     startCombat,
     playerAttack,
     enemyAttack,
