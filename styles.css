@@ -454,6 +454,34 @@ section {
   border-left: 2px solid #ffe66d;
 }
 
+/* Fallen party member styling */
+.party-member.fallen {
+  opacity: 0.6;
+  background: var(--surface-border);
+  border-color: var(--muted);
+}
+
+.party-member.fallen:hover {
+  background: var(--surface-border);
+  border-color: var(--muted);
+  transform: none;
+  box-shadow: none;
+}
+
+/* Fallen marker styling */
+.fallen-marker {
+  background: var(--bad);
+  color: white;
+  padding: 1px 6px;
+  border-radius: var(--radius-full);
+  font-size: 0.55rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-top: 2px;
+  line-height: 1;
+}
+
 /* Mobile responsive */
 @media (max-width: 700px) {
   .party-stats {
