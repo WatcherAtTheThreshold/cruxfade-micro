@@ -4,87 +4,24 @@
 // ================================================================
 
 // Import core modules
-import { G, initializeGame, addLogEntry, setGameData, switchPartyLeader } from './state.js';
+import { G, initializeGame, addLogEntry, setGameData } from './state.js';
 import { renderAll, bindEventHandlers } from './ui.js';
 import { initRNG } from './rng.js';
 
 // ================================================================
-// DATA LOADING SYSTEM
+// GAME LOOP & STATE MANAGEMENT (DEFINED FIRST)
 // ================================================================
 
 /**
- * Load all game data from JSON files
+ * Main game update cycle - called after any state change
  */
-async function loadGameData() {
-    try {
-        console.log('📁 Loading game data files...');
-        
-        // Load enemies.json (required)
-        const enemiesResponse = await fetch('./data/enemies.json');
-        
-        if (!enemiesResponse.ok) {
-            throw new Error(`Failed to load enemies.json: ${enemiesResponse.status} ${enemiesResponse.statusText}`);
-        }
-        
-        const enemies = await enemiesResponse.json();
-        console.log('✅ Enemies loaded:', enemies);
-        
-        // Optional files - don't fail if they don't exist
-        let encounters = null;
-        let items = null;
-        let bosses = null; // NEW: Boss data
-        
-        try {
-            const encountersResponse = await fetch('./data/encounters.json');
-            if (encountersResponse.ok) {
-                encounters = await encountersResponse.json();
-                console.log('✅ Encounters loaded:', encounters);
-            }
-        } catch (e) {
-            console.log('⚠️ encounters.json not found (optional)');
-        }
-        
-        try {
-            const itemsResponse = await fetch('./data/items.json');
-            if (itemsResponse.ok) {
-                items = await itemsResponse.json();
-                console.log('✅ Items loaded:', items);
-            }
-        } catch (e) {
-            console.log('⚠️ items.json not found (optional)');
-        }
-        
-        // NEW: Load bosses.json
-        try {
-            const bossesResponse = await fetch('./data/bosses.json');
-            if (bossesResponse.ok) {
-                bosses = await bossesResponse.json();
-                console.log('✅ Bosses loaded:', bosses);
-                console.log('💀 Available bosses:', Object.keys(bosses).filter(key => key !== 'boss-enemies'));
-            }
-        } catch (e) {
-            console.log('⚠️ bosses.json not found (boss encounters disabled)');
-        }
-        
-        const gameData = {
-            enemies: enemies,
-            encounters: encounters,
-            items: items,
-            bosses: bosses  // NEW: Include boss data
-        };
-        
-        console.log('🎮 Game data loaded:', gameData);
-        return gameData;
-        
-    } catch (error) {
-        console.error('❌ Failed to load game data:', error);
-        throw error;
-    }
+export function updateGame() {
+    // Re-render all UI elements to reflect state changes
+    renderAll();
+    
+    // Check win/lose conditions
+    checkGameEndConditions();
 }
-
-// ================================================================
-// GAME LOOP & STATE MANAGEMENT
-// ================================================================
 
 /**
  * Check if the game should end (win/lose conditions)
@@ -140,6 +77,76 @@ function checkGameEndConditions() {
 }
 
 // ================================================================
+// DATA LOADING SYSTEM
+// ================================================================
+
+/**
+ * Load all game data from JSON files
+ */
+async function loadGameData() {
+    try {
+        console.log('📁 Loading game data files...');
+        
+        const enemiesResponse = await fetch('./data/enemies.json');
+        if (!enemiesResponse.ok) {
+            throw new Error(`Failed to load enemies.json: ${enemiesResponse.status} ${enemiesResponse.statusText}`);
+        }
+        
+        const enemies = await enemiesResponse.json();
+        console.log('✅ Enemies loaded:', enemies);
+        
+        let encounters = null;
+        let items = null;
+        let bosses = null;
+        
+        try {
+            const encountersResponse = await fetch('./data/encounters.json');
+            if (encountersResponse.ok) {
+                encounters = await encountersResponse.json();
+                console.log('✅ Encounters loaded:', encounters);
+            }
+        } catch (e) {
+            console.log('⚠️ encounters.json not found (optional)');
+        }
+        
+        try {
+            const itemsResponse = await fetch('./data/items.json');
+            if (itemsResponse.ok) {
+                items = await itemsResponse.json();
+                console.log('✅ Items loaded:', items);
+            }
+        } catch (e) {
+            console.log('⚠️ items.json not found (optional)');
+        }
+        
+        try {
+            const bossesResponse = await fetch('./data/bosses.json');
+            if (bossesResponse.ok) {
+                bosses = await bossesResponse.json();
+                console.log('✅ Bosses loaded:', bosses);
+                console.log('👀 Available bosses:', Object.keys(bosses).filter(key => key !== 'boss-enemies'));
+            }
+        } catch (e) {
+            console.log('⚠️ bosses.json not found (boss encounters disabled)');
+        }
+        
+        const gameData = {
+            enemies: enemies,
+            encounters: encounters,
+            items: items,
+            bosses: bosses
+        };
+        
+        console.log('🎮 Game data loaded:', gameData);
+        return gameData;
+        
+    } catch (error) {
+        console.error('❌ Failed to load game data:', error);
+        throw error;
+    }
+}
+
+// ================================================================
 // MAIN INITIALIZATION
 // ================================================================
 
@@ -150,37 +157,25 @@ async function init() {
     console.log('🎮 Cruxfade-Micro starting up...');
     
     try {
-        // Load game data first
         const gameData = await loadGameData();
-        
-        // Pass data to state system
         setGameData(gameData);
         
-        // Initialize RNG with seed
         const seed = getSeedFromURL();
         G.seed = seed;
         initRNG(seed);
         
-        // Initialize game state
         initializeGame();
-        
-        // Set up UI event handlers and pass updateGame as callback
-        bindEventHandlers(updateGame);
-        
-        // Initial render of all game elements
+        bindEventHandlers(updateGame); // Now updateGame is defined
         renderAll();
         
-        // Add welcome message with boss hint
         addLogEntry('Welcome to the grid. Find the key to proceed...');
         
-        // NEW: Show boss availability info
         if (gameData.bosses) {
             const bossCount = Object.keys(gameData.bosses).filter(key => key !== 'boss-enemies').length;
-            addLogEntry(`💀 ${bossCount} epic bosses await in the deeper grids...`);
+            addLogEntry(`👀 ${bossCount} epic bosses await in the deeper grids...`);
         }
         
         console.log('✅ Game initialized successfully');
-        console.log('🎯 Current state:', G);
         
     } catch (error) {
         console.error('🚨 Game initialization failed:', error);
@@ -188,22 +183,14 @@ async function init() {
     }
 }
 
-
-
 // ================================================================
 // UTILITY FUNCTIONS
 // ================================================================
 
-/**
- * Generate a random seed for new games
- */
 export function generateSeed() {
     return Math.floor(Math.random() * 99999);
 }
 
-/**
- * Get seed from URL parameters or generate random
- */
 function getSeedFromURL() {
     const urlParams = new URLSearchParams(window.location.search);
     const seedParam = urlParams.get('seed');
@@ -213,9 +200,6 @@ function getSeedFromURL() {
     return generateSeed();
 }
 
-/**
- * Start a new game with optional seed
- */
 export function newGame(seed = null) {
     G.seed = seed || generateSeed();
     initRNG(G.seed);
@@ -223,17 +207,13 @@ export function newGame(seed = null) {
     renderAll();
     addLogEntry(`🌱 New game started (Seed: ${G.seed})`);
     
-    // NEW: Show boss info on new game
     const gameData = G._gameData || {};
     if (gameData.bosses) {
         const bossCount = Object.keys(gameData.bosses).filter(key => key !== 'boss-enemies').length;
-        addLogEntry(`💀 ${bossCount} epic bosses await in Grid 4+...`);
+        addLogEntry(`👀 ${bossCount} epic bosses await in Grid 4+...`);
     }
 }
 
-/**
- * Restart game with current seed (for testing)
- */
 export function restartWithSeed() {
     initRNG(G.seed);
     initializeGame(); 
@@ -241,30 +221,25 @@ export function restartWithSeed() {
     addLogEntry(`🔄 Restarted with seed: ${G.seed}`);
 }
 
-/**
- * Export the global state for debugging
- */
 export function getGameState() {
     return G;
 }
 
-// NEW: Export boss testing functions for development
 export function debugBoss() {
     if (!G.boss.active) {
-        // Force trigger boss encounter
         G.gridLevel = 4;
         initializeGame();
         renderAll();
-        addLogEntry('🐛 DEBUG: Forced boss encounter!');
+        addLogEntry('🛠 DEBUG: Forced boss encounter!');
     } else {
-        console.log('🐛 Current boss state:', G.boss);
+        console.log('🛠 Current boss state:', G.boss);
     }
 }
 
 export function debugVictory() {
     G.victory = true;
     G.over = true;
-    addLogEntry('🐛 DEBUG: Forced victory state!');
+    addLogEntry('🛠 DEBUG: Forced victory state!');
     renderAll();
 }
 
@@ -272,27 +247,23 @@ export function debugVictory() {
 // DOM READY & ERROR HANDLING
 // ================================================================
 
-// Wait for DOM to be fully loaded before initializing
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', init);
 } else {
-    // DOM already loaded
     init();
 }
 
-// Global error handler for development
-window.addEventListener('error', (event) => {
-    console.error('🚨 Game Error:', event.error);
-    addLogEntry(`❌ Error: ${event.error.message}`);
-});
-
-// Make functions available globally for debugging and testing
+// Make functions available globally
 window.CruxfadeMicro = {
     getState: getGameState,
     newGame: newGame,
     restartWithSeed: restartWithSeed,
     update: updateGame,
-    // NEW: Boss debugging functions
     debugBoss: debugBoss,
     debugVictory: debugVictory
 };
+
+// Simplified error handler (no updateGame calls)
+window.addEventListener('error', (event) => {
+    console.error('🚨 Game Error:', event.error);
+});
