@@ -730,18 +730,13 @@ function renderFightEncounter() {
             <div class="encounter-fight">
                 <h3>⚔️ Combat: ${G.combat.enemy.name}</h3>
                 <div class="combat-status">
-                    <div class="combatant">
-                        <strong>You</strong><br>
-                        ❤️ ${G.combat.playerHp} HP
-                    </div>
-                    <div class="vs">VS</div>
-                    <div class="combatant">
-                        <strong>${G.combat.enemy.name}</strong><br>
-                        ❤️ ${G.combat.enemyHp} HP
-                    </div>
+                   <div class="combatant">
+                   <strong>${leaderName}</strong><br>
+                  ❤️ ${G.combat.playerHp} HP
+                   </div>
                 </div>
                 ${G.combat.lastRoll ? `<p>🎲 Last roll: ${G.combat.lastRoll}</p>` : ''}
-                <p>${G.combat.turn === 'player' ? 'Your turn!' : 'Enemy turn...'}</p>
+                <p>${G.combat.turn === 'player' ? `${leaderName}'s turn!` : 'Enemy turn...'}</p>
             </div>
         `;
         
