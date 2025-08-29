@@ -490,6 +490,20 @@ section {
   flex: 1;
 }
 
+.log {
+  background: #11141b;
+  border: 1px solid var(--surface-border);
+  border-radius: var(--radius-sm);
+  padding: 10px;
+  color: #cbd5e1;
+  font-size: 0.85rem;
+  flex: 1;
+  overflow-y: auto; /* Ensure scrolling is enabled */
+  line-height: 1.4;
+  max-height: 140px; /* Set a max height */
+  scroll-behavior: smooth; /* Smooth scrolling */
+}
+
 /* ================================================================
    6. PARTY CARDS (Bottom Left - Overlapping Cards)
    ================================================================ */
