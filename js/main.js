@@ -83,55 +83,6 @@ async function loadGameData() {
 }
 
 // ================================================================
-// MAIN INITIALIZATION
-// ================================================================
-
-/**
- * Initialize the entire game when DOM is loaded
- */
-async function init() {
-    console.log('🎮 Cruxfade-Micro starting up...');
-    
-    try {
-        // Load game data first
-        const gameData = await loadGameData();
-        
-        // Pass data to state system
-        setGameData(gameData);
-        
-        // Initialize RNG with seed
-        const seed = getSeedFromURL();
-        G.seed = seed;
-        initRNG(seed);
-        
-        // Initialize game state
-        initializeGame();
-        
-        // Set up UI event handlers and pass updateGame as callback
-        bindEventHandlers(updateGame);
-        
-        // Initial render of all game elements
-        renderAll();
-        
-        // Add welcome message with boss hint
-        addLogEntry('Welcome to the grid. Find the key to proceed...');
-        
-        // NEW: Show boss availability info
-        if (gameData.bosses) {
-            const bossCount = Object.keys(gameData.bosses).filter(key => key !== 'boss-enemies').length;
-            addLogEntry(`💀 ${bossCount} epic bosses await in the deeper grids...`);
-        }
-        
-        console.log('✅ Game initialized successfully');
-        console.log('🎯 Current state:', G);
-        
-    } catch (error) {
-        console.error('🚨 Game initialization failed:', error);
-        document.body.innerHTML = '<h1>Failed to load game data. Check console for details.</h1>';
-    }
-}
-
-// ================================================================
 // GAME LOOP & STATE MANAGEMENT
 // ================================================================
 
@@ -187,6 +138,57 @@ function checkGameEndConditions() {
         return;
     }
 }
+
+// ================================================================
+// MAIN INITIALIZATION
+// ================================================================
+
+/**
+ * Initialize the entire game when DOM is loaded
+ */
+async function init() {
+    console.log('🎮 Cruxfade-Micro starting up...');
+    
+    try {
+        // Load game data first
+        const gameData = await loadGameData();
+        
+        // Pass data to state system
+        setGameData(gameData);
+        
+        // Initialize RNG with seed
+        const seed = getSeedFromURL();
+        G.seed = seed;
+        initRNG(seed);
+        
+        // Initialize game state
+        initializeGame();
+        
+        // Set up UI event handlers and pass updateGame as callback
+        bindEventHandlers(updateGame);
+        
+        // Initial render of all game elements
+        renderAll();
+        
+        // Add welcome message with boss hint
+        addLogEntry('Welcome to the grid. Find the key to proceed...');
+        
+        // NEW: Show boss availability info
+        if (gameData.bosses) {
+            const bossCount = Object.keys(gameData.bosses).filter(key => key !== 'boss-enemies').length;
+            addLogEntry(`💀 ${bossCount} epic bosses await in the deeper grids...`);
+        }
+        
+        console.log('✅ Game initialized successfully');
+        console.log('🎯 Current state:', G);
+        
+    } catch (error) {
+        console.error('🚨 Game initialization failed:', error);
+        document.body.innerHTML = '<h1>Failed to load game data. Check console for details.</h1>';
+    }
+}
+
+
 
 // ================================================================
 // UTILITY FUNCTIONS
