@@ -273,28 +273,28 @@ section {
   font-size: 0.9rem;
 }
 
-/* Party member display - NOW HORIZONTAL */
+/* Party member display - HORIZONTAL and COMPACT */
 .party-stats {
   display: flex;
-  flex-direction: row; /* Changed from column to row */
-  gap: 12px;
-  overflow-x: auto; /* Allow scrolling if too many members */
-  padding: 4px; /* Small padding for scroll area */
+  flex-direction: row;
+  gap: 10px;
+  overflow-x: auto;
+  padding: 4px;
 }
 
 .party-member {
-  /* Card-shaped dimensions */
-  width: 140px;
-  min-width: 140px; /* Prevent shrinking */
+  /* Much more compact card dimensions */
+  width: 120px;
+  min-width: 120px;
   
   /* Vertical layout for card content */
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 6px;
+  gap: 4px;
   
   /* Card styling */
-  padding: 12px 8px;
+  padding: 8px 6px;
   background: var(--surface-light);
   border-radius: var(--radius);
   border: 1px solid var(--surface-border);
@@ -303,8 +303,8 @@ section {
   transition: all 0.2s ease;
   cursor: pointer;
   
-  /* Card proportions */
-  aspect-ratio: 0.7; /* Playing card proportions (width/height) */
+  /* Compact proportions - much shorter */
+  height: 140px; /* Fixed height instead of aspect ratio */
 }
 
 .party-member:hover {
@@ -320,15 +320,15 @@ section {
 }
 
 .member-portrait {
-  width: 32px;
-  height: 32px;
+  width: 28px;
+  height: 28px;
   border-radius: 50%;
   background: var(--tile);
   display: grid;
   place-items: center;
   overflow: hidden;
   position: relative;
-  margin-bottom: 4px;
+  margin-bottom: 2px;
 }
 
 .member-portrait img {
@@ -338,69 +338,87 @@ section {
 }
 
 .portrait-fallback {
-  font-size: 1rem;
+  font-size: 0.9rem;
   display: none;
 }
 
-/* Member name and stats - compact vertical layout */
+/* Member name and stats - very compact */
 .member-info {
   display: flex;
   flex-direction: column;
   align-items: center;
   width: 100%;
   text-align: center;
+  gap: 2px;
 }
 
 .member-info strong {
-  font-size: 0.9rem;
-  margin-bottom: 4px;
+  font-size: 0.85rem;
+  margin-bottom: 2px;
+  line-height: 1;
 }
 
-/* Stats - vertical stack instead of horizontal */
+/* Stats - HP on one line, ATK+MAG on next line */
 .stats {
   display: flex;
   flex-direction: column;
-  gap: 2px;
-  font-size: 0.75rem;
+  gap: 1px;
+  font-size: 0.7rem;
   color: var(--muted);
-  margin-bottom: 6px;
+  margin-bottom: 4px;
+  line-height: 1;
+}
+
+.stats .hp {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+}
+
+/* ATK and MAG on same line */
+.stats .atk-mag-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
 }
 
 .stats span {
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 4px;
+  gap: 3px;
 }
 
-/* Equipment display - more compact */
+/* Equipment display - very compact, icon + "None" */
 .equipment-display {
-  margin-top: 4px;
+  margin-top: 2px;
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 1px;
   width: 100%;
 }
 
 .equipment-slot {
   display: flex;
   align-items: center;
-  gap: 4px;
-  font-size: 0.7rem;
-  padding: 1px 4px;
-  border-radius: 4px;
+  gap: 3px;
+  font-size: 0.65rem;
+  padding: 1px 3px;
+  border-radius: 3px;
   background: rgba(255, 255, 255, 0.05);
+  height: 16px; /* Fixed small height */
 }
 
 .slot-icon {
-  width: 12px;
+  width: 10px;
   text-align: center;
-  font-size: 0.8rem;
+  font-size: 0.7rem;
 }
 
 .equipment-name {
   color: var(--muted);
-  font-size: 0.65rem;
+  font-size: 0.6rem;
   flex: 1;
   min-width: 0;
   overflow: hidden;
@@ -408,20 +426,21 @@ section {
   white-space: nowrap;
 }
 
-/* Leader marker - smaller and positioned at bottom */
+/* Leader marker - very small */
 .leader-marker {
   background: var(--accent);
   color: white;
-  padding: 1px 4px;
+  padding: 1px 6px;
   border-radius: var(--radius-full);
-  font-size: 0.6rem;
+  font-size: 0.55rem;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  margin-top: auto; /* Push to bottom of card */
+  margin-top: 2px;
+  line-height: 1;
 }
 
-/* Different slot styling - more subtle */
+/* Different slot styling - very subtle */
 .weapon-slot {
   border-left: 2px solid #ff6b6b;
 }
@@ -434,24 +453,16 @@ section {
   border-left: 2px solid #ffe66d;
 }
 
-/* Responsive adjustments for cards */
+/* Mobile responsive */
 @media (max-width: 700px) {
   .party-stats {
     gap: 8px;
   }
   
   .party-member {
-    width: 120px;
-    min-width: 120px;
-  }
-  
-  .equipment-slot {
-    font-size: 0.65rem;
-    padding: 1px 3px;
-  }
-  
-  .equipment-name {
-    font-size: 0.6rem;
+    width: 110px;
+    min-width: 110px;
+    height: 130px;
   }
 }
 
