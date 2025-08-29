@@ -273,30 +273,44 @@ section {
   font-size: 0.9rem;
 }
 
-/* Party member display */
+/* Party member display - NOW HORIZONTAL */
 .party-stats {
   display: flex;
-  flex-direction: column;
-  gap: 8px;
+  flex-direction: row; /* Changed from column to row */
+  gap: 12px;
+  overflow-x: auto; /* Allow scrolling if too many members */
+  padding: 4px; /* Small padding for scroll area */
 }
 
 .party-member {
-  display: grid;
-  grid-template-columns: auto 1fr auto;
-  gap: 12px;
+  /* Card-shaped dimensions */
+  width: 140px;
+  min-width: 140px; /* Prevent shrinking */
+  
+  /* Vertical layout for card content */
+  display: flex;
+  flex-direction: column;
   align-items: center;
-  padding: 8px;
+  gap: 6px;
+  
+  /* Card styling */
+  padding: 12px 8px;
   background: var(--surface-light);
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius);
   border: 1px solid var(--surface-border);
-  transition: all 0.2s ease; /* Add this to existing rule */
+  
+  /* Hover effect */
+  transition: all 0.2s ease;
   cursor: pointer;
+  
+  /* Card proportions */
+  aspect-ratio: 0.7; /* Playing card proportions (width/height) */
 }
 
 .party-member:hover {
   background: var(--surface);
   border-color: var(--accent);
-  transform: translateY(-1px);
+  transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(110, 167, 255, 0.2);
 }
 
@@ -306,14 +320,15 @@ section {
 }
 
 .member-portrait {
-  width: 40px;
-  height: 40px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
   background: var(--tile);
   display: grid;
   place-items: center;
   overflow: hidden;
   position: relative;
+  margin-bottom: 4px;
 }
 
 .member-portrait img {
@@ -323,70 +338,121 @@ section {
 }
 
 .portrait-fallback {
-  font-size: 1.2rem;
-  display: none; /* Hidden by default - shown only when image fails */
+  font-size: 1rem;
+  display: none;
+}
+
+/* Member name and stats - compact vertical layout */
+.member-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  text-align: center;
 }
 
 .member-info strong {
-  display: block;
-  font-size: 0.95rem;
+  font-size: 0.9rem;
+  margin-bottom: 4px;
 }
 
+/* Stats - vertical stack instead of horizontal */
 .stats {
   display: flex;
-  gap: 12px;
-  font-size: 0.85rem;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 0.75rem;
   color: var(--muted);
+  margin-bottom: 6px;
 }
 
 .stats span {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 4px;
 }
 
+/* Equipment display - more compact */
+.equipment-display {
+  margin-top: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  width: 100%;
+}
+
+.equipment-slot {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.7rem;
+  padding: 1px 4px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.slot-icon {
+  width: 12px;
+  text-align: center;
+  font-size: 0.8rem;
+}
+
+.equipment-name {
+  color: var(--muted);
+  font-size: 0.65rem;
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Leader marker - smaller and positioned at bottom */
 .leader-marker {
   background: var(--accent);
   color: white;
-  padding: 2px 6px;
+  padding: 1px 4px;
   border-radius: var(--radius-full);
-  font-size: 0.7rem;
+  font-size: 0.6rem;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.05em;
+  margin-top: auto; /* Push to bottom of card */
 }
 
-/* Game Log */
-.log-area {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
+/* Different slot styling - more subtle */
+.weapon-slot {
+  border-left: 2px solid #ff6b6b;
 }
 
-.log-area h3 {
-  margin-bottom: 8px;
-  font-size: 0.95rem;
-  color: var(--muted);
+.armor-slot {
+  border-left: 2px solid #4ecdc4;
 }
 
-.log {
-  background: #11141b;
-  border: 1px solid var(--surface-border);
-  border-radius: var(--radius-sm);
-  padding: 10px;
-  color: #cbd5e1;
-  font-size: 0.85rem;
-  flex: 1;
-  overflow-y: auto;
-  line-height: 1.4;
+.accessory-slot {
+  border-left: 2px solid #ffe66d;
 }
 
-.log p {
-  margin-bottom: 4px;
-}
-
-.log p:last-child {
-  margin-bottom: 0;
+/* Responsive adjustments for cards */
+@media (max-width: 700px) {
+  .party-stats {
+    gap: 8px;
+  }
+  
+  .party-member {
+    width: 120px;
+    min-width: 120px;
+  }
+  
+  .equipment-slot {
+    font-size: 0.65rem;
+    padding: 1px 3px;
+  }
+  
+  .equipment-name {
+    font-size: 0.6rem;
+  }
 }
 
 /* ================================================================
