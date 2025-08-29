@@ -24,19 +24,27 @@ export function updateGame() {
 }
 
 /**
- * Check if the game should end (win/lose conditions)
+ * Check if the game should end (win/lose conditions) - DEBUG VERSION
  */
 function checkGameEndConditions() {
+    console.log('🔍 DEBUG: checkGameEndConditions called');
+    console.log('🔍 DEBUG: G.victory:', G.victory);
+    console.log('🔍 DEBUG: G.over:', G.over);
+    console.log('🔍 DEBUG: Current party:', G.party.map(m => `${m.name}:${m.hp}HP`));
+    
     // Check victory condition first
     if (G.victory) {
+        console.log('🔍 DEBUG: Victory already achieved, skipping game over check');
         return;
     }
     
     // Get all living party members
     const livingMembers = G.party.filter(member => member.hp > 0);
+    console.log('🔍 DEBUG: Living members:', livingMembers.map(m => `${m.name}:${m.hp}HP`));
     
     // If everyone is dead, game over
     if (livingMembers.length === 0) {
+        console.log('🔍 DEBUG: All members dead - setting game over');
         G.over = true;
         addLogEntry('💀 Game Over! All party members have fallen.');
         renderAll();
@@ -45,13 +53,20 @@ function checkGameEndConditions() {
     
     // If current leader is dead but others are alive, switch leader
     const currentLeader = G.party[0];
+    console.log('🔍 DEBUG: Current leader:', currentLeader ? `${currentLeader.name}:${currentLeader.hp}HP` : 'none');
+    
     if (currentLeader && currentLeader.hp <= 0 && livingMembers.length > 0) {
+        console.log('🔍 DEBUG: Leader dead but others alive - switching leadership');
+        
         // Find the first living member
         const newLeaderIndex = G.party.findIndex(member => member.hp > 0);
+        console.log('🔍 DEBUG: New leader index:', newLeaderIndex);
         
         if (newLeaderIndex > 0) {
             // Move living member to position 0 (leader spot)
             const newLeader = G.party[newLeaderIndex];
+            console.log('🔍 DEBUG: Promoting', newLeader.name, 'to leader');
+            
             G.party.splice(newLeaderIndex, 1); // Remove from current position
             G.party.unshift(newLeader); // Add to front
             
@@ -59,15 +74,20 @@ function checkGameEndConditions() {
             
             // Update combat HP if in combat
             if (G.combat.active) {
+                console.log('🔍 DEBUG: Updating combat HP from', G.combat.playerHp, 'to', newLeader.hp);
                 G.combat.playerHp = newLeader.hp;
             }
         }
         
+        console.log('🔍 DEBUG: Leadership switch complete - NOT ending game');
         return; // Don't end game - we have a new leader
     }
     
+    console.log('🔍 DEBUG: No game over conditions met');
+    
     // Fallback win condition
     if (G.gridLevel > 6 && !G.victory) {
+        console.log('🔍 DEBUG: Grid level > 6 - victory condition');
         G.over = true;
         G.victory = true;
         addLogEntry('🏆 Victory! You have conquered all grids!');
