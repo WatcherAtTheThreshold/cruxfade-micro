@@ -677,7 +677,7 @@ export function endCombat(victory) {
                         addLogEntry(`💀 ${phase.defeatText}`);
                     }
                 }
-                G.over = true;
+               
             }
         }
         
