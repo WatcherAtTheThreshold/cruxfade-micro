@@ -831,11 +831,46 @@ function resetPartyToStart() {
 // ================================================================
 
 /**
- * Attempt to move player to a new position
- * Returns true if move was successful
+ * Check if the current tile encounter is completed
+ */
+export function isCurrentTileCompleted() {
+    const currentTile = getCurrentTile();
+    if (!currentTile) return true;
+    
+    // Start tiles are always considered completed
+    if (currentTile.type === 'start') return true;
+    
+    // Empty tiles are completed when stepped on
+    if (currentTile.type === 'empty') return true;
+    
+    // Check if tile is consumed (completed)
+    return currentTile.consumed === true;
+}
+
+/**
+ * Get completion requirement message for current tile
+ */
+export function getCurrentTileRequirement() {
+    const currentTile = getCurrentTile();
+    if (!currentTile) return '';
+    
+    const requirements = {
+        'fight': 'Defeat the enemy',
+        'hazard': 'Navigate the hazard', 
+        'item': 'Take the item',
+        'ally': 'Recruit or decline the ally',
+        'key': 'Take the key',
+        'door': 'Use the door to proceed'
+    };
+    
+    return requirements[currentTile.type] || 'Complete this encounter';
+}
+
+/**
+ * Attempt to move player to a new position (UPDATED with completion check)
  */
 export function movePlayer(newRow, newCol) {
-    // Check bounds (now 4x4)
+    // Check bounds (4x4)
     if (newRow < 0 || newRow > 3 || newCol < 0 || newCol > 3) {
         return false;
     }
@@ -851,14 +886,28 @@ export function movePlayer(newRow, newCol) {
         return false;
     }
     
+    // NEW: Check if current tile is completed
+    if (!isCurrentTileCompleted()) {
+        const requirement = getCurrentTileRequirement();
+        addLogEntry(`❌ Must complete current encounter first: ${requirement}`);
+        return false;
+    }
+    
     // Move player
     G.board.player.r = newRow;
     G.board.player.c = newCol;
     
-    // Mark tile as seen (4x4 indexing)
+    // Mark new tile as seen and revealed
     const tileIndex = newRow * 4 + newCol;
     G.board.seen.add(tileIndex);
     G.board.tiles[tileIndex].revealed = true;
+    
+    // Auto-complete empty tiles
+    const newTile = G.board.tiles[tileIndex];
+    if (newTile.type === 'empty') {
+        newTile.consumed = true;
+        addLogEntry(`👣 Empty area explored`);
+    }
     
     addLogEntry(`🚶 Moved to tile (${newRow}, ${newCol})`);
     
