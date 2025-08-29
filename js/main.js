@@ -156,38 +156,38 @@ function checkGameEndConditions() {
         return;
     }
     
-    // NEW: Check for leader succession instead of immediate game over
-    const leader = G.party[0]; // Current leader is always first
-    if (!leader || leader.hp <= 0) {
-        // Current leader is dead - check if we can promote someone
-        const livingMembers = G.party.filter(member => member.hp > 0);
-        
-        if (livingMembers.length === 0) {
-            // All party members dead - game over
-            G.over = true;
-            addLogEntry('💀 Game Over! All party members have fallen.');
-            renderAll();
-            return;
-        } else {
-            // Promote next living member to leader
-            const newLeader = livingMembers[0];
-            switchPartyLeader(newLeader.id);
-            addLogEntry(`👑 ${newLeader.name} has taken leadership of the party!`);
-            addLogEntry(`⚔️ The quest continues with ${livingMembers.length} party members remaining!`);
-            
-            // Update combat state if in combat
-            if (G.combat.active) {
-                G.combat.playerHp = newLeader.hp;
-                addLogEntry(`⚔️ Combat continues with ${newLeader.name} (${newLeader.hp} HP)!`);
-            }
-            
-            renderAll();
-            return;
-        }
+    // NEW: Check if ALL party members are dead (true game over)
+    const livingMembers = G.party.filter(member => member.hp > 0);
+    
+    if (livingMembers.length === 0) {
+        // Everyone is dead - true game over
+        G.over = true;
+        addLogEntry('💀 Game Over! All party members have fallen.');
+        renderAll();
+        return;
     }
     
-    // OLD: Basic win condition (now handled by boss system)
-    // Keep as fallback for games without boss data
+    // NEW: Auto-switch leader if current leader is dead but others live
+    const currentLeader = G.party[0];
+    if (currentLeader && currentLeader.hp <= 0 && livingMembers.length > 0) {
+        // Current leader is dead but others are alive - auto-switch
+        const newLeader = livingMembers[0];
+        
+        // Import the switchPartyLeader function and use it
+        import('./state.js').then(({ switchPartyLeader, addLogEntry }) => {
+            switchPartyLeader(newLeader.id);
+            addLogEntry(`💔 ${currentLeader.name} has fallen! ${newLeader.name} takes leadership!`);
+            
+            // Update combat HP if in combat
+            if (G.combat.active) {
+                G.combat.playerHp = newLeader.hp;
+            }
+        }).catch(console.error);
+        
+        return; // Don't end game - we have a new leader
+    }
+    
+    // OLD: Basic win condition (fallback for games without boss data)
     if (G.gridLevel > 6 && !G.victory) {
         G.over = true;
         G.victory = true;
