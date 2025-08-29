@@ -1270,6 +1270,13 @@ export function bindEventHandlers(updateGameCallback) {
                     break;
                 
                 // Existing actions
+
+                case 'flee-encounter':
+                    console.log('🏃 Attempting to flee...');
+                    const fleeResult = attemptFlee(); // Import this at the top of ui.js
+                    _updateGameCallback();
+                    break;
+                    
                 case 'start-combat':
                     console.log('⚔️ Starting combat...');
                     const enemyType = getRandomEnemyType(); // Use random enemy type
