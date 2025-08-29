@@ -1273,15 +1273,15 @@ export function bindEventHandlers(updateGameCallback) {
                 // Existing actions
 
                 case 'flee-encounter':
-                   console.log('🏃 Attempting to flee...');
-                   console.log('🔍 DEBUG: Combat active before flee:', G.combat.active);
+    console.log('🏃 Attempting to flee...');
+    console.log('🔍 DEBUG: Combat active before flee:', G.combat.active);
     
-                   if (typeof attemptFlee !== 'function') {
-                   console.error('❌ attemptFlee is not imported properly:', typeof attemptFlee);
-                   addLogEntry('❌ Flee system error - check console');
-            } else {
-                  const fleeResult = attemptFlee();
-                  console.log('🔍 DEBUG: Flee result:', fleeResult);
+    if (typeof attemptFlee !== 'function') {
+        console.error('❌ attemptFlee is not imported properly:', typeof attemptFlee);
+        addLogEntry('❌ Flee system error - check console');
+    } else {
+        const fleeResult = attemptFlee();
+        console.log('🔍 DEBUG: Flee result:', fleeResult);
     }
     
     _updateGameCallback();
