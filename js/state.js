@@ -843,10 +843,9 @@ export function isCurrentTileCompleted() {
     // Empty tiles are completed when stepped on
     if (currentTile.type === 'empty') return true;
     
-    // Door tiles are completed if you have the key OR if you used the door
-    if (currentTile.type === 'door') {
-        return G.keyFound || currentTile.consumed;
-    }
+    // Door tiles: you can always move AWAY from doors, even without key
+    // The key requirement only applies to using the door to proceed to next grid
+    if (currentTile.type === 'door') return true;
     
     // All other tiles check consumed status
     return currentTile.consumed === true;
@@ -865,7 +864,7 @@ export function getCurrentTileRequirement() {
         'item': 'Take the item',
         'ally': 'Recruit or decline the ally',
         'key': 'Take the key',
-        'door': 'Use the door to proceed'
+        'door': 'Find the key to use this door' // Updated message
     };
     
     return requirements[currentTile.type] || 'Complete this encounter';
