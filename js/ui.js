@@ -30,6 +30,7 @@ import {
     getEquippedItem,
     isEquipment,
     // Combat functions
+    attemptFlee, 
     startCombat,
     playerAttack,
     enemyAttack,
