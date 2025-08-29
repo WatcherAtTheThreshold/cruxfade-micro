@@ -504,6 +504,37 @@ section {
   scroll-behavior: smooth; /* Smooth scrolling */
 }
 
+/* Add this to the existing .log section */
+.log p {
+  margin-bottom: 4px;
+}
+
+.log p:last-child {
+  margin-bottom: 0;
+}
+
+/* New styles for log entries */
+.log-entry {
+  transition: all 0.3s ease;
+  opacity: 0.8;
+}
+
+.log-entry.current-entry {
+  font-size: 0.95rem; /* Larger than the base 0.85rem */
+  font-weight: 600;   /* Bolder */
+  opacity: 1;         /* Full opacity */
+  color: var(--ink);  /* Brighter color */
+  margin-bottom: 6px; /* Extra spacing below */
+  padding: 2px 0;     /* Slight padding */
+}
+
+/* Older entries are more subdued */
+.log-entry:not(.current-entry) {
+  font-size: 0.8rem;  /* Slightly smaller */
+  opacity: 0.7;       /* More faded */
+  color: var(--muted); /* Dimmer color */
+}
+
 /* ================================================================
    6. PARTY CARDS (Bottom Left - Overlapping Cards)
    ================================================================ */
