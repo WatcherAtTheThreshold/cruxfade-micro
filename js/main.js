@@ -46,6 +46,7 @@ function checkGameEndConditions() {
     if (livingMembers.length === 0) {
         console.log('🔍 DEBUG: All members dead - setting game over');
         G.over = true;
+        G.combat.active = false;
         addLogEntry('💀 Game Over! All party members have fallen.');
         renderAll();
         return;
