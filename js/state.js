@@ -1720,6 +1720,57 @@ export function startCombat(enemyType = 'goblin', bossPhase = null) {
 }
 
 /**
+ * Attempt to flee from combat with dice roll
+ */
+export function attemptFlee() {
+    if (!G.combat.active) {
+        return { success: false, message: 'Not in combat' };
+    }
+    
+    const player = getPartyLeader();
+    const roll = rollDice(20); // d20 roll
+    const statBonus = player.atk; // Use ATK for "fighting your way out"
+    const total = roll + statBonus;
+    const difficulty = 12 + G.combat.enemy.atk; // Harder to flee from stronger enemies
+    
+    addLogEntry(`🏃 Attempting to flee... (d20 + ATK vs ${difficulty})`);
+    addLogEntry(`🎲 Rolled ${roll} + ${statBonus} = ${total}`);
+    
+    if (total >= difficulty) {
+        // Success - end combat but DON'T consume tile
+        G.combat.active = false;
+        G.combat.enemy = null;
+        G.combat.playerHp = 0;
+        G.combat.enemyHp = 0;
+        G.combat.turn = 'player';
+        G.combat.lastRoll = null;
+        G.combat.bossPhase = null;
+        
+        addLogEntry(`✅ Successfully escaped from ${G.combat.enemy?.name || 'combat'}!`);
+        addLogEntry(`⚠️ The enemy remains - you can try fighting again later`);
+        
+        return { success: true };
+    } else {
+        // Failure - take damage and stay in combat
+        const damage = Math.max(1, G.combat.enemy.atk - 1); // Reduced damage for failed flee
+        G.combat.playerHp = Math.max(0, G.combat.playerHp - damage);
+        player.hp = G.combat.playerHp;
+        
+        addLogEntry(`❌ Failed to escape! Took ${damage} damage trying to flee!`);
+        
+        // Check if failure killed the player
+        if (G.combat.playerHp <= 0) {
+            endCombat(false); // This will trigger leadership switch or game over
+        } else {
+            // Enemy gets a turn after failed flee attempt
+            G.combat.turn = 'enemy';
+        }
+        
+        return { success: false };
+    }
+}
+
+/**
  * Roll a die with specified number of sides
  */
 export function rollDice(sides = 6) {
