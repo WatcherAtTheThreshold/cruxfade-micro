@@ -242,12 +242,12 @@ function createPartyMemberElement(member, isLeader = false) {
     <div class="member-info" style="flex: 1;">
       <strong style="font-size: 0.85rem;">${member.name}</strong>
       <div class="stats">
-       <span class="hp">❤️ <strong style="color:${hpColor}">${member.hp}</strong>/${member.maxHp}</span>
-      <div class="atk-mag-row">
-       <span class="atk">⚔️ <strong>${member.atk}</strong></span>
-       <span class="mag">✨ <strong>${member.mag}</strong></span>
-     </div>
-     </div>
+  <span class="hp">❤️ <strong style="color:${hpColor}">${member.hp}</strong>/${member.maxHp}</span>
+  <div class="atk-mag-row">
+    <span class="atk">⚔️ <strong>${member.atk}</strong></span>
+    <span class="mag">✨ <strong>${member.mag}</strong></span>
+  </div>
+</div>
       <div class="equipment-display" style="margin-top: 4px; gap: 2px;">
         <div class="equipment-slot weapon-slot clickable-slot" style="padding: 1px 3px; font-size: 0.65rem;"
              data-member-id="${member.id}" data-slot="weapon" title="Click to manage weapon">
