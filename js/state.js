@@ -1864,10 +1864,36 @@ export function enemyAttack() {
     
     addLogEntry(`💥 ${G.combat.enemy.name} attacks for ${damage} damage! Your HP: ${G.combat.playerHp}`);
     
-    if (G.combat.playerHp <= 0) {
+   if (G.combat.playerHp <= 0) {
+    // Check if we can switch leaders instead of ending combat
+    const livingMembers = G.party.filter(member => member.hp > 0);
+    
+    if (livingMembers.length === 0) {
+        // Everyone is dead - end combat
         endCombat(false);
         return true;
+    } else {
+        // Switch to next living member and continue combat
+        const currentLeader = G.party[0];
+        const newLeaderIndex = G.party.findIndex(member => member.hp > 0);
+        
+        if (newLeaderIndex > 0) {
+            const newLeader = G.party[newLeaderIndex];
+            
+            // Switch leadership
+            G.party.splice(newLeaderIndex, 1);
+            G.party.unshift(newLeader);
+            
+            // Update combat HP to new leader
+            G.combat.playerHp = newLeader.hp;
+            
+            addLogEntry(`💔 ${currentLeader.name} has fallen! ${newLeader.name} continues the fight!`);
+        }
+        
+        G.combat.turn = 'player';
+        return true;
     }
+}
     
     G.combat.turn = 'player';
     return true;
