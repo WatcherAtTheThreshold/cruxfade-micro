@@ -304,7 +304,7 @@ section {
   cursor: pointer;
   
   /* Compact proportions - much shorter */
-  height: 140px; /* Fixed height instead of aspect ratio */
+  height: 150px; /* Fixed height instead of aspect ratio */
 }
 
 .party-member:hover {
