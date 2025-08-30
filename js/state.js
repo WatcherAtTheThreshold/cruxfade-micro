@@ -112,6 +112,57 @@ export const G = {
 // ================================================================
 
 /**
+ * Generate a new 4x4 grid with encounters - UPDATED for fog of war
+ */
+function generateGrid() {
+    G.board.tiles = [];
+    
+    if (shouldTriggerBoss()) {
+        generateBossGrid();
+        return;
+    }
+    
+    const entranceRow = G.board.player.r;
+    const entranceCol = G.board.player.c;
+    const entranceIndex = entranceRow * 4 + entranceCol;
+    
+    // Create 16 tiles - all start hidden except entrance
+    for (let i = 0; i < 16; i++) {
+        const row = Math.floor(i / 4);
+        const col = i % 4;
+        
+        if (i === entranceIndex) {
+            // Starting tile
+            G.board.tiles.push({
+                type: 'start',
+                row: row,
+                col: col,
+                discovered: true,
+                explored: true,
+                consumed: false
+            });
+        } else {
+            // Hidden tiles
+            G.board.tiles.push({
+                type: getRandomEncounterType(),
+                row: row,
+                col: col,
+                discovered: false,
+                explored: false,
+                consumed: false
+            });
+        }
+    }
+    
+    ensureKeyAndDoor();
+}
+
+function revealAdjacentTilesAsDiscoverable(centerRow, centerCol) {
+    // Will implement properly after cooldown
+    console.log('Adjacent tile reveal - basic version');
+}
+
+/**
  * Initialize/reset the game to starting state - UPDATED for fog of war
  */
 export function initializeGame() {
