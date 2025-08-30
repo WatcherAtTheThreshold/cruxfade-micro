@@ -8,7 +8,8 @@
 </head>
 <body>
     <!-- Main game container with 3:2 aspect ratio and letterboxing -->
-    <div class="wrap">
+    <div id="game">
+      <div class="wrap">
         
        <!-- SECTION 1: EXPLORATION GRID (Top Left) -->
         <section class="exploration-area">
@@ -144,7 +145,7 @@
 
         <!-- OLD ENCOUNTERS SECTION - REMOVE THIS -->
     </div>
-
+</div>
     <!-- Overlay System for Dice, Combat, etc. -->
     <div class="overlay-system" id="overlay-system">
         <!-- Dice Roll Overlay -->
@@ -157,7 +158,7 @@
                 <p id="dice-result">Click to roll!</p>
             </div>
         </div>
-
+<div class="overlay-system" id="overlay-system">
         <!-- Combat Overlay -->
         <div class="overlay combat-overlay" id="combat-overlay">
             <div class="overlay-content">
@@ -191,7 +192,7 @@
         </div>
         
     </div>
-
+</div>
     <!-- Load main game script as ES module -->
     <script type="module" src="./js/main.js"></script>
 </body>
