@@ -157,9 +157,9 @@ function generateGrid() {
     ensureKeyAndDoor();
 }
 
-function revealAdjacentTilesAsDiscoverable(centerRow, centerCol) {
+//function revealAdjacentTilesAsDiscoverable(centerRow, centerCol) {
     // Will implement properly after cooldown
-    console.log('Adjacent tile reveal - basic version');
+    //console.log('Adjacent tile reveal - basic version');
 }
 
 /**
@@ -202,6 +202,14 @@ export function initializeGame() {
     initializeEquipment();
     
     console.log('🔄 Game state initialized with fog of war');
+}
+
+// ================================================================
+// FOG OF WAR UTILITY FUNCTIONS  
+// ================================================================
+
+function revealAdjacentTilesAsDiscoverable(centerRow, centerCol) {
+    // Keep whichever implementation you have
 }
 
 // ================================================================
@@ -273,7 +281,7 @@ function generateBossGrid() {
     // Reveal adjacent tiles to starting position
     const entranceRow = G.board.player.r;
     const entranceCol = G.board.player.c;
-    revealAdjacentTilesAsDiscoverable(entranceRow, entranceCol);
+    //revealAdjacentTilesAsDiscoverable(entranceRow, entranceCol);
     
     addLogEntry(`💀 You have entered the ${boss.data.name}'s domain...`);
     addLogEntry(`📖 ${boss.data.description}`);
