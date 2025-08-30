@@ -23,6 +23,7 @@ import {
     getMaxHandSize,
     playCard,
     getAvailableEquipmentForSlot,
+    removeAlly,
     // Equipment functions
     getEquipmentById,
     equipItem,
@@ -1653,7 +1654,7 @@ function renderEquipmentManagementOverlay() {
     // Get currently equipped item
     const currentItem = getEquippedItem(EQUIPMENT_STATE.memberId, EQUIPMENT_STATE.slot);
     
-    // Get available items of this type from inventory (for now, just show unequip option)
+    // Get available items of this type from inventory
     const availableItems = getAvailableItemsForSlot(EQUIPMENT_STATE.slot);
     
     // Create the overlay content
@@ -1715,6 +1716,16 @@ function renderEquipmentManagementOverlay() {
                 </div>
             ` : ''}
             
+            <div class="dismiss-member-section">
+                <h4 style="color: var(--bad); margin-top: 16px;">Dismiss Party Member</h4>
+                <p style="font-size: 0.8rem; color: var(--muted); margin-bottom: 8px;">
+                    Remove ${member.name} from your party permanently. This cannot be undone.
+                </p>
+                <button class="btn-danger dismiss-btn" data-action="dismiss-member" data-member-id="${member.id}">
+                    Dismiss ${member.name}
+                </button>
+            </div>
+            
             <div class="equipment-actions">
                 <button class="btn-secondary close-btn" data-action="close">Close</button>
             </div>
@@ -1726,7 +1737,8 @@ function renderEquipmentManagementOverlay() {
         button.addEventListener('click', (e) => {
             const action = button.dataset.action;
             const itemId = button.dataset.itemId;
-            handleEquipmentAction(action, itemId);
+            const memberId = button.dataset.memberId;
+            handleEquipmentAction(action, itemId, memberId);
         });
     });
 }
@@ -1734,16 +1746,25 @@ function renderEquipmentManagementOverlay() {
 /**
  * Handle equipment management actions
  */
-function handleEquipmentAction(action, itemId) {
-    const memberId = EQUIPMENT_STATE.memberId;
+function handleEquipmentAction(action, itemId, memberId) {
+    const currentMemberId = EQUIPMENT_STATE.memberId;
     const slot = EQUIPMENT_STATE.slot;
+    const member = G.party.find(m => m.id === currentMemberId);
     
     switch(action) {
+        case 'dismiss-member':
+            if (confirm(`Are you sure you want to dismiss ${member.name} from your party? This cannot be undone.`)) {
+                removeAlly(memberId);
+                addLogEntry(`👋 ${member.name} has been dismissed from the party`);
+                hideEquipmentManagement();
+                if (EQUIPMENT_STATE.callback) EQUIPMENT_STATE.callback();
+            }
+            break;
+            
         case 'unequip':
-            const unequipped = unequipItem(memberId, slot);
+            const unequipped = unequipItem(currentMemberId, slot);
             if (unequipped) {
                 addLogEntry(`📦 ${unequipped.name} was unequipped`);
-                console.log('🔧 Equipment after unequip:', G.equipment[memberId]); // DEBUG
             }
             hideEquipmentManagement();
             if (EQUIPMENT_STATE.callback) EQUIPMENT_STATE.callback();
@@ -1752,8 +1773,7 @@ function handleEquipmentAction(action, itemId) {
         case 'equip':
             const itemData = getItemById(itemId);
             if (itemData) {
-                equipItem(memberId, itemData);
-                console.log('🔧 Equipment after change:', G.equipment[memberId]); // DEBUG
+                equipItem(currentMemberId, itemData);
                 hideEquipmentManagement();
                 if (EQUIPMENT_STATE.callback) EQUIPMENT_STATE.callback();
             }
@@ -1764,18 +1784,16 @@ function handleEquipmentAction(action, itemId) {
             break;
     }
 }
+
 /**
- * Get available items for a specific slot (placeholder - later connect to inventory)
+ * Get available items for a specific slot
  */
 function getAvailableItemsForSlot(slot) {
     return getAvailableEquipmentForSlot(slot);
 }
-    
-   
-    
-   
+
 /**
- * Get item data by ID (placeholder)
+ * Get item data by ID
  */
 function getItemById(itemId) {
     return getEquipmentById(itemId);
