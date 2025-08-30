@@ -300,6 +300,68 @@ function getBossForLevel(level) {
     return null;
 }
 
+/**
+ * Generate a boss encounter grid
+ */
+function generateBossGrid() {
+    const boss = getBossForLevel(G.gridLevel);
+    if (!boss) {
+        console.error('No boss found for grid level:', G.gridLevel);
+        generateGrid(); // Fallback to normal grid
+        return;
+    }
+    
+    // Initialize boss state
+    G.boss.active = true;
+    G.boss.bossId = boss.id;
+    G.boss.currentPhase = 0;
+    G.boss.phaseComplete = false;
+    G.boss.defeated = false;
+    G.boss.enemyIndex = 0;
+    
+    // Create a simple grid with just the boss encounter in center
+    G.board.tiles = [];
+    
+    for (let i = 0; i < 16; i++) {
+        const row = Math.floor(i / 4);
+        const col = i % 4;
+        
+        // Player starts at entrance (left edge)
+        if (row === G.board.player.r && col === G.board.player.c) {
+            G.board.tiles.push({
+                type: 'start',
+                row: row,
+                col: col,
+                revealed: true,
+                consumed: false
+            });
+        }
+        // Boss encounter in center (tile 5 or 6)
+        else if (i === 5) { // Center-left tile
+            G.board.tiles.push({
+                type: 'boss-encounter',
+                row: row,
+                col: col,
+                revealed: false,
+                consumed: false,
+                bossId: boss.id
+            });
+        }
+        // Empty tiles elsewhere
+        else {
+            G.board.tiles.push({
+                type: 'empty',
+                row: row,
+                col: col,
+                revealed: false,
+                consumed: false
+            });
+        }
+    }
+    
+    addLogEntry(`💀 You have entered the ${boss.data.name}'s domain...`);
+    addLogEntry(`📖 ${boss.data.description}`);
+}
 
 /**
  * Start the current boss phase
