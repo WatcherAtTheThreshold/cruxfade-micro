@@ -160,7 +160,7 @@ function generateGrid() {
 //function revealAdjacentTilesAsDiscoverable(centerRow, centerCol) {
     // Will implement properly after cooldown
     //console.log('Adjacent tile reveal - basic version');
-}
+
 
 /**
  * Initialize/reset the game to starting state - UPDATED for fog of war
