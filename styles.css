@@ -6,19 +6,20 @@
 /* 
    SECTION INDEX:
    1. CSS CUSTOM PROPERTIES (Theme System)
-   2. RESET & BASE STYLES
-   3. MAIN CONTAINER & LAYOUT SYSTEM
-   4. EXPLORATION AREA (Top Left - 4x4 Grid)
-   5. PARTY STATUS (Top Right - Stats & Cards Combined)
-   6. PARTY CARDS (Bottom Left - Overlapping Cards)  
-   7. ENCOUNTERS (Bottom Right - Combat & Events)
-   8. OVERLAY SYSTEM (Dice, Combat Popups)
-   9. UI COMPONENTS (Buttons, Chips, Cards)
-   10. RESPONSIVE ADJUSTMENTS
-   11. ANIMATIONS & TRANSITIONS
-   12. CARD OVERFLOW OVERLAY STYLES
-   13. EQUIPMENT DISPLAY STYLES
-   14. EQUIPMENT MANAGEMENT STYLES
+   2. RESPONSIVE SCALING SYSTEM
+   3. RESET & BASE STYLES
+   4. MAIN CONTAINER & LAYOUT SYSTEM
+   5. EXPLORATION AREA (Top Left - 4x4 Grid)
+   6. PARTY STATUS (Top Right - Stats & Cards Combined)
+   7. PARTY CARDS (Bottom Left - Overlapping Cards)  
+   8. ENCOUNTERS (Bottom Right - Combat & Events)
+   9. OVERLAY SYSTEM (Dice, Combat Popups)
+   10. UI COMPONENTS (Buttons, Chips, Cards)
+   11. RESPONSIVE ADJUSTMENTS
+   12. ANIMATIONS & TRANSITIONS
+   13. CARD OVERFLOW OVERLAY STYLES
+   14. EQUIPMENT DISPLAY STYLES
+   15. EQUIPMENT MANAGEMENT STYLES
 
 */
 
@@ -75,7 +76,50 @@
 }
 
 /* ================================================================
-   2. RESET & BASE STYLES
+   2. RESPONSIVE SCALING SYSTEM
+   ================================================================ */
+
+#game {
+  max-width: 1200px; /* Match your current container max */
+  margin: auto;
+  transform-origin: top center; /* Scale from top-center */
+  transition: transform 0.3s ease; /* Smooth scaling transitions */
+  
+  /* Base scaling for different screen sizes */
+}
+
+/* Progressive scaling for larger screens */
+@media (min-width: 1300px) { 
+  #game { transform: scale(1.05); }
+}
+
+@media (min-width: 1500px) { 
+  #game { transform: scale(1.1); }
+}
+
+@media (min-width: 1700px) { 
+  #game { transform: scale(1.15); }
+}
+
+@media (min-width: 1920px) { 
+  #game { transform: scale(1.25); }
+}
+
+/* Smaller scaling for mobile/tablet */
+@media (max-width: 900px) {
+  #game { transform: scale(0.95); }
+}
+
+@media (max-width: 700px) {
+  #game { transform: scale(0.9); }
+}
+
+@media (max-width: 500px) {
+  #game { transform: scale(0.85); }
+}
+
+/* ================================================================
+   3. RESET & BASE STYLES
    ================================================================ */
 * {
   margin: 0;
@@ -112,7 +156,7 @@ img {
 }
 
 /* ================================================================
-   3. MAIN CONTAINER & LAYOUT SYSTEM
+   4. MAIN CONTAINER & LAYOUT SYSTEM
    ================================================================ */
 
 /* Main wrapper - use more vertical space */
@@ -171,7 +215,7 @@ section {
 }
 
 /* ================================================================
-   4. EXPLORATION AREA (Top Left - 4x4 Grid)
+   5. EXPLORATION AREA (Top Left - 4x4 Grid)
    ================================================================ */
 
 .exploration-area {
@@ -261,7 +305,7 @@ section {
 }
 
 /* ================================================================
-   5. PARTY STATUS (Top Right - Stats & Cards Combined)
+   6. PARTY STATUS (Top Right - Stats & Cards Combined)
    ================================================================ */
 
 .party-status {
@@ -482,12 +526,6 @@ section {
   line-height: 1;
 }
 
-/* Mobile responsive */
-@media (max-width: 700px) {
-  .party-stats {
-    gap: 8px;
-  }
-  
   .party-member {
     width: 110px;
     min-width: 110px;
@@ -496,7 +534,7 @@ section {
 }
 
 /* ================================================================
-   5.5. EVENT LOG AREA (Bottom Left - Moved from Party Status)
+   6.5. EVENT LOG AREA (Bottom Left - Moved from Party Status)
    ================================================================ */
 
 .event-log-area {
@@ -564,7 +602,7 @@ section {
 }
 
 /* ================================================================
-   6. PARTY HAND SECTION (Bottom Right - Overlapping Cards)
+   7. PARTY HAND SECTION (Bottom Right - Overlapping Cards)
    ================================================================ */
 
 .party-hand-section {
@@ -667,13 +705,6 @@ section {
   letter-spacing: 0.02em;
 }
 
-/* Mobile responsive */
-@media (max-width: 700px) {
-  .playable-card-compact {
-    width: 80px;
-    height: 100px;
-    margin-left: -12px;
-  }
   
   .playable-card-compact h4 {
     font-size: 0.7rem;
@@ -684,7 +715,7 @@ section {
   }
 }
 /* ================================================================
-   7. ENCOUNTERS (Bottom Right - Combat & Events)
+   8. ENCOUNTERS (Bottom Right - Combat & Events)
    ================================================================ */
 
 .encounters {
@@ -754,7 +785,7 @@ section {
 }
 
 /* ================================================================
-   8. OVERLAY SYSTEM (Dice, Combat Popups)
+   9. OVERLAY SYSTEM (Dice, Combat Popups)
    ================================================================ */
 
 .overlay-system {
@@ -849,7 +880,7 @@ section {
 }
 
 /* ================================================================
-   9. UI COMPONENTS (Buttons, Chips, Cards)
+   10. UI COMPONENTS (Buttons, Chips, Cards)
    ================================================================ */
 
 /* Chips for displaying stats/info */
@@ -924,7 +955,7 @@ button:disabled {
 }
 
 /* ================================================================
-   10. RESPONSIVE ADJUSTMENTS
+   11. RESPONSIVE ADJUSTMENTS
    ================================================================ */
 
 @media (max-width: 900px) {
@@ -971,7 +1002,7 @@ button:disabled {
 }
 
 /* ================================================================
-   11. ANIMATIONS & TRANSITIONS
+   12. ANIMATIONS & TRANSITIONS
    ================================================================ */
 
 /* Flash effects for game feedback */
@@ -1009,7 +1040,7 @@ button,
 }
 
 /* ================================================================
-   CARD OVERFLOW OVERLAY STYLES
+   13. CARD OVERFLOW OVERLAY STYLES
    ================================================================ */
 
 /* Card overflow specific overlay content */
@@ -1110,7 +1141,7 @@ button,
 }
 
 /* ================================================================
-   EQUIPMENT DISPLAY STYLES
+  14. EQUIPMENT DISPLAY STYLES
    ================================================================ */
 
 /* Equipment display container */
@@ -1176,12 +1207,6 @@ button,
     opacity: 0.7;
 }
 
-/* Responsive adjustments */
-@media (max-width: 700px) {
-    .equipment-display {
-        margin-top: 6px;
-        gap: 3px;
-    }
     
     .equipment-slot {
         font-size: 0.75rem;
@@ -1194,7 +1219,7 @@ button,
 }
 
 /* ================================================================
-   EQUIPMENT MANAGEMENT STYLES
+   15. EQUIPMENT MANAGEMENT STYLES
    ================================================================ */
 
 /* Clickable equipment slots */
@@ -1379,13 +1404,7 @@ button,
     margin-top: 16px;
 }
 
-/* Mobile responsive */
-@media (max-width: 700px) {
-    .equipment-management-content {
-        max-width: 95vw;
-        padding: 12px;
-    }
-    
+
     .equipment-item {
         padding: 8px;
     }
