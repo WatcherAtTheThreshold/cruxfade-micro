@@ -204,13 +204,7 @@ export function initializeGame() {
     console.log('🔄 Game state initialized with fog of war');
 }
 
-// ================================================================
-// FOG OF WAR UTILITY FUNCTIONS  
-// ================================================================
 
-function revealAdjacentTilesAsDiscoverable(centerRow, centerCol) {
-    // Keep whichever implementation you have
-}
 
 // ================================================================
 // UPDATED: BOSS GRID GENERATION - FOG OF WAR COMPATIBLE
@@ -281,7 +275,7 @@ function generateBossGrid() {
     // Reveal adjacent tiles to starting position
     const entranceRow = G.board.player.r;
     const entranceCol = G.board.player.c;
-    //revealAdjacentTilesAsDiscoverable(entranceRow, entranceCol);
+    revealAdjacentTilesAsDiscoverable(entranceRow, entranceCol);
     
     addLogEntry(`💀 You have entered the ${boss.data.name}'s domain...`);
     addLogEntry(`📖 ${boss.data.description}`);
