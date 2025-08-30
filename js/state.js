@@ -153,16 +153,11 @@ function generateGrid() {
             });
         }
     }
-    
+    revealAdjacentTilesAsDiscoverable(entranceRow, entranceCol);
     ensureKeyAndDoor();
 }
 
-// At the END of generateGrid() function, add:
-revealAdjacentTilesAsDiscoverable(entranceRow, entranceCol); {
-//function revealAdjacentTilesAsDiscoverable(centerRow, centerCol)
-    // Will implement properly after cooldown
-    //console.log('Adjacent tile reveal - basic version');
-}
+
 
 
 /**
