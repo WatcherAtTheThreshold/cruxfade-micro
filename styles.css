@@ -280,8 +280,237 @@ section {
   border: 2px solid var(--accent);
 }
 
-.tile.player-tile::before {
-  content: '◉';
+/* ================================================================
+   HIDDEN TILES - Completely invisible or very dark
+   ================================================================ */
+.tile.hidden {
+  background: #0a0a0f;
+  border: 1px solid #15161c;
+  opacity: 0.3;
+  cursor: default;
+  color: transparent;
+}
+
+.tile.hidden:hover {
+  background: #0a0a0f;
+  transform: none;
+  box-shadow: none;
+  cursor: default;
+}
+
+.tile.hidden::before {
+  display: none; /* Hide any type icons */
+}
+
+/* ================================================================
+   DISCOVERABLE TILES - Dark with prominent "?" icon  
+   ================================================================ */
+.tile.discoverable {
+  background: #1a1d24;
+  border: 1px solid #2a2d34;
+  opacity: 0.7;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.tile.discoverable:hover {
+  background: #232731;
+  border-color: var(--accent);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(110, 167, 255, 0.3);
+  opacity: 0.9;
+}
+
+/* Unknown icon styling for discoverable tiles */
+.tile.discoverable .unknown-icon {
+  font-size: 1.8rem;
+  color: var(--muted);
+  font-weight: bold;
+  opacity: 0.8;
+  text-shadow: 0 0 8px rgba(154, 160, 166, 0.4);
+}
+
+.tile.discoverable:hover .unknown-icon {
+  color: var(--accent);
+  opacity: 1;
+  text-shadow: 0 0 12px rgba(110, 167, 255, 0.5);
+}
+
+/* ================================================================
+   EXPLORED TILES - Normal visibility with content
+   ================================================================ */
+.tile.explored {
+  background: var(--tile);
+  border: 1px solid var(--surface-border);
+  opacity: 1;
+  cursor: default;
+  transition: all 0.15s ease;
+}
+
+.tile.explored:hover {
+  background: var(--tileHi);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+}
+
+/* Tile icon styling for explored tiles */
+.tile.explored .tile-icon {
+  font-size: 1.8rem;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+  opacity: 1;
+}
+
+/* ================================================================
+   PLAYER POSITION - Clean blue glow without extra icons
+   ================================================================ */
+.tile.player-tile {
+  background: var(--accent);
+  border: 2px solid var(--accent);
+  color: white;
+  font-weight: bold;
+  box-shadow: 0 0 0 2px var(--accent) inset, 
+              0 0 16px rgba(110, 167, 255, 0.5),
+              0 4px 12px rgba(110, 167, 255, 0.3);
+  cursor: default;
+  transform: translateY(-2px);
+  z-index: 3;
+}
+
+.tile.player-tile:hover {
+  background: var(--accent);
+  transform: translateY(-2px);
+  box-shadow: 0 0 0 2px var(--accent) inset, 
+              0 0 20px rgba(110, 167, 255, 0.6),
+              0 6px 16px rgba(110, 167, 255, 0.4);
+}
+
+
+
+/* ================================================================
+   CONSUMED ENCOUNTERS - Dimmed to show completion
+   ================================================================ */
+.tile.consumed {
+  opacity: 0.6;
+  filter: saturate(0.7) brightness(0.8);
+}
+
+.tile.consumed .tile-icon {
+  opacity: 0.7;
+  filter: grayscale(0.3);
+}
+
+.tile.consumed:hover {
+  opacity: 0.75;
+  filter: saturate(0.8) brightness(0.9);
+}
+
+/* ================================================================
+   ADJACENT CLICKABLE TILES - Enhanced highlight for movement options
+   ================================================================ */
+.tile.adjacent.discoverable {
+  border: 2px solid rgba(110, 167, 255, 0.6);
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+.tile.adjacent.discoverable:hover {
+  border-color: var(--accent);
+  animation: none;
+}
+
+/* Subtle pulse animation for clickable tiles */
+@keyframes pulse-glow {
+  0%, 100% { 
+    border-color: rgba(110, 167, 255, 0.4); 
+    box-shadow: 0 0 8px rgba(110, 167, 255, 0.2);
+  }
+  50% { 
+    border-color: rgba(110, 167, 255, 0.7); 
+    box-shadow: 0 0 12px rgba(110, 167, 255, 0.4);
+  }
+}
+
+/* ================================================================
+   TILE TYPE VARIANTS - Different discover/explored states for different encounters
+   ================================================================ */
+
+/* Start tiles - Always visible, no mystery */
+.tile.start.explored {
+  background: #1e2332;
+  border-color: var(--good);
+}
+
+/* Fight tiles - Subtle red hint when explored */
+.tile.fight.explored {
+  border-color: #ef6b73;
+}
+
+.tile.fight.explored .tile-icon {
+  color: #ef6b73;
+}
+
+/* Item tiles - Subtle yellow hint when explored */
+.tile.item.explored {
+  border-color: #f6d55c;
+}
+
+.tile.item.explored .tile-icon {
+  color: #f6d55c;
+}
+
+/* Key tiles - Gold highlight when explored */
+.tile.key.explored {
+  border-color: var(--exit);
+}
+
+.tile.key.explored .tile-icon {
+  color: var(--exit);
+}
+
+/* Ally tiles - Green hint when explored */
+.tile.ally.explored {
+  border-color: var(--good);
+}
+
+.tile.ally.explored .tile-icon {
+  color: var(--good);
+}
+
+/* Boss tiles - Dramatic red glow when explored */
+.tile.boss-encounter.explored {
+  border-color: #ef6b73;
+  box-shadow: 0 0 16px rgba(239, 107, 115, 0.4);
+}
+
+.tile.boss-encounter.explored .tile-icon {
+  color: #ef6b73;
+  text-shadow: 0 0 8px rgba(239, 107, 115, 0.6);
+}
+
+/* ================================================================
+   RESPONSIVE ADJUSTMENTS FOR FOG OF WAR
+   ================================================================ */
+@media (max-width: 700px) {
+  .tile.discoverable .unknown-icon,
+  .tile.explored .tile-icon {
+    font-size: 1.6rem;
+  }
+  
+  .tile.player-tile {
+    box-shadow: 0 0 0 2px var(--accent) inset, 
+                0 0 12px rgba(110, 167, 255, 0.4),
+                0 3px 8px rgba(110, 167, 255, 0.3);
+  }
+  
+  @keyframes pulse-glow {
+    0%, 100% { 
+      border-color: rgba(110, 167, 255, 0.3); 
+      box-shadow: 0 0 6px rgba(110, 167, 255, 0.2);
+    }
+    50% { 
+      border-color: rgba(110, 167, 255, 0.6); 
+      box-shadow: 0 0 8px rgba(110, 167, 255, 0.3);
+    }
+  }
 }
 
 /* Tile type indicators */
