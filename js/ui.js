@@ -121,11 +121,11 @@ export function renderAll() {
 }
 
 // ================================================================
-// BOARD RENDERING
+// UPDATED: BOARD RENDERING FUNCTION - FOG OF WAR COMPATIBLE
 // ================================================================
 
 /**
- * Render the 4x4 game board
+ * Render the 4x4 game board - UPDATED for fog of war system
  */
 function renderBoard() {
     if (!DOM.tiles) return;
@@ -135,34 +135,86 @@ function renderBoard() {
         const col = index % 4;
         const tile = G.board.tiles[index];
         
-        // Clear previous classes
+        // Clear all previous classes
         tileElement.className = 'tile';
         tileElement.innerHTML = '';
         
-        // Add revealed state
-        if (tile.revealed) {
-            tileElement.classList.add('revealed');
+        // Determine tile visibility state
+        const isPlayerHere = (G.board.player.r === row && G.board.player.c === col);
+        
+        if (!tile.discovered) {
+            // HIDDEN TILE - Player doesn't know this exists
+            tileElement.classList.add('hidden');
+            tileElement.innerHTML = ''; // No content shown
+            
+        } else if (!tile.explored) {
+            // DISCOVERABLE TILE - Shows "?" icon, darkened
+            tileElement.classList.add('discoverable');
+            tileElement.innerHTML = '<span class="unknown-icon">?</span>';
+            
+            // Add adjacent class for clicking if next to player
+            if (isAdjacentToPlayer(row, col)) {
+                tileElement.classList.add('adjacent');
+            }
+            
+        } else {
+            // EXPLORED TILE - Shows actual content
+            tileElement.classList.add('explored');
+            
+            // Show actual tile content
+            const content = getExploredTileContent(tile);
+            tileElement.innerHTML = content;
+            
+            // Add tile type class for styling
+            if (tile.type) {
+                tileElement.classList.add(tile.type);
+            }
+            
+            // Mark consumed tiles
+            if (tile.consumed) {
+                tileElement.classList.add('consumed');
+            }
         }
         
-        // Add tile type
-        if (tile.type) {
-            tileElement.classList.add(tile.type);
-        }
-        
-        // Mark player position
-        if (G.board.player.r === row && G.board.player.c === col) {
+        // CURRENT PLAYER POSITION - Blue glow highlight (no extra icon)
+        if (isPlayerHere) {
             tileElement.classList.add('player-tile');
+            // Remove the player position ::before CSS - we'll handle this in CSS
         }
         
-        // Add tile content based on type
-        const content = getTileDisplayContent(tile);
-        tileElement.innerHTML = content;
-        
-        // Add adjacent class for tiles that can be clicked
-        if (isAdjacentToPlayer(row, col) && !isPlayerCurrentTile(row, col)) {
+        // Add adjacent class for clickable tiles that can be moved to
+        if (isAdjacentToPlayer(row, col) && !isPlayerHere && tile.discovered) {
             tileElement.classList.add('adjacent');
         }
     });
+}
+
+// ================================================================
+// NEW: EXPLORED TILE CONTENT FUNCTION - SINGLE ICON ONLY
+// ================================================================
+
+/**
+ * Get display content for explored tiles - SINGLE ICON, no duplicates
+ * @param {Object} tile - The tile object to get content for
+ * @returns {string} HTML content for the tile
+ */
+function getExploredTileContent(tile) {
+    const icons = {
+        start: '', // Empty for start tile - no icon needed
+        fight: '⚔️',
+        hazard: '⚡',
+        item: '📦',
+        ally: '🤝',
+        key: '🗝️',
+        door: '🚪',
+        empty: '', // Empty tiles show no icon
+        'boss-encounter': '💀'
+    };
+    
+    const icon = icons[tile.type] || '?';
+    
+    // Return just the icon - NO DUPLICATES
+    return icon ? `<span class="tile-icon">${icon}</span>` : '';
 }
 
 /**
@@ -189,13 +241,16 @@ function getTileDisplayContent(tile) {
     return icons[tile.type] || '?';
 }
 
+// ================================================================
+// UTILITY FUNCTION - CHECK IF TILE IS CURRENTLY PLAYER POSITION
+// ================================================================
+
 /**
- * Check if coordinates are the player's current tile
+ * Check if coordinates are the player's current tile (helper function)
  */
 function isPlayerCurrentTile(row, col) {
     return G.board.player.r === row && G.board.player.c === col;
 }
-
 // ================================================================
 // PARTY STATUS RENDERING
 // ================================================================
@@ -1798,3 +1853,35 @@ function getAvailableItemsForSlot(slot) {
 function getItemById(itemId) {
     return getEquipmentById(itemId);
 }
+
+// ================================================================
+// UPDATED: CARD EFFECTS - ENHANCE SCOUT'S TRACK ABILITY
+// ================================================================
+
+/**
+ * Enhanced Track card effect - reveals actual tile types of discoverable tiles
+ * This gets added to the CARD_EFFECTS object in state.js
+ */
+const ENHANCED_TRACK_EFFECT = {
+    'track': (card) => {
+        // Find all discoverable but unexplored tiles (tiles showing "?")
+        let tilesRevealed = 0;
+        
+        G.board.tiles.forEach((tile, index) => {
+            if (tile.discovered && !tile.explored) {
+                // This tile is currently showing "?" - reveal its actual type
+                tile.explored = true; // Now shows actual content
+                G.board.seen.add(index);
+                tilesRevealed++;
+            }
+        });
+        
+        if (tilesRevealed > 0) {
+            addLogEntry(`🔍 ${card.name}: Revealed ${tilesRevealed} tile types! You can now see what awaits you.`);
+            return true;
+        } else {
+            addLogEntry(`🔍 ${card.name}: No hidden tile types to reveal.`);
+            return false;
+        }
+    }
+};
