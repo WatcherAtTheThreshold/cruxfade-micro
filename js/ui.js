@@ -193,6 +193,9 @@ function renderBoard() {
 // NEW: EXPLORED TILE CONTENT FUNCTION - SINGLE ICON ONLY
 // ================================================================
 
+// ================================================================
+// NEW: EXPLORED TILE CONTENT FUNCTION - SINGLE ICON ONLY
+// ================================================================
 /**
  * Get display content for explored tiles - SINGLE ICON, no duplicates
  * @param {Object} tile - The tile object to get content for
@@ -216,31 +219,6 @@ function getExploredTileContent(tile) {
     // Return just the icon - NO DUPLICATES
     return icon ? `<span class="tile-icon">${icon}</span>` : '';
 }
-
-/**
- * Get display content for a tile based on its type
- */
-function getTileDisplayContent(tile) {
-    if (!tile.revealed && tile.type !== 'start') {
-        return '<span style="opacity: 0.5">?</span>';
-    }
-    
-    const icons = {
-        start: '◉',
-        fight: '⚔️',
-        hazard: '⚡',
-        item: '📦',
-        ally: '🤝',
-        key: '🗝️',
-        door: '🚪',
-        empty: '·',
-        // NEW: Boss encounter icon
-        'boss-encounter': '💀'
-    };
-    
-    return icons[tile.type] || '?';
-}
-
 // ================================================================
 // UTILITY FUNCTION - CHECK IF TILE IS CURRENTLY PLAYER POSITION
 // ================================================================
