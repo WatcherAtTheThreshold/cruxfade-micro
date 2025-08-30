@@ -84,37 +84,37 @@
   margin: auto;
   transform-origin: top center;
   transition: transform 0.3s ease;
-  transform: scale(0.90); /* Add base scale to make everything smaller */
+  transform: scale(0.85); /* Add base scale to make everything smaller */
 }
 
 /* Progressive scaling for larger screens */
 @media (min-width: 1300px) { 
-  #game { transform: scale(.95); } /* Was 1.05 */
+  #game { transform: scale(.90); } /* Was 1.05 */
 }
 
 @media (min-width: 1500px) { 
-  #game { transform: scale(1.0); } /* Was 1.1 */
+  #game { transform: scale(.95); } /* Was 1.1 */
 }
 
 @media (min-width: 1700px) { 
-  #game { transform: scale(1.05); } /* Was 1.15 */
+  #game { transform: scale(1.0); } /* Was 1.15 */
 }
 
 @media (min-width: 1920px) { 
-  #game { transform: scale(1.15); } /* Was 1.25 */
+  #game { transform: scale(1.1); } /* Was 1.25 */
 }
 
 /* Scale DOWN for smaller screens */
 @media (max-width: 900px) {
-  #game { transform: scale(0.85); }
+  #game { transform: scale(0.75); }
 }
 
 @media (max-width: 700px) {
-  #game { transform: scale(0.7); }
+  #game { transform: scale(0.65); }
 }
 
 @media (max-width: 500px) {
-  #game { transform: scale(0.6); } /* Not too small - buttons need to be tappable */
+  #game { transform: scale(0.55); } /* Not too small - buttons need to be tappable */
 }
 
 /* ================================================================
