@@ -513,14 +513,14 @@ section {
   }
 }
 
-/* Tile type indicators */
+/* Tile type indicators 
 .tile.fight::before { content: '⚔️'; }
 .tile.hazard::before { content: '⚡'; }
 .tile.item::before { content: '📦'; }
 .tile.ally::before { content: '🤝'; }
 .tile.key::before { content: '🗝️'; }
 .tile.door::before { content: '🚪'; }
-.tile.empty::before { content: '·'; color: var(--muted); }
+.tile.empty::before { content: '·'; color: var(--muted); }*/
 
 /* Revealed tile styling */
 .tile.revealed {
