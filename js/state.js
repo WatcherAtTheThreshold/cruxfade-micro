@@ -108,11 +108,11 @@ export const G = {
 };
 
 // ================================================================
-// INITIALIZATION FUNCTIONS
+// UPDATED: INITIALIZATION FUNCTION - CLEAR FOG OF WAR STATE
 // ================================================================
 
 /**
- * Initialize/reset the game to starting state
+ * Initialize/reset the game to starting state - UPDATED for fog of war
  */
 export function initializeGame() {
     // Reset core values
@@ -134,10 +134,11 @@ export function initializeGame() {
     
     // Initialize player position to left edge start (1,0)
     G.board.player = { r: 1, c: 0 };
-    G.board.seen = new Set();
-    G.board.seen.add(4); // Left edge start (1,0) = index 4
     
-    // Generate initial 4x4 grid
+    // CLEAR fog of war state - start with empty seen set
+    G.board.seen = new Set();
+    
+    // Generate initial 4x4 grid with fog of war
     generateGrid();
     
     // Initialize starting deck
@@ -149,54 +150,120 @@ export function initializeGame() {
     // Initialize equipment system
     initializeEquipment();
     
-    console.log('🔄 Game state initialized');
+    console.log('🔄 Game state initialized with fog of war');
 }
 
+// ================================================================
+// UPDATED: BOSS GRID GENERATION - FOG OF WAR COMPATIBLE
+// ================================================================
+
 /**
- * Generate a new 4x4 grid with encounters
+ * Generate a boss encounter grid - UPDATED for fog of war
  */
-function generateGrid() {
-    G.board.tiles = [];
-    
-    // Check if this should be a boss encounter
-    if (shouldTriggerBoss()) {
-        generateBossGrid();
+function generateBossGrid() {
+    const boss = getBossForLevel(G.gridLevel);
+    if (!boss) {
+        console.error('No boss found for grid level:', G.gridLevel);
+        generateGrid(); // Fallback to normal grid
         return;
     }
     
-    // Get player's entrance position
-    const entranceRow = G.board.player.r;
-    const entranceCol = G.board.player.c;
-    const entranceIndex = entranceRow * 4 + entranceCol; // 4x4 indexing
+    // Initialize boss state
+    G.boss.active = true;
+    G.boss.bossId = boss.id;
+    G.boss.currentPhase = 0;
+    G.boss.phaseComplete = false;
+    G.boss.defeated = false;
+    G.boss.enemyIndex = 0;
     
-    // Create 16 tiles (4x4 grid)
+    // Create a 4x4 grid with fog of war
+    G.board.tiles = [];
+    
     for (let i = 0; i < 16; i++) {
-        const row = Math.floor(i / 4); // 4x4 math
+        const row = Math.floor(i / 4);
         const col = i % 4;
         
-        // Entrance tile is always safe/start type
-        if (i === entranceIndex) {
+        // Player starts at entrance (left edge) - EXPLORED
+        if (row === G.board.player.r && col === G.board.player.c) {
             G.board.tiles.push({
                 type: 'start',
                 row: row,
                 col: col,
-                revealed: true,
+                discovered: true,     // NEW: Fog of war compatible
+                explored: true,       // NEW: Fog of war compatible
                 consumed: false
             });
-        } else {
-            // Random encounter for other tiles
+        }
+        // Boss encounter in center (tile 5) - HIDDEN initially
+        else if (i === 5) { // Center-left tile
             G.board.tiles.push({
-                type: getRandomEncounterType(),
+                type: 'boss-encounter',
                 row: row,
                 col: col,
-                revealed: false,
+                discovered: false,    // NEW: Hidden until player moves adjacent
+                explored: false,      // NEW: Hidden until player steps on it
+                consumed: false,
+                bossId: boss.id
+            });
+        }
+        // Empty tiles elsewhere - HIDDEN initially
+        else {
+            G.board.tiles.push({
+                type: 'empty',
+                row: row,
+                col: col,
+                discovered: false,    // NEW: Hidden until discovered
+                explored: false,      // NEW: Hidden until explored
                 consumed: false
             });
         }
     }
     
-    // Ensure we have exactly one key and one door
-    ensureKeyAndDoor();
+    // Reveal adjacent tiles to starting position
+    const entranceRow = G.board.player.r;
+    const entranceCol = G.board.player.c;
+    revealAdjacentTilesAsDiscoverable(entranceRow, entranceCol);
+    
+    addLogEntry(`💀 You have entered the ${boss.data.name}'s domain...`);
+    addLogEntry(`📖 ${boss.data.description}`);
+}
+
+// ================================================================
+// NEW: ADJACENT TILE DISCOVERY FUNCTION
+// ================================================================
+
+/**
+ * Reveal tiles adjacent to given position as discoverable (show "?" icon)
+ * @param {number} centerRow - Row to reveal around
+ * @param {number} centerCol - Column to reveal around
+ */
+function revealAdjacentTilesAsDiscoverable(centerRow, centerCol) {
+    // Check all 4 adjacent directions (no diagonals)
+    const directions = [
+        { dr: -1, dc: 0 }, // Up
+        { dr: 1, dc: 0 },  // Down
+        { dr: 0, dc: -1 }, // Left
+        { dr: 0, dc: 1 }   // Right
+    ];
+    
+    directions.forEach(({ dr, dc }) => {
+        const newRow = centerRow + dr;
+        const newCol = centerCol + dc;
+        
+        // Check if position is within 4x4 grid bounds
+        if (newRow >= 0 && newRow < 4 && newCol >= 0 && newCol < 4) {
+            const tileIndex = newRow * 4 + newCol;
+            const tile = G.board.tiles[tileIndex];
+            
+            // Only reveal as discoverable if not already explored
+            if (tile && !tile.explored) {
+                tile.discovered = true;  // Player can now see this tile (with "?" icon)
+                G.board.seen.add(tileIndex); // Add to seen set for compatibility
+            }
+        }
+    });
+    
+    addLogEntry(`🔍 You can see ${directions.length} adjacent areas to explore...`);
 }
 
 // ================================================================
@@ -875,8 +942,12 @@ export function getCurrentTileRequirement() {
     return requirements[currentTile.type] || 'Complete this encounter';
 }
 
+// ================================================================
+// UPDATED: MOVE PLAYER FUNCTION - HANDLE FOG OF WAR REVELATION
+// ================================================================
+
 /**
- * Attempt to move player to a new position (UPDATED with completion check)
+ * Attempt to move player to a new position - UPDATED for fog of war
  */
 export function movePlayer(newRow, newCol) {
     // Check bounds (4x4)
@@ -895,34 +966,58 @@ export function movePlayer(newRow, newCol) {
         return false;
     }
     
-    // NEW: Check if current tile is completed
+    // Check if current tile is completed (existing logic)
     if (!isCurrentTileCompleted()) {
         const requirement = getCurrentTileRequirement();
         addLogEntry(`❌ Must complete current encounter first: ${requirement}`);
         return false;
     }
     
-    // Move player
+    // Get the target tile
+    const tileIndex = newRow * 4 + newCol;
+    const targetTile = G.board.tiles[tileIndex];
+    
+    // Can only move to DISCOVERED tiles (tiles showing "?")
+    if (!targetTile.discovered) {
+        addLogEntry('❌ Cannot move to unexplored areas');
+        return false;
+    }
+    
+    // MOVE PLAYER TO NEW POSITION
     G.board.player.r = newRow;
     G.board.player.c = newCol;
     
-    // Mark new tile as seen and revealed
-    const tileIndex = newRow * 4 + newCol;
-    G.board.seen.add(tileIndex);
-    G.board.tiles[tileIndex].revealed = true;
+    // EXPLORE THE NEW TILE (reveal its actual content)
+    targetTile.explored = true;
+    G.board.seen.add(tileIndex); // Keep compatibility with existing seen system
     
-    // Auto-complete empty tiles
-    const newTile = G.board.tiles[tileIndex];
-    if (newTile.type === 'empty') {
-        newTile.consumed = true;
-        addLogEntry(`👣 Empty area explored`);
+    // REVEAL NEW ADJACENT TILES AS DISCOVERABLE
+    revealAdjacentTilesAsDiscoverable(newRow, newCol);
+    
+    // Auto-complete empty tiles (existing logic)
+    if (targetTile.type === 'empty') {
+        targetTile.consumed = true;
+        addLogEntry(`💨 Empty area explored`);
     }
     
-    addLogEntry(`🚶 Moved to tile (${newRow}, ${newCol})`);
+    // Log the move with tile type revelation
+    const tileTypeNames = {
+        'start': 'Safe Area',
+        'fight': 'Enemy Encounter', 
+        'hazard': 'Dangerous Hazard',
+        'item': 'Treasure Cache',
+        'ally': 'Potential Ally',
+        'key': 'Key Location',
+        'door': 'Grid Exit',
+        'empty': 'Empty Space',
+        'boss-encounter': 'Boss Domain'
+    };
+    
+    const tileName = tileTypeNames[targetTile.type] || targetTile.type;
+    addLogEntry(`🚶 Moved to ${tileName} at (${newRow}, ${newCol})`);
     
     return true;
 }
-
 /**
  * Get the current tile the player is standing on
  */
