@@ -11,6 +11,12 @@
     "atk": 2,
     "description": "A small, evil creature"
   },
+   "skrunt": {
+    "name": "Skrunt", 
+    "hp": 4,
+    "atk": 2,
+    "description": "A little mangy chupacabra demon"
+  },
   
   "orc": {
     "name": "Orc Warrior", 
