@@ -1382,12 +1382,12 @@ export function bindEventHandlers(updateGameCallback) {
                         console.log('⚠️ Ally recruitment caused card overflow');
                         
                         // Create a combined card that represents what the ally offers
-                        const combinedCard = {
-                            id: 'ally-offer-' + result.ally.id,
-                            name: `${result.ally.name}'s Cards`,
-                            type: 'ally',
-                            description: `${result.ally.name} offers: ${result.cards.map(c => c.name).join(', ')}`
-                        };
+                        showAllyCardOverflow(result.ally, result.cards, (resolved) => {
+                    if (resolved) {
+                       resolvePendingAlly();
+                        _updateGameCallback();
+                            }
+                          });
                         
                         // Show overflow selection with callback
                         showCardOverflowSelection(combinedCard, (resolved) => {
