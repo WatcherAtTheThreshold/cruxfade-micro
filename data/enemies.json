@@ -10,7 +10,7 @@
    "hp": 2,
    "atk": 1,
    "description": "A small vicious rat-like creature."
-  }
+  },
   "orc": {
     "name": "Orc Warrior", 
     "hp": 7,
