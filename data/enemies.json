@@ -5,12 +5,7 @@
     "atk": 2,
     "description": "A small, vicious creature"
   },
-  "hob-goblin": {
-   "name": "Hob Goblin",
-   "hp": 2,
-   "atk": 1,
-   "description": "A small vicious rat-like creature."
-  },
+  
   "orc": {
     "name": "Orc Warrior", 
     "hp": 7,
@@ -28,11 +23,6 @@
     "hp": 10,
     "atk": 3,
     "description": "A battle-hardened warrior with devastating attacks"
-  },
-  "small-wyvern": {
-    "name": "Small Wyvern",
-    "hp": 10,
-    "atk": 3,
-    "description": "A small black slick scaled dragon"
   }
+  
 }
