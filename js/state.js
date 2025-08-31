@@ -1970,7 +1970,7 @@ export function playerAttack() {
 }
 
 /**
- * Enhanced enemy attack that considers combat modifiers
+ * Enhanced enemy attack that considers combat modifiers - UPDATED with auto-removal
  */
 export function enemyAttack() {
     if (!G.combat.active) return false;
@@ -2016,36 +2016,52 @@ export function enemyAttack() {
     
     addLogEntry(`💥 ${G.combat.enemy.name} attacks for ${damage} damage! Your HP: ${G.combat.playerHp}`);
     
-   if (G.combat.playerHp <= 0) {
-    // Check if we can switch leaders instead of ending combat
-    const livingMembers = G.party.filter(member => member.hp > 0);
-    
-    if (livingMembers.length === 0) {
-        // Everyone is dead - end combat
-        endCombat(false);
-        return true;
-    } else {
-        // Switch to next living member and continue combat
-        const currentLeader = G.party[0];
-        const newLeaderIndex = G.party.findIndex(member => member.hp > 0);
+    if (G.combat.playerHp <= 0) {
+        // Check if we can switch leaders instead of ending combat
+        const livingMembers = G.party.filter(member => member.hp > 0);
         
-        if (newLeaderIndex > 0) {
-            const newLeader = G.party[newLeaderIndex];
+        if (livingMembers.length === 0) {
+            // Everyone is dead - end combat
+            endCombat(false);
+            return true;
+        } else {
+            // Switch to next living member and continue combat
+            const currentLeader = G.party[0];
+            const newLeaderIndex = G.party.findIndex(member => member.hp > 0);
             
-            // Switch leadership
-            G.party.splice(newLeaderIndex, 1);
-            G.party.unshift(newLeader);
+            if (newLeaderIndex > 0) {
+                const newLeader = G.party[newLeaderIndex];
+                
+                // Switch leadership
+                G.party.splice(newLeaderIndex, 1);
+                G.party.unshift(newLeader);
+                
+                // Update combat HP to new leader
+                G.combat.playerHp = newLeader.hp;
+                
+                addLogEntry(`💔 ${currentLeader.name} has fallen! ${newLeader.name} continues the fight!`);
+                
+                // AUTO-REMOVE the fallen party member after brief delay
+                console.log('🔍 DEBUG: Scheduling auto-removal for fallen member:', currentLeader.name);
+                setTimeout(() => {
+                    console.log('🔍 DEBUG: Auto-removal timer triggered for:', currentLeader.name);
+                    // Double-check the member is still in party and still dead
+                    const fallenMember = G.party.find(m => m.id === currentLeader.id);
+                    if (fallenMember && fallenMember.hp <= 0) {
+                        console.log('🔍 DEBUG: Calling removeAlly for:', currentLeader.id);
+                        removeAlly(currentLeader.id);
+                        addLogEntry(`⚰️ ${currentLeader.name}'s body fades away...`);
+                        console.log('🔍 DEBUG: Auto-removal complete');
+                    } else {
+                        console.log('🔍 DEBUG: Auto-removal skipped - member not found or not dead');
+                    }
+                }, 2000); // 2 second delay for dramatic effect
+            }
             
-            // Update combat HP to new leader
-            G.combat.playerHp = newLeader.hp;
-            
-            addLogEntry(`💔 ${currentLeader.name} has fallen! ${newLeader.name} continues the fight!`);
+            G.combat.turn = 'player';
+            return true;
         }
-        
-        G.combat.turn = 'player';
-        return true;
     }
-}
     
     G.combat.turn = 'player';
     return true;
