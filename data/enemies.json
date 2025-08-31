@@ -22,7 +22,8 @@
     "hp": 10,
     "atk": 3,
     "description": "A battle-hardened warrior with devastating attacks"
-  }"small-wyvern": {
+  },
+  "small-wyvern": {
     "name": "Small Wyvern",
     "hp": 10,
     "atk": 3,
