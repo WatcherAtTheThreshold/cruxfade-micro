@@ -152,12 +152,12 @@
   "boss-enemies": {
     "shadow-lord-final": {
       "name": "The Shadow Lord",
-      "hp": 25,
-      "atk": 6,
+      "hp": 20,
+      "atk": 5,
       "mag": 4,
       "description": "An ancient entity wreathed in living darkness",
       "abilities": ["shadow-strike", "darkness-heal", "fear-aura"],
-      "resistances": ["physical-25%"],
+      "resistances": ["physical-15%"],
       "weaknesses": ["magic"]
     },
     
