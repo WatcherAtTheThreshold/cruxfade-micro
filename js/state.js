@@ -1085,16 +1085,18 @@ export function damagePartyMember(memberId, damage) {
         
         if (member.hp <= 0) {
             addLogEntry(`💀 ${member.name} has fallen!`);
+            console.log('🔍 DEBUG: Party member died, setting up auto-removal:', member.name);
             
-            // AUTO-REMOVE fallen party member after brief delay
             setTimeout(() => {
-                if (member.hp <= 0) { // Double-check they're still dead
+                console.log('🔍 DEBUG: Auto-removal timer triggered for:', member.name);
+                console.log('🔍 DEBUG: Member HP check:', member.hp);
+                if (member.hp <= 0) {
+                    console.log('🔍 DEBUG: Calling removeAlly for:', member.id);
                     removeAlly(member.id);
                     addLogEntry(`⚰️ ${member.name}'s body fades away...`);
-                    // Trigger UI update if available
-                    if (_updateGameCallback) _updateGameCallback();
+                    console.log('🔍 DEBUG: Auto-removal complete');
                 }
-            }, 2000); // 2 second delay for dramatic effect
+            }, 2000);
         }
     }
 }
