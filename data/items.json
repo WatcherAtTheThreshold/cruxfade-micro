@@ -3,15 +3,15 @@
     "health-potion": {
       "name": "Health Potion",
       "stat": "hp",
-      "boost": 3,
-      "maxBoost": 2,
+      "boost": 5,
+      "maxBoost": 3,
       "rarity": "common"
     },
     "healing-herbs": {
       "name": "Healing Herbs",
       "stat": "hp", 
-      "boost": 5,
-      "maxBoost": 3,
+      "boost": 6,
+      "maxBoost": 4,
       "rarity": "common"
     },
     "greater-healing-potion": {
@@ -24,13 +24,13 @@
     "strength-elixir": {
       "name": "Strength Elixir",
       "stat": "atk",
-      "boost": 1,
+      "boost": 3,
       "rarity": "common"
     },
     "magic-crystal": {
       "name": "Magic Crystal", 
       "stat": "mag",
-      "boost": 1,
+      "boost": 3,
       "rarity": "common"
     }
   },
@@ -38,14 +38,14 @@
     "iron-sword": {
       "name": "Iron Sword",
       "slot": "weapon",
-      "statBonus": { "atk": 2 },
+      "statBonus": { "atk": 3 },
       "description": "A sturdy iron blade that increases attack power",
       "rarity": "common"
     },
     "enchanted-blade": {
       "name": "Enchanted Blade",
       "slot": "weapon", 
-      "statBonus": { "atk": 3, "mag": 1 },
+      "statBonus": { "atk": 4, "mag": 1, "hp": 3 },
       "description": "A magical sword that enhances both physical and magical abilities",
       "rarity": "rare"
     },
@@ -73,7 +73,7 @@
     "mage-robes": {
       "name": "Mage Robes",
       "slot": "armor",
-      "statBonus": { "mag": 3, "hp": 1 },
+      "statBonus": { "mag": 3, "hp": 2 },
       "description": "Enchanted robes that enhance magical abilities",
       "rarity": "uncommon"
     },
@@ -87,21 +87,21 @@
     "berserker-ring": {
       "name": "Berserker Ring",
       "slot": "accessory",
-      "statBonus": { "atk": 2, "hp": -2 },
+      "statBonus": { "atk": 3, "hp": -1 },
       "description": "Increases attack power at the cost of health",
       "rarity": "rare"
     },
     "health-amulet": {
       "name": "Health Amulet",
       "slot": "accessory",
-      "statBonus": { "hp": 4 },
+      "statBonus": { "hp": 5 },
       "description": "A protective charm that significantly boosts health",
       "rarity": "uncommon"
     },
     "arcane-focus": {
       "name": "Arcane Focus",
       "slot": "accessory",
-      "statBonus": { "mag": 3 },
+      "statBonus": { "mag": 3, "hp": 3 },
       "description": "A rare magical item that greatly enhances spellcasting",
       "rarity": "rare"
     }
