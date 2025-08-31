@@ -1075,7 +1075,7 @@ export function getPartyLeader() {
 }
 
 /**
- * Apply damage to a party member
+ * Apply damage to a party member - UPDATED with auto-removal
  */
 export function damagePartyMember(memberId, damage) {
     const member = G.party.find(m => m.id === memberId);
@@ -1085,6 +1085,16 @@ export function damagePartyMember(memberId, damage) {
         
         if (member.hp <= 0) {
             addLogEntry(`💀 ${member.name} has fallen!`);
+            
+            // AUTO-REMOVE fallen party member after brief delay
+            setTimeout(() => {
+                if (member.hp <= 0) { // Double-check they're still dead
+                    removeAlly(member.id);
+                    addLogEntry(`⚰️ ${member.name}'s body fades away...`);
+                    // Trigger UI update if available
+                    if (_updateGameCallback) _updateGameCallback();
+                }
+            }, 2000); // 2 second delay for dramatic effect
         }
     }
 }
