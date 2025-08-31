@@ -9,7 +9,7 @@
       "empty": 1
     },
     "enemyPools": {
-      "common": ["goblin", "shadow-wisp", "hob-goblin"],
+      "common": ["goblin", "shadow-wisp", "hob-goblin" "hob-goblin"],
       "rare": ["orc"]
     }
   },
@@ -24,7 +24,7 @@
     },
     "enemyPools": {
       "common": ["goblin", "orc", "hob-goblin"],
-      "rare": ["orc-champion", "small-wyvern"]
+      "rare": ["orc-champion", "small-wyvern", "small-wyvern"]
     }
   },
   "grid-3": {
