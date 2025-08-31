@@ -892,6 +892,22 @@ function resetPartyToStart() {
 export function isCurrentTileCompleted() {
     const currentTile = getCurrentTile();
     if (!currentTile) return true;
+//test log code/////////////////////////////////////
+console.log('🔍 Tile completion check:', {
+        type: currentTile.type,
+        consumed: currentTile.consumed,
+        combatActive: G.combat.active,
+        playerPos: `${G.board.player.r},${G.board.player.c}`
+    });
+    
+    if (currentTile.type === 'fight') {
+        console.log('⚔️ Fight tile check:', {
+            consumed: currentTile.consumed,
+            combatActive: G.combat.active,
+            canMove: currentTile.consumed || !G.combat.active
+        });
+    }
+//test log code end //////////////////////////////////
     
     // Start tiles are always considered completed
     if (currentTile.type === 'start') return true;
