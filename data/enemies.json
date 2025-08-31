@@ -5,12 +5,12 @@
     "atk": 2,
     "description": "A small, vicious creature"
   },
-   "bush-goblin": {
-    "name": "Bush Goblin",
-    "hp": 2,
-    "atk": 1,
-    "description": "A small, rat-like creature"
-  },
+  "hob-goblin": {
+   "name": "Hob Goblin",
+   "hp": 2,
+   "atk": 1,
+   "description": "A small vicious rat-like creature."
+  }
   "orc": {
     "name": "Orc Warrior", 
     "hp": 7,
