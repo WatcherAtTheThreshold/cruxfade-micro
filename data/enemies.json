@@ -1,4 +1,4 @@
-{
+n{
    "hob-goblin": {
     "name": "Goblin",
     "hp": 2,
@@ -32,11 +32,11 @@
   },
   "orc-champion": {
     "name": "Orc Champion",
-    "hp": 10,
+    "hp": 9,
     "atk": 3,
     "description": "A battle-hardened warrior with devastating attacks"
   },
-  "small-wveryn": {
+  "small-wyvern": {
     "name": "Small Wyvern",
     "hp": 9,
     "atk": 2,
