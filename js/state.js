@@ -863,8 +863,8 @@ function ensureKeyAndDoor() {
  */
 function initializeStartingDeck() {
     G.deck = [
+        
         { id: 'basic-strike', name: 'Basic Strike', type: 'attack' },
-        { id: 'basic-strike-2', name: 'Basic Strike', type: 'attack' },
         { id: 'defend', name: 'Defend', type: 'defense' },
         { id: 'move', name: 'Quick Move', type: 'utility' }
     ];
