@@ -1,6 +1,12 @@
 {
+   "cur": {
+    "name": "Cur",
+    "hp": 3,
+    "atk": 1,
+    "description": "A feral fighting dog."
+  },
    "hob-goblin": {
-    "name": "Goblin",
+    "name": "Hob Goblin",
     "hp": 2,
     "atk": 1,
     "description": "A small, vicious rat-like creature"
