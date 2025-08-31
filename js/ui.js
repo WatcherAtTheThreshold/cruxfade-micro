@@ -1832,34 +1832,4 @@ function getItemById(itemId) {
     return getEquipmentById(itemId);
 }
 
-// ================================================================
-// UPDATED: CARD EFFECTS - ENHANCE SCOUT'S TRACK ABILITY
-// ================================================================
 
-/**
- * Enhanced Track card effect - reveals actual tile types of discoverable tiles
- * This gets added to the CARD_EFFECTS object in state.js
- */
-const ENHANCED_TRACK_EFFECT = {
-    'track': (card) => {
-        // Find all discoverable but unexplored tiles (tiles showing "?")
-        let tilesRevealed = 0;
-        
-        G.board.tiles.forEach((tile, index) => {
-            if (tile.discovered && !tile.explored) {
-                // This tile is currently showing "?" - reveal its actual type
-                tile.explored = true; // Now shows actual content
-                G.board.seen.add(index);
-                tilesRevealed++;
-            }
-        });
-        
-        if (tilesRevealed > 0) {
-            addLogEntry(`🔍 ${card.name}: Revealed ${tilesRevealed} tile types! You can now see what awaits you.`);
-            return true;
-        } else {
-            addLogEntry(`🔍 ${card.name}: No hidden tile types to reveal.`);
-            return false;
-        }
-    }
-};
