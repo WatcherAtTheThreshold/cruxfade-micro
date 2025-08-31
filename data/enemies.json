@@ -7,8 +7,8 @@
   },
   "orc": {
     "name": "Orc Warrior", 
-    "hp": 8,
-    "atk": 3,
+    "hp": 7,
+    "atk": 2,
     "description": "A battle-hardened brute"
   },
   "shadow-wisp": {
@@ -19,8 +19,13 @@
   },
   "orc-champion": {
     "name": "Orc Champion",
-    "hp": 12,
-    "atk": 4,
+    "hp": 10,
+    "atk": 3,
     "description": "A battle-hardened warrior with devastating attacks"
+  }"small-wyvern": {
+    "name": "Small Wyvern",
+    "hp": 10,
+    "atk": 3,
+    "description": "A small black slick scaled dragon"
   }
 }
