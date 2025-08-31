@@ -108,57 +108,63 @@ export const G = {
 };
 
 // ================================================================
-// UPDATED: INITIALIZATION FUNCTION - CLEAR FOG OF WAR STATE
+// UPDATED: TILE CREATION - ADD COMBAT ENGAGEMENT TRACKING
 // ================================================================
 
 /**
- * Generate a new 4x4 grid with encounters - UPDATED for fog of war
+ * Generate a new 4x4 grid with encounters - UPDATED to track combat engagement
  */
 function generateGrid() {
     G.board.tiles = [];
     
+    // Check if this should be a boss encounter
     if (shouldTriggerBoss()) {
         generateBossGrid();
         return;
     }
     
+    // Get player's entrance position
     const entranceRow = G.board.player.r;
     const entranceCol = G.board.player.c;
-    const entranceIndex = entranceRow * 4 + entranceCol;
+    const entranceIndex = entranceRow * 4 + entranceCol; // 4x4 indexing
     
-    // Create 16 tiles - all start hidden except entrance
+    // Create 16 tiles (4x4 grid) - ALL START AS HIDDEN
     for (let i = 0; i < 16; i++) {
-        const row = Math.floor(i / 4);
+        const row = Math.floor(i / 4); // 4x4 math
         const col = i % 4;
         
+        // Entrance tile is immediately EXPLORED (shows actual content)
         if (i === entranceIndex) {
-            // Starting tile
             G.board.tiles.push({
                 type: 'start',
                 row: row,
                 col: col,
-                discovered: true,
-                explored: true,
-                consumed: false
+                discovered: true,    // NEW: Player can see this tile exists
+                explored: true,      // NEW: Player has been here, shows actual content
+                consumed: false,     // Whether encounter is complete
+                combatEngaged: false // NEW: Track if player has engaged with combat
             });
         } else {
-            // Hidden tiles
+            // All other tiles start as HIDDEN (not discovered, not explored)
+            const tileType = getRandomEncounterType();
             G.board.tiles.push({
-                type: getRandomEncounterType(),
+                type: tileType,
                 row: row,
                 col: col,
-                discovered: false,
-                explored: false,
-                consumed: false
+                discovered: false,   // NEW: Player doesn't know this tile exists yet
+                explored: false,     // NEW: Player hasn't been here yet
+                consumed: false,     // Whether encounter is complete
+                combatEngaged: false // NEW: Track if player has engaged with combat (all tiles)
             });
         }
     }
+    
+    // Reveal adjacent tiles to starting position as DISCOVERABLE
     revealAdjacentTilesAsDiscoverable(entranceRow, entranceCol);
+    
+    // Ensure we have exactly one key and one door
     ensureKeyAndDoor();
 }
-
-
-
 
 /**
  * Initialize/reset the game to starting state - UPDATED for fog of war
@@ -205,11 +211,11 @@ export function initializeGame() {
 
 
 // ================================================================
-// UPDATED: BOSS GRID GENERATION - FOG OF WAR COMPATIBLE
+// UPDATED: BOSS GRID GENERATION - ADD COMBAT ENGAGEMENT TRACKING
 // ================================================================
 
 /**
- * Generate a boss encounter grid - UPDATED for fog of war
+ * Generate a boss encounter grid - UPDATED for combat engagement tracking
  */
 function generateBossGrid() {
     const boss = getBossForLevel(G.gridLevel);
@@ -242,7 +248,8 @@ function generateBossGrid() {
                 col: col,
                 discovered: true,     // NEW: Fog of war compatible
                 explored: true,       // NEW: Fog of war compatible
-                consumed: false
+                consumed: false,
+                combatEngaged: false  // NEW: Combat engagement tracking
             });
         }
         // Boss encounter in center (tile 5) - HIDDEN initially
@@ -254,7 +261,8 @@ function generateBossGrid() {
                 discovered: false,    // NEW: Hidden until player moves adjacent
                 explored: false,      // NEW: Hidden until player steps on it
                 consumed: false,
-                bossId: boss.id
+                bossId: boss.id,
+                combatEngaged: false  // NEW: Combat engagement tracking
             });
         }
         // Empty tiles elsewhere - HIDDEN initially
@@ -265,7 +273,8 @@ function generateBossGrid() {
                 col: col,
                 discovered: false,    // NEW: Hidden until discovered
                 explored: false,      // NEW: Hidden until explored
-                consumed: false
+                consumed: false,
+                combatEngaged: false  // NEW: Combat engagement tracking
             });
         }
     }
@@ -278,6 +287,7 @@ function generateBossGrid() {
     addLogEntry(`💀 You have entered the ${boss.data.name}'s domain...`);
     addLogEntry(`📖 ${boss.data.description}`);
 }
+
 
 // ================================================================
 // NEW: ADJACENT TILE DISCOVERY FUNCTION
@@ -883,31 +893,23 @@ function resetPartyToStart() {
 }
 
 // ================================================================
-// PLAYER MOVEMENT FUNCTIONS
+// UPDATED: TILE COMPLETION CHECK - FIX FIGHT TILE ESCAPE BUG
 // ================================================================
 
 /**
- * Check if the current tile encounter is completed
+ * Check if the current tile encounter is completed - FIXED fight tile bug
  */
 export function isCurrentTileCompleted() {
     const currentTile = getCurrentTile();
     if (!currentTile) return true;
-//test log code/////////////////////////////////////
-console.log('🔍 Tile completion check:', {
+    
+    console.log('🔍 Tile completion check:', {
         type: currentTile.type,
         consumed: currentTile.consumed,
         combatActive: G.combat.active,
+        combatEngaged: currentTile.combatEngaged, // NEW: Log engagement status
         playerPos: `${G.board.player.r},${G.board.player.c}`
     });
-    
-    if (currentTile.type === 'fight') {
-        console.log('⚔️ Fight tile check:', {
-            consumed: currentTile.consumed,
-            combatActive: G.combat.active,
-            canMove: currentTile.consumed || !G.combat.active
-        });
-    }
-//test log code end //////////////////////////////////
     
     // Start tiles are always considered completed
     if (currentTile.type === 'start') return true;
@@ -918,34 +920,54 @@ console.log('🔍 Tile completion check:', {
     // Door tiles: you can always move away from doors
     if (currentTile.type === 'door') return true;
     
-    // Fight tiles: completed if consumed OR if not in active combat
-    // (allows movement after successful flee or before engaging)
+    // FIGHT TILES: FIXED LOGIC - Must engage with combat before leaving
     if (currentTile.type === 'fight') {
-        return currentTile.consumed || !G.combat.active;
+        // Can leave if consumed (defeated enemy) OR if engaged and no longer in active combat (fled successfully)
+        const canMove = currentTile.consumed || (currentTile.combatEngaged && !G.combat.active);
+        
+        console.log('⚔️ Fight tile check:', {
+            consumed: currentTile.consumed,
+            combatActive: G.combat.active,
+            combatEngaged: currentTile.combatEngaged,
+            canMove: canMove
+        });
+        
+        return canMove;
     }
     
     // All other tiles check consumed status
     return currentTile.consumed === true;
 }
 
+
+// ================================================================
+// UPDATED: TILE COMPLETION REQUIREMENT MESSAGE
+// ================================================================
+
 /**
- * Get completion requirement message for current tile
+ * Get completion requirement message for current tile - UPDATED for engagement
  */
 export function getCurrentTileRequirement() {
     const currentTile = getCurrentTile();
     if (!currentTile) return '';
     
+    // Special message for fight tiles that haven't been engaged
+    if (currentTile.type === 'fight' && !currentTile.combatEngaged) {
+        return 'Engage with the enemy (click Fight!)';
+    }
+    
     const requirements = {
-        'fight': 'Defeat the enemy',
+        'fight': 'Defeat the enemy or flee from combat',
         'hazard': 'Navigate the hazard', 
         'item': 'Take the item',
         'ally': 'Recruit or decline the ally',
         'key': 'Take the key',
-        'door': 'Find the key to use this door' // Updated message
+        'door': 'Find the key to use this door'
     };
     
     return requirements[currentTile.type] || 'Complete this encounter';
 }
+
 
 // ================================================================
 // UPDATED: MOVE PLAYER FUNCTION - HANDLE FOG OF WAR REVELATION
@@ -1792,11 +1814,11 @@ export function clearLog() {
 }
 
 // ================================================================
-// COMBAT SYSTEM FUNCTIONS
+// UPDATED: COMBAT START - SET ENGAGEMENT FLAG
 // ================================================================
 
 /**
- * Start combat with a specific enemy type
+ * Start combat with a specific enemy type - UPDATED to set engagement flag
  */
 export function startCombat(enemyType = 'goblin', bossPhase = null) {
     const enemyTemplate = GAME_DATA.enemies[enemyType];
@@ -1812,7 +1834,14 @@ export function startCombat(enemyType = 'goblin', bossPhase = null) {
         return false;
     }
     
-    console.log('🐛 DEBUG: startCombat called with enemy:', enemyType, 'bossPhase:', !!bossPhase);
+    console.log('🛠 DEBUG: startCombat called with enemy:', enemyType, 'bossPhase:', !!bossPhase);
+    
+    // SET COMBAT ENGAGEMENT FLAG - Player has now engaged with this fight tile
+    const currentTile = getCurrentTile();
+    if (currentTile && currentTile.type === 'fight') {
+        currentTile.combatEngaged = true;
+        console.log('⚔️ Combat engagement flag set for fight tile');
+    }
     
     G.combat.active = true;
     G.combat.enemy = { ...enemyTemplate }; // Copy enemy data
@@ -1822,11 +1851,12 @@ export function startCombat(enemyType = 'goblin', bossPhase = null) {
     G.combat.lastRoll = null;
     G.combat.bossPhase = bossPhase; // Set boss phase if provided
     
-    console.log('🐛 DEBUG: Combat initialized - bossPhase:', !!G.combat.bossPhase);
+    console.log('🛠 DEBUG: Combat initialized - bossPhase:', !!G.combat.bossPhase);
     
     addLogEntry(`⚔️ Combat started with ${enemyTemplate.name}!`);
     return true;
 }
+
 
 /**
  * Attempt to flee from combat with dice roll
