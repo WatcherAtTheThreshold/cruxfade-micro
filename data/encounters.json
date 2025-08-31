@@ -10,7 +10,7 @@
     },
     "enemyPools": {
       "common": ["hob-goblin", "goblin", "shadow-wisp"],
-      "rare": ["orc"]
+      "rare": ["skrunt"]
     }
   },
   "grid-2": {
