@@ -583,7 +583,7 @@ function defeatBoss() {
 }
 
 /**
- * Get the level of the next boss encounter
+ * Get the level of the next boss encounter  
  */
 function getNextBossLevel() {
     if (!GAME_DATA.bosses) return null;
