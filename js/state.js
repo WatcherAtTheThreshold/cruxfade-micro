@@ -595,9 +595,12 @@ export function completeBossPhase() {
             addLogEntry('🗺️ Use the door to face the ultimate evil!');
         }
     }
+      
     
     console.log('🏆 Boss defeat processing complete');
 }
+}
+    
 /**
  * Get the level of the next boss encounter  
  */
