@@ -406,7 +406,7 @@ export function startBossPhase() {
 /**
  * Start a fight phase (minions)
  */
-export function startBossPhase() {
+export function startBossPhaseFight() {
     if (!phase.enemies || phase.enemies.length === 0) {
         addLogEntry('⚔️ No enemies to fight - phase complete!');
         completeBossPhase();
