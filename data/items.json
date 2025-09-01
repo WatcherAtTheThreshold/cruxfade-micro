@@ -4,27 +4,27 @@
       "name": "Health Potion",
       "stat": "hp",
       "boost": 5,
-      "maxBoost": 3,
+      "maxBoost": 5,
       "rarity": "common"
     },
     "healing-herbs": {
       "name": "Healing Herbs",
       "stat": "hp", 
-      "boost": 6,
-      "maxBoost": 4,
+      "boost": 8,
+      "maxBoost": 5,
       "rarity": "common"
     },
     "greater-healing-potion": {
       "name": "Greater Healing Potion",
       "stat": "hp",
-      "boost": 8,
-      "maxBoost": 4,
+      "boost": 10,
+      "maxBoost": 8,
       "rarity": "uncommon"
     },
     "strength-elixir": {
       "name": "Strength Elixir",
       "stat": "atk",
-      "boost": 3,
+      "boost": 5,
       "rarity": "common"
     },
     "magic-crystal": {
@@ -38,42 +38,42 @@
     "iron-sword": {
       "name": "Iron Sword",
       "slot": "weapon",
-      "statBonus": { "atk": 3 },
+      "statBonus": { "atk": 5 },
       "description": "A sturdy iron blade that increases attack power",
       "rarity": "common"
     },
     "enchanted-blade": {
       "name": "Enchanted Blade",
       "slot": "weapon", 
-      "statBonus": { "atk": 4, "mag": 1, "hp": 3 },
+      "statBonus": { "atk": 6, "mag": 1, "hp": 5 },
       "description": "A magical sword that enhances both physical and magical abilities",
       "rarity": "rare"
     },
     "war-hammer": {
       "name": "War Hammer",
       "slot": "weapon",
-      "statBonus": { "atk": 4 },
+      "statBonus": { "atk": 8 },
       "description": "A heavy two-handed weapon that deals massive damage",
       "rarity": "uncommon"
     },
     "leather-armor": {
       "name": "Leather Armor",
       "slot": "armor",
-      "statBonus": { "hp": 3 },
+      "statBonus": { "hp": 6 },
       "description": "Basic protection that increases maximum health",
       "rarity": "common"
     },
     "chain-mail": {
       "name": "Chain Mail",
       "slot": "armor",
-      "statBonus": { "hp": 5, "atk": -1 },
+      "statBonus": { "hp": 7, "atk": -1 },
       "description": "Heavy armor that provides excellent protection but limits mobility",
       "rarity": "uncommon"
     },
     "mage-robes": {
       "name": "Mage Robes",
       "slot": "armor",
-      "statBonus": { "mag": 3, "hp": 2 },
+      "statBonus": { "mag": 3, "hp": 12 },
       "description": "Enchanted robes that enhance magical abilities",
       "rarity": "uncommon"
     },
@@ -87,21 +87,21 @@
     "berserker-ring": {
       "name": "Berserker Ring",
       "slot": "accessory",
-      "statBonus": { "atk": 3, "hp": -1 },
+      "statBonus": { "atk": 5, "hp": 5 },
       "description": "Increases attack power at the cost of health",
       "rarity": "rare"
     },
     "health-amulet": {
       "name": "Health Amulet",
       "slot": "accessory",
-      "statBonus": { "hp": 5 },
+      "statBonus": { "hp": 8 },
       "description": "A protective charm that significantly boosts health",
       "rarity": "uncommon"
     },
     "arcane-focus": {
       "name": "Arcane Focus",
       "slot": "accessory",
-      "statBonus": { "mag": 3, "hp": 3 },
+      "statBonus": { "mag": 3, "hp": 6 },
       "description": "A rare magical item that greatly enhances spellcasting",
       "rarity": "rare"
     }
