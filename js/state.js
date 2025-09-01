@@ -516,8 +516,6 @@ function defeatBoss() {
     const bossData = GAME_DATA.bosses[G.boss.bossId];
     
     G.boss.defeated = true;
-    G.victory = true;
-    G.over = true;
     
     // Show victory messages
     addLogEntry(`🎉 ${bossData.victoryRewards.completionMessage}`);
@@ -530,12 +528,80 @@ function defeatBoss() {
         addLogEntry(`⭐ Gained ${bossData.victoryRewards.experience} experience!`);
     }
     
-    // Check if game is complete
+    // Check if this is the FINAL boss (only Void Empress should have gameComplete: true)
     if (bossData.victoryRewards.gameComplete) {
-        addLogEntry('🏁 Game Complete! You have saved all of existence!');
+        G.victory = true;
+        G.over = true;
+        addLogEntry('🏆 CAMPAIGN COMPLETE! You have saved all of existence!');
+        console.log('🏆 Final boss defeated! Game complete!');
+    } else {
+        // CAMPAIGN CONTINUES - Reset boss state but don't end game
+        console.log('⭐ Boss defeated but campaign continues...');
+        
+        // Reset boss encounter state
+        G.boss.active = false;
+        G.boss.bossId = null;
+        G.boss.currentPhase = 0;
+        G.boss.phaseComplete = false;
+        G.boss.defeated = false;
+        G.boss.enemyIndex = 0;
+        
+        // Campaign progression rewards
+        addLogEntry('⚡ The boss power flows through your party!');
+        addLogEntry('💚 All party members fully healed!');
+        addLogEntry('🔮 Party strength increased!');
+        
+        // Heal all party members to full
+        G.party.forEach(member => {
+            if (member.hp > 0) { // Only heal living members
+                member.hp = member.maxHp;
+            }
+        });
+        
+        // Optional: Small stat boosts for campaign progression
+        const leader = G.party[0];
+        if (leader) {
+            leader.maxHp += 2;
+            leader.hp = leader.maxHp; // Set to new max
+            leader.atk += 1;
+            addLogEntry(`💪 ${leader.name} grows stronger! (+2 HP, +1 ATK)`);
+        }
+        
+        // Mark current tile as consumed so we can move away
+        consumeCurrentTile();
+        
+        // Continue exploring message
+        const nextBossLevel = getNextBossLevel();
+        if (nextBossLevel) {
+            addLogEntry(`🗺️ The path deeper awaits... Next challenge at Grid ${nextBossLevel}`);
+        } else {
+            addLogEntry('🗺️ Continue exploring to face the ultimate evil!');
+        }
     }
     
-    console.log('🏆 Boss defeated! Victory achieved!');
+    console.log('🏆 Boss defeat processing complete');
+}
+
+/**
+ * Get the level of the next boss encounter
+ */
+function getNextBossLevel() {
+    if (!GAME_DATA.bosses) return null;
+    
+    const currentLevel = G.gridLevel;
+    const bossLevels = [];
+    
+    // Collect all boss unlock levels
+    for (const [bossId, bossData] of Object.entries(GAME_DATA.bosses)) {
+        if (bossId === 'boss-enemies') continue; // Skip enemy definitions
+        if (bossData.unlockLevel && bossData.unlockLevel > currentLevel) {
+            bossLevels.push(bossData.unlockLevel);
+        }
+    }
+    
+    // Return the next boss level
+    bossLevels.sort((a, b) => a - b);
+    return bossLevels[0] || null;
 }
 
 /**
