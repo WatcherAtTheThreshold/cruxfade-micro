@@ -16,8 +16,8 @@
       "empty": 1
     },
     "enemyPools": {
-      "common": ["goblin", "shadow-wisp"],
-      "rare": ["orc"]
+      "common": ["goblin", "shadow-wisp", "hob-goblin", "curr"],
+      "rare": ["skrunt"]
     }
   },
   
