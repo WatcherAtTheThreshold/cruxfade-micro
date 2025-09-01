@@ -679,7 +679,7 @@ function startBossCombat(bossEnemyData, phase) {
 /**
  * Check if player is currently in a boss encounter
  */
-export function isInBossEncounter() {
+ function isInBossEncounter() {
     return G.boss.active;
 }
 
