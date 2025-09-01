@@ -521,7 +521,7 @@ export function completeBossPhase() {
 /**
  * Handle boss defeat and victory
  */
-export function defeatBoss() {
+function defeatBoss() {
     const bossData = GAME_DATA.bosses[G.boss.bossId];
     
     G.boss.defeated = true;
@@ -576,21 +576,28 @@ export function defeatBoss() {
             addLogEntry(`💪 ${leader.name} grows stronger! (+2 HP, +1 ATK)`);
         }
         
-        // Mark current tile as consumed so we can move away
-        consumeCurrentTile();
+        // IMPORTANT: Convert the current boss tile to a door for progression
+        const currentTile = getCurrentTile();
+        if (currentTile && currentTile.type === 'boss-encounter') {
+            currentTile.type = 'door';
+            currentTile.consumed = false; // Make sure it's usable
+            addLogEntry('🚪 A path to the deeper realms opens before you...');
+        }
+        
+        // Set key found so door can be used immediately
+        G.keyFound = true;
         
         // Continue exploring message
         const nextBossLevel = getNextBossLevel();
         if (nextBossLevel) {
-            addLogEntry(`🗺️ The path deeper awaits... Next challenge at Grid ${nextBossLevel}`);
+            addLogEntry(`🗺️ Use the door to continue your journey! Next challenge awaits at Grid ${nextBossLevel}`);
         } else {
-            addLogEntry('🗺️ Continue exploring to face the ultimate evil!');
+            addLogEntry('🗺️ Use the door to face the ultimate evil!');
         }
     }
     
     console.log('🏆 Boss defeat processing complete');
 }
-
 /**
  * Get the level of the next boss encounter  
  */
