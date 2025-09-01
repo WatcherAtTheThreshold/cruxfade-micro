@@ -38,21 +38,21 @@
     "iron-sword": {
       "name": "Iron Sword",
       "slot": "weapon",
-      "statBonus": { "atk": 5 },
+      "statBonus": { "atk": +5 },
       "description": "A sturdy iron blade that increases attack power",
       "rarity": "common"
     },
     "enchanted-blade": {
       "name": "Enchanted Blade",
       "slot": "weapon", 
-      "statBonus": { "atk": 6, "mag": 1, "hp": 5 },
+      "statBonus": { "atk": +6, "mag": 1, "hp": +5 },
       "description": "A magical sword that enhances both physical and magical abilities",
       "rarity": "rare"
     },
     "war-hammer": {
       "name": "War Hammer",
       "slot": "weapon",
-      "statBonus": { "atk": 8 },
+      "statBonus": { "atk": +8 },
       "description": "A heavy two-handed weapon that deals massive damage",
       "rarity": "uncommon"
     },
@@ -66,14 +66,14 @@
     "chain-mail": {
       "name": "Chain Mail",
       "slot": "armor",
-      "statBonus": { "hp": 7, "atk": -1 },
+      "statBonus": { "hp": +7, "atk": -1 },
       "description": "Heavy armor that provides excellent protection but limits mobility",
       "rarity": "uncommon"
     },
     "mage-robes": {
       "name": "Mage Robes",
       "slot": "armor",
-      "statBonus": { "mag": 3, "hp": 12 },
+      "statBonus": { "mag": 3, "hp": +12 },
       "description": "Enchanted robes that enhance magical abilities",
       "rarity": "uncommon"
     },
@@ -87,14 +87,14 @@
     "berserker-ring": {
       "name": "Berserker Ring",
       "slot": "accessory",
-      "statBonus": { "atk": 5, "hp": 5 },
+      "statBonus": { "atk": +5, "hp": +5 },
       "description": "Increases attack power at the cost of health",
       "rarity": "rare"
     },
     "health-amulet": {
       "name": "Health Amulet",
       "slot": "accessory",
-      "statBonus": { "hp": 8 },
+      "statBonus": { "hp": +8 },
       "description": "A protective charm that significantly boosts health",
       "rarity": "uncommon"
     },
