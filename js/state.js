@@ -512,12 +512,12 @@ export function completeBossPhase() {
     
     // Check if boss is fully defeated
     if (G.boss.currentPhase >= bossData.phases.length) {
-        defeatBoss();
-    } else {
-        addLogEntry('📈 Phase complete. Preparing for next challenge...');
-    }
+    console.log('🛠️ DEBUG: All phases complete, calling defeatBoss...');
+    console.log('🛠️ DEBUG: Current phase:', G.boss.currentPhase, 'Total phases:', bossData.phases.length);
+    defeatBoss();
+} else {
+    addLogEntry('📈 Phase complete. Preparing for next challenge...');
 }
-
 /**
  * Handle boss defeat and victory
  */
