@@ -335,7 +335,16 @@ function revealAdjacentTilesAsDiscoverable(centerRow, centerCol) {
  * Check if current grid level should trigger a boss encounter
  */
 function shouldTriggerBoss() {
-    return G.gridLevel >= 4 && GAME_DATA.bosses;
+    if (!GAME_DATA.bosses) return false;
+    
+    // Check if current grid level matches any boss unlock level
+    for (const [bossId, bossData] of Object.entries(GAME_DATA.bosses)) {
+        if (bossId === 'boss-enemies') continue;
+        if (bossData.unlockLevel === G.gridLevel) {
+            return true;
+        }
+    }
+    return false;
 }
 
 /**
@@ -406,7 +415,7 @@ export function startBossPhase() {
 /**
  * Start a fight phase (minions)
  */
-export function startBossPhaseFight() {
+function startBossPhaseFight(phase) {  // ← Add the parameter here!
     if (!phase.enemies || phase.enemies.length === 0) {
         addLogEntry('⚔️ No enemies to fight - phase complete!');
         completeBossPhase();
@@ -432,7 +441,7 @@ export function startBossPhaseFight() {
     }
     
     // Use regular combat but with boss phase flag
-    console.log('🐛 DEBUG: Starting boss phase minion fight with enemy:', enemyType);
+    console.log('🛠 DEBUG: Starting boss phase minion fight with enemy:', enemyType);
     return startCombat(enemyType, phase);
 }
 
