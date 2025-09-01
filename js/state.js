@@ -679,14 +679,14 @@ function startBossCombat(bossEnemyData, phase) {
 /**
  * Check if player is currently in a boss encounter
  */
- function isInBossEncounter() {
+export function isInBossEncounter() {
     return G.boss.active;
 }
 
 /**
  * Get current boss phase data
  */
- function getCurrentBossPhase() {
+export function getCurrentBossPhase() {
     if (!G.boss.active || !G.boss.bossId) return null;
     
     const bossData = GAME_DATA.bosses[G.boss.bossId];
@@ -698,7 +698,7 @@ function startBossCombat(bossEnemyData, phase) {
 /**
  * Get current boss data
  */
- function getCurrentBoss() {
+ export function getCurrentBoss() {
     if (!G.boss.active || !G.boss.bossId) return null;
     return GAME_DATA.bosses[G.boss.bossId];
 }
