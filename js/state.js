@@ -521,7 +521,7 @@ export function completeBossPhase() {
 /**
  * Handle boss defeat and victory
  */
- function defeatBoss() {
+ export function defeatBoss() {
     const bossData = GAME_DATA.bosses[G.boss.bossId];
     
     G.boss.defeated = true;
