@@ -406,7 +406,7 @@ export function startBossPhase() {
 /**
  * Start a fight phase (minions)
  */
-function startBossPhaseFight(phase) {
+export function startBossPhase() {
     if (!phase.enemies || phase.enemies.length === 0) {
         addLogEntry('⚔️ No enemies to fight - phase complete!');
         completeBossPhase();
@@ -512,7 +512,7 @@ export function completeBossPhase() {
 /**
  * Handle boss defeat and victory
  */
-function defeatBoss() {
+export function defeatBoss() {
     const bossData = GAME_DATA.bosses[G.boss.bossId];
     
     G.boss.defeated = true;
