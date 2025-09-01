@@ -2,7 +2,7 @@
   "shadow-lord": {
     "name": "The Shadow Lord",
     "description": "An ancient entity that feeds on the darkness between worlds",
-    "unlockLevel": 4,
+    "unlockLevel": 6,
     "phases": [
       {
         "id": "minions",
@@ -34,22 +34,23 @@
         "description": "The ancient Shadow Lord reveals its true form",
         "enemy": "shadow-lord-final",
         "flavorText": "The Shadow Lord emerges from the darkness, its form shifting between nightmare and void...",
-        "victoryText": "The Shadow Lord lets out a final wail as it dissolves into nothingness. Light returns to the realm!",
+        "victoryText": "The Shadow Lord lets out a final wail as it dissolves into nothingness. Light returns to this realm!",
         "defeatText": "The shadows consume everything. Your quest ends in darkness..."
       }
     ],
     "victoryRewards": {
       "gold": 100,
       "experience": 250,
-      "completionMessage": "🏆 Victory! You have banished the Shadow Lord and restored light to the realm!",
-      "unlocks": ["shadow-crystal", "lord-slayer-title"]
+      "completionMessage": "🏆 Victory! You have banished the Shadow Lord! The deeper mysteries await...",
+      "unlocks": ["shadow-crystal", "lord-slayer-title"],
+      "campaignContinues": true
     }
   },
   
   "crystal-tyrant": {
     "name": "The Crystal Tyrant", 
     "description": "A massive crystalline being that has corrupted the deep caverns",
-    "unlockLevel": 5,
+    "unlockLevel": 11,
     "phases": [
       {
         "id": "crystal-guardians",
@@ -88,15 +89,16 @@
     "victoryRewards": {
       "gold": 150,
       "experience": 350,
-      "completionMessage": "🏆 Victory! You have shattered the Crystal Tyrant and freed the deep caverns!",
-      "unlocks": ["prismatic-shard", "tyrant-breaker-title"]
+      "completionMessage": "🏆 Victory! You have shattered the Crystal Tyrant! The void beckons beyond...",
+      "unlocks": ["prismatic-shard", "tyrant-breaker-title"],
+      "campaignContinues": true
     }
   },
 
   "void-empress": {
     "name": "The Void Empress",
     "description": "The ultimate evil that seeks to unmake all existence", 
-    "unlockLevel": 6,
+    "unlockLevel": 16,
     "phases": [
       {
         "id": "void-spawn",
