@@ -686,7 +686,7 @@ function startBossCombat(bossEnemyData, phase) {
 /**
  * Get current boss phase data
  */
-export function getCurrentBossPhase() {
+ function getCurrentBossPhase() {
     if (!G.boss.active || !G.boss.bossId) return null;
     
     const bossData = GAME_DATA.bosses[G.boss.bossId];
