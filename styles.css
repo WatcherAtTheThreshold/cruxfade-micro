@@ -1674,14 +1674,13 @@ section {
 .event-log {
     background-image: url('./images/sections/log-bg.png');
     background-size: cover;
+    background-size: contain; 
     background-position: center;
-    position: relative;
-    z-index: 2;
 }
 
 .party-hand-section {
     background-image: url('./images/sections/hand-bg.png');
-    background-size: cover; 
+    background-size: cover 
     background-position: center;
 }
 
