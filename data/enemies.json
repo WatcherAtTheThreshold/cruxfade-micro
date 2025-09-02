@@ -47,6 +47,27 @@
     "hp": 9,
     "atk": 2,
     "description": "A small black sleak-scaled dragon."
+  },
+    "crystal-guardian": {
+    "name": "Crystal Guardian",
+    "hp": 12,
+    "atk": 4, 
+    "mag": 2,
+    "description": "A living crystal construct animated by the Tyrant's will"
+  },
+  "void-spawn": {
+    "name": "Void Spawn",
+    "hp": 8,
+    "atk": 3,
+    "mag": 3,
+    "description": "A creature of pure nothingness given form"
+  },
+  "void-wraith": {
+    "name": "Void Wraith", 
+    "hp": 10,
+    "atk": 4,
+    "mag": 4,
+    "description": "A spirit consumed by the void's hunger"
   }
   
 }
