@@ -1673,7 +1673,7 @@ section {
 
 .encounters { 
     background: rgba(0, 255, 0, 0.3);
-    background-image: url('./images/sections/encounter-bg.png');
+    
     background-size: 100% 100%;
     background-position: center;
     background-repeat: no-repeat;
@@ -1690,7 +1690,8 @@ section {
 /* If you need some background for readability, use semi-transparent */
 .party-status-compact,
 .encounter-content {
-    background: rgba(20, 25, 38, 0.7) !important;
+    background-image: url('./images/sections/encounter-bg.png');
+    background: rgba(20, 25, 38, 0.5) !important;
     border-radius: var(--radius-sm);
     padding: 8px;
 }
