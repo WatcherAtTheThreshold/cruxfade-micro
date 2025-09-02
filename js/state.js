@@ -534,15 +534,17 @@ export function completeBossPhase() {
     
     G.boss.phaseComplete = true;
     G.boss.currentPhase++;
-    G.boss.enemyIndex = 0; // Reset enemy index for next phase
+    G.boss.enemyIndex = 0;
     
     // Check if boss is fully defeated
     if (G.boss.currentPhase >= bossData.phases.length) {
-    console.log('🛠️ DEBUG: All phases complete, calling defeatBoss...');
-    console.log('🛠️ DEBUG: Current phase:', G.boss.currentPhase, 'Total phases:', bossData.phases.length);
-    defeatBoss();
-} else {
-    addLogEntry('📈 Phase complete. Preparing for next challenge...');
+        console.log('🛠️ DEBUG: All phases complete, calling defeatBoss...');
+        defeatBoss();
+    } else {
+        addLogEntry('📈 Phase complete. Preparing for next challenge...');
+        // DON'T consume tile - keep boss encounter active
+        console.log('🛠️ DEBUG: Boss phase complete, NOT consuming tile');
+    }
 }
 /**
  * Handle boss defeat and victory
