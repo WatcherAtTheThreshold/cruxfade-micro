@@ -351,22 +351,27 @@ function shouldTriggerBoss() {
  * Check if current grid level should trigger a boss encounter
 */
 function shouldTriggerBoss() {
-    console.log('shouldTriggerBoss called, GAME_DATA:', !!GAME_DATA);
+    console.log('shouldTriggerBoss called for grid level:', G.gridLevel);
+    console.log('GAME_DATA:', !!GAME_DATA);
     console.log('GAME_DATA.bosses:', !!GAME_DATA?.bosses);
     
     if (!GAME_DATA || !GAME_DATA.bosses) {
         console.log('No boss data available');
         return false;
     }
+    
     // Check if current grid level matches any boss unlock level
     for (const [bossId, bossData] of Object.entries(GAME_DATA.bosses)) {
         if (bossId === 'boss-enemies') continue;
+        console.log(`Checking ${bossId}: unlock level ${bossData.unlockLevel} vs current ${G.gridLevel}`);
         if (bossData.unlockLevel === G.gridLevel) {
+            console.log(`BOSS MATCH! ${bossId} should trigger for grid ${G.gridLevel}`);
             return true;
         }
     }
+    console.log('No boss matches found for grid level', G.gridLevel);
     return false;
-} 
+}
 
 /**
  * Get the appropriate boss for current grid level
