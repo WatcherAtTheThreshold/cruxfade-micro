@@ -1203,21 +1203,54 @@ export function healPartyMember(memberId, amount) {
 
 /**
  * Apply item effects to player
+ * Supports both consumables (stat/boost/maxBoost)
+ * and equipment (statBonus object)
  */
 function applyItemToPlayer(player, item) {
-    if (item.stat === 'hp') {
-        const healAmount = Math.min(item.boost, player.maxHp - player.hp);
-        player.hp += healAmount;
-        if (item.maxBoost) {
-            player.maxHp += item.maxBoost;
-            player.hp += item.maxBoost;
+    // --- Case 1: Consumables ---
+    if (item.stat) {
+        if (item.stat === 'hp') {
+            // Heal and possibly increase max HP
+            const healAmount = Math.min(item.boost || 0, player.maxHp - player.hp);
+            player.hp += healAmount;
+            if (item.maxBoost) {
+                player.maxHp += item.maxBoost;
+                player.hp += item.maxBoost;
+            }
+            addLogEntry(
+                `📦 Found ${item.name}! Healed ${healAmount + (item.maxBoost || 0)} HP! (${player.hp}/${player.maxHp} HP)`
+            );
+        } else {
+            // Add to other stats (atk, mag, etc.)
+            player[item.stat] = (player[item.stat] || 0) + (item.boost || 0);
+            addLogEntry(
+                `📦 Found ${item.name}! +${item.boost} ${item.stat.toUpperCase()}! (${item.stat.toUpperCase()}: ${player[item.stat]})`
+            );
         }
-        addLogEntry(`📦 Found ${item.name}! Healed ${healAmount + (item.maxBoost || 0)} HP! (${player.hp}/${player.maxHp} HP)`);
-    } else {
-        player[item.stat] += item.boost;
-        addLogEntry(`📦 Found ${item.name}! +${item.boost} ${item.stat.toUpperCase()}! (${item.stat.toUpperCase()}: ${player[item.stat]})`);
+        return;
     }
+
+    // --- Case 2: Equipment ---
+    if (item.statBonus) {
+        for (const [stat, bonus] of Object.entries(item.statBonus)) {
+            // Add bonus instead of overwriting
+            if (stat === 'hp') {
+                player.maxHp = (player.maxHp || 0) + bonus;
+                player.hp = (player.hp || 0) + bonus; // also heal up to new max
+            } else {
+                player[stat] = (player[stat] || 0) + bonus;
+            }
+            addLogEntry(
+                `🛡️ Equipped ${item.name}! ${bonus >= 0 ? '+' : ''}${bonus} ${stat.toUpperCase()} (Now: ${player[stat]})`
+            );
+        }
+        return;
+    }
+
+    // --- Fallback ---
+    console.warn('Item type not recognized:', item);
 }
+
 
 // ================================================================
 // HAZARD SYSTEM FUNCTIONS  
