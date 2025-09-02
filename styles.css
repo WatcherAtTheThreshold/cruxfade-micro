@@ -1672,7 +1672,7 @@ button,
     background-position: center;
 }
 
-/* Optional: Subtle overlay to ensure text readability */
+/* Optional: Subtle overlay to ensure text readability 
 .exploration-area::before,
 .encounters::before, 
 .event-log::before,
@@ -1683,7 +1683,7 @@ button,
     background: rgba(0, 0, 0, 0.3);
     border-radius: var(--radius);
     pointer-events: none;
-}
+}*/
 
 /* End of Stylesheet */
 
