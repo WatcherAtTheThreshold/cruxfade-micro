@@ -1682,7 +1682,8 @@ section {
 
 /* Force all child elements to be transparent */
 .encounters > * {
-    background: transparent !important;
+    background-image: url('./images/sections/encounter-bg.png');
+    /*background: transparent !important;*/
     position: relative;
     z-index: 1;
 }
@@ -1690,7 +1691,7 @@ section {
 /* If you need some background for readability, use semi-transparent */
 .party-status-compact,
 .encounter-content {
-    background-image: url('./images/sections/encounter-bg.png');
+    
     background: rgba(20, 25, 38, 0.5) !important;
     border-radius: var(--radius-sm);
     padding: 8px;
