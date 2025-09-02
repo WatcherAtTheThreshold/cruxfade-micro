@@ -549,23 +549,9 @@ export function completeBossPhase() {
 /**
  * Handle boss defeat and victory
  */
-  function defeatBoss() {
+function defeatBoss() {
     const bossData = GAME_DATA.bosses[G.boss.bossId];
-
-    const currentTile = getCurrentTile();
-console.log('🛠️ DEBUG: Converting boss tile:', currentTile);
-console.log('🛠️ DEBUG: Tile type before conversion:', currentTile?.type);
-
-if (currentTile && currentTile.type === 'boss-encounter') {
-    console.log('🛠️ DEBUG: Condition passed, converting to door...');
-    currentTile.type = 'door';
-    currentTile.consumed = false;
-    console.log('🛠️ DEBUG: Tile type after conversion:', currentTile.type);
-    addLogEntry('🚪 A path to the deeper realms opens before you...');
-} else {
-    console.log('🛠️ DEBUG: Conversion failed - currentTile:', !!currentTile, 'type:', currentTile?.type);
-}
-      
+    
     G.boss.defeated = true;
     
     // Show victory messages
@@ -589,14 +575,6 @@ if (currentTile && currentTile.type === 'boss-encounter') {
         // CAMPAIGN CONTINUES - Reset boss state but don't end game
         console.log('⭐ Boss defeated but campaign continues...');
         
-        // Reset boss encounter state
-        G.boss.active = false;
-        G.boss.bossId = null;
-        G.boss.currentPhase = 0;
-        G.boss.phaseComplete = false;
-        G.boss.defeated = false;
-        G.boss.enemyIndex = 0;
-        
         // Campaign progression rewards
         addLogEntry('⚡ The boss power flows through your party!');
         addLogEntry('💚 All party members fully healed!');
@@ -609,7 +587,7 @@ if (currentTile && currentTile.type === 'boss-encounter') {
             }
         });
         
-        // Optional: Small stat boosts for campaign progression
+        // Stat boosts for campaign progression
         const leader = G.party[0];
         if (leader) {
             leader.maxHp += 2;
@@ -618,30 +596,44 @@ if (currentTile && currentTile.type === 'boss-encounter') {
             addLogEntry(`💪 ${leader.name} grows stronger! (+2 HP, +1 ATK)`);
         }
         
-        // IMPORTANT: Convert the current boss tile to a door for progression
-        const currentTile = getCurrentTile();
-        if (currentTile && currentTile.type === 'boss-encounter') {
-            currentTile.type = 'door';
-            currentTile.consumed = false; // Make sure it's usable
+        // CRITICAL FIX: Find the actual boss encounter tile, not player's current tile
+        const bossTile = G.board.tiles.find(tile => tile.type === 'boss-encounter');
+        console.log('🛠️ DEBUG: Converting boss tile:', bossTile);
+        console.log('🛠️ DEBUG: Boss tile type before conversion:', bossTile?.type);
+        
+        if (bossTile && bossTile.type === 'boss-encounter') {
+            console.log('🛠️ DEBUG: Boss tile found, converting to door...');
+            bossTile.type = 'door';
+            bossTile.consumed = false; // Make sure it's usable
+            console.log('🛠️ DEBUG: Boss tile type after conversion:', bossTile.type);
             addLogEntry('🚪 A path to the deeper realms opens before you...');
-        }
-        
-        // Set key found so door can be used immediately
-        G.keyFound = true;
-        
-        // Continue exploring message
-        const nextBossLevel = getNextBossLevel();
-        if (nextBossLevel) {
-            addLogEntry(`🗺️ Use the door to continue your journey! Next challenge awaits at Grid ${nextBossLevel}`);
+            
+            // Set key found so door can be used immediately
+            G.keyFound = true;
+            
+            // Continue exploring message
+            const nextBossLevel = getNextBossLevel();
+            if (nextBossLevel) {
+                addLogEntry(`🗺️ Use the door to continue your journey! Next challenge awaits at Grid ${nextBossLevel}`);
+            } else {
+                addLogEntry('🗺️ Use the door to face the ultimate evil!');
+            }
         } else {
-            addLogEntry('🗺️ Use the door to face the ultimate evil!');
+            console.error('🚨 ERROR: Could not find boss encounter tile to convert to door!');
+            console.log('🛠️ DEBUG: Available tiles:', G.board.tiles.map(t => `${t.type}(${t.row},${t.col})`));
         }
+        
+        // Reset boss encounter state AFTER tile conversion
+        G.boss.active = false;
+        G.boss.bossId = null;
+        G.boss.currentPhase = 0;
+        G.boss.phaseComplete = false;
+        G.boss.defeated = false;
+        G.boss.enemyIndex = 0;
     }
-      
     
     console.log('🏆 Boss defeat processing complete');
 }
-
     
 /**
  * Get the level of the next boss encounter  
