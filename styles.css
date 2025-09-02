@@ -947,9 +947,9 @@ section {
    8. ENCOUNTERS (Bottom Right - Combat & Events)
    ================================================================ */
 
-/*.encounters {
+.encounters {
   position: relative;
-}*/
+}
 
 .encounter-content {
   flex: 1;
@@ -1669,8 +1669,7 @@ section {
     background-image: url('./images/sections/encounter-bg.png');  
     background-size: cover;
     background-position: center;
-    position: absolute;
-    z-index: 0;
+    z-index: 5;
 }
 
 .event-log {
