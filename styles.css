@@ -1648,6 +1648,17 @@ button,
    ================================================================ */
 
 /* Four quadrant section backgrounds */
+
+section {
+    position: relative;  /* This is crucial! */
+    z-index: 0;         /* Base layer */
+}
+
+.exploration-area { background: rgba(125, 90, 82, 0.3); }
+.encounters { background: rgba(82, 125, 84, 0.3); }
+.event-log { background: rgba(82, 101, 1255, 0.3); }
+.party-hand-section { background: rgba(123, 125, 82, 0.3); }
+
 .exploration-area {
     background-image: url('./images/sections/exploration-bg.png');
     background-size: cover;
@@ -1663,14 +1674,17 @@ button,
 .event-log {
     background-image: url('./images/sections/log-bg.png');
     background-size: cover;
+    background-size: contain; 
     background-position: center;
 }
 
 .party-hand-section {
     background-image: url('./images/sections/hand-bg.png');
-    background-size: cover; 
+    background-size: cover 
     background-position: center;
 }
+
+
 
 /* Optional: Subtle overlay to ensure text readability 
 .exploration-area::before,
