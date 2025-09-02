@@ -1641,10 +1641,50 @@ button,
     .item-stats {
         gap: 6px;
     }
-}
 
-/* End of Stylesheet */
 
 /* ================================================================
    16. FOUR QUADRANT SYSTEM BACKGROUNDS
    ================================================================ */
+
+/* Four quadrant section backgrounds */
+.exploration-area {
+    background-image: url('./images/sections/exploration-bg.png');
+    background-size: cover;
+    background-position: center;
+}
+
+.encounters {
+    background-image: url('./images/sections/encounter-bg.png');  
+    background-size: cover;
+    background-position: center;
+}
+
+.event-log {
+    background-image: url('./images/sections/log-bg.png');
+    background-size: cover;
+    background-position: center;
+}
+
+.party-hand-section {
+    background-image: url('./images/sections/hand-bg.png');
+    background-size: cover; 
+    background-position: center;
+}
+
+/* Optional: Subtle overlay to ensure text readability */
+.exploration-area::before,
+.encounters::before, 
+.event-log::before,
+.party-hand-section::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: var(--radius);
+    pointer-events: none;
+}
+
+/* End of Stylesheet */
+
+
