@@ -1669,8 +1669,8 @@ section {
     background-image: url('./images/sections/encounter-bg.png');  
     background-size: contain;
     background-position: center;
-   position: relative;
-    z-index: -2;
+   position: absolute;
+    z-index: 0;
 }
 
 .event-log {
