@@ -1672,7 +1672,7 @@ section {
 ---------------------------------------------------*/
 
 html body .wrap section.encounters {
-    background-image: url('./images/sections/exploration-bg.png') !important; /* Use same image as exploration */
+    background-image: url('./images/sections/encounter-bg.png') !important;
     background-size: 100% 100% !important;
     background-position: center !important;
     background-repeat: no-repeat !important;
