@@ -1,6 +1,13 @@
 {
+  "_campaign_structure": {
+    "forest_region": "Grids 1-5, culminates in Shadow Lord (Grid 6)",
+    "mountain_region": "Grids 7-10, culminates in Crystal Tyrant (Grid 11)", 
+    "void_region": "Grids 12-15, culminates in Void Empress (Grid 16)"
+  },
+
   "grid-1": {
-    "name": "Tutorial Grid",
+    "name": "Forest Edge - Tutorial",
+    "region": "forest",
     "encounterWeights": {
       "fight": 3,
       "hazard": 2, 
@@ -9,12 +16,14 @@
       "empty": 1
     },
     "enemyPools": {
-      "common": ["hob-goblin", "goblin", "shadow-wisp", "cur"],
+      "common": ["goblin", "shadow-wisp", "hob-goblin", "cur"],
       "rare": ["skrunt"]
     }
   },
+  
   "grid-2": {
-    "name": "Deeper Caves", 
+    "name": "Deeper Woods",
+    "region": "forest", 
     "encounterWeights": {
       "fight": 4,
       "hazard": 2,
@@ -23,21 +32,183 @@
       "empty": 1
     },
     "enemyPools": {
-      "common": ["hob-goblin", "goblin", "orc", "cur", "skrunt"],
-      "rare": ["small-wyvern"]
+      "common": ["goblin", "orc", "hob-goblin", "cur"],
+      "rare": ["skrunt"]
     }
   },
+  
   "grid-3": {
-    "name": "Final Depths",
+    "name": "Dark Forest",
+    "region": "forest",
+    "encounterWeights": {
+      "fight": 4,
+      "hazard": 3,
+      "item": 2,
+      "ally": 1,
+      "empty": 0
+    },
+    "enemyPools": {
+      "common": ["orc", "shadow-wisp", "cur"],
+      "rare": ["small-wyvern", "skrunt"]
+    }
+  },
+  
+  "grid-4": {
+    "name": "Forest Depths",
+    "region": "forest",
     "encounterWeights": {
       "fight": 5,
+      "hazard": 3,
+      "item": 2,
+      "ally": 1,
+      "empty": 0
+    },
+    "enemyPools": {
+      "common": ["orc", "skrunt"],
+      "rare": ["orc-champion"]
+    }
+  },
+  
+  "grid-5": {
+    "name": "Shadow's Edge",
+    "region": "forest",
+    "encounterWeights": {
+      "fight": 6,
       "hazard": 3,
       "item": 1,
       "ally": 1,
       "empty": 0
     },
     "enemyPools": {
-      "common": ["hob-goblin", "orc", "goblin", "cur", "skrunt"],
+      "common": ["orc-champion", "shadow-wisp"],
+      "rare": ["orc-champion"]
+    }
+  },
+  
+  "grid-7": {
+    "name": "Mountain Pass",
+    "region": "mountain",
+    "encounterWeights": {
+      "fight": 4,
+      "hazard": 4,
+      "item": 2,
+      "ally": 1,
+      "empty": 0
+    },
+    "enemyPools": {
+      "common": ["orc-champion", "goblin"],
+      "rare": ["orc-champion"]
+    }
+  },
+  
+  "grid-8": {
+    "name": "Rocky Heights",
+    "region": "mountain",
+    "encounterWeights": {
+      "fight": 5,
+      "hazard": 4,
+      "item": 2,
+      "ally": 1,
+      "empty": 0
+    },
+    "enemyPools": {
+      "common": ["small-wyvern", "shadow-wisp"],
+      "rare": ["small-wyvern"]
+    }
+  },
+  
+  "grid-9": {
+    "name": "Crystal Caves",
+    "region": "mountain",
+    "encounterWeights": {
+      "fight": 5,
+      "hazard": 4,
+      "item": 2,
+      "ally": 1,
+      "empty": 0
+    },
+    "enemyPools": {
+      "common": ["orc-champion", "orc-champion"],
+      "rare": ["orc-champion"]
+    }
+  },
+  
+  "grid-10": {
+    "name": "Deep Caverns",
+    "region": "mountain",
+    "encounterWeights": {
+      "fight": 6,
+      "hazard": 4,
+      "item": 1,
+      "ally": 1,
+      "empty": 0
+    },
+    "enemyPools": {
+      "common": ["orc-champion"],
+      "rare": ["orc-champion"]
+    }
+  },
+  
+  "grid-12": {
+    "name": "Void Threshold",
+    "region": "void",
+    "encounterWeights": {
+      "fight": 5,
+      "hazard": 5,
+      "item": 2,
+      "ally": 1,
+      "empty": 0
+    },
+    "enemyPools": {
+      "common": ["orc-champion", "shadow-wisp"],
+      "rare": ["orc-champion"]
+    }
+  },
+  
+  "grid-13": {
+    "name": "Reality Fractures",
+    "region": "void",
+    "encounterWeights": {
+      "fight": 6,
+      "hazard": 5,
+      "item": 2,
+      "ally": 1,
+      "empty": 0
+    },
+    "enemyPools": {
+      "common": ["orc-champion", "shadow-wisp"],
+      "rare": ["orc-champion"]
+    }
+  },
+  
+  "grid-14": {
+    "name": "Entropy Fields",
+    "region": "void",
+    "encounterWeights": {
+      "fight": 6,
+      "hazard": 5,
+      "item": 1,
+      "ally": 1,
+      "empty": 0
+    },
+    "enemyPools": {
+      "common": ["orc-champion"],
+      "rare": ["orc-champion"]
+    }
+  },
+  
+  "grid-15": {
+    "name": "Void's Heart",
+    "region": "void",
+    "encounterWeights": {
+      "fight": 7,
+      "hazard": 5,
+      "item": 1,
+      "ally": 0,
+      "empty": 0
+    },
+    "enemyPools": {
+      "common": ["orc-champion"],
       "rare": ["orc-champion"]
     }
   }

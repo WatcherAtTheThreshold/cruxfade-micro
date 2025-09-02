@@ -86,15 +86,14 @@ function checkGameEndConditions() {
     
     console.log('🔍 DEBUG: No game over conditions met');
     
-    // Fallback win condition
-    if (G.gridLevel > 6 && !G.victory) {
-        console.log('🔍 DEBUG: Grid level > 6 - victory condition');
-        G.over = true;
-        G.victory = true;
-        addLogEntry('🏆 Victory! You have conquered all grids!');
-        renderAll();
-        return;
-    }
+  if (G.gridLevel > 16 && !G.victory) {
+    console.log('🔍 DEBUG: Grid level > 16 - fallback victory condition');
+    G.over = true;
+    G.victory = true;
+    addLogEntry('🏆 Victory! You have conquered all grids!');
+    renderAll();
+    return;
+}
 }
 
 // ================================================================

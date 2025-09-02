@@ -333,9 +333,44 @@ function revealAdjacentTilesAsDiscoverable(centerRow, centerCol) {
 
 /**
  * Check if current grid level should trigger a boss encounter
- */
+
 function shouldTriggerBoss() {
-    return G.gridLevel >= 4 && GAME_DATA.bosses;
+    if (!GAME_DATA.bosses) return false;
+    
+    // Check if current grid level matches any boss unlock level
+    for (const [bossId, bossData] of Object.entries(GAME_DATA.bosses)) {
+        if (bossId === 'boss-enemies') continue;
+        if (bossData.unlockLevel === G.gridLevel) {
+            return true;
+        }
+    }
+    return false;
+} */
+
+/**
+ * Check if current grid level should trigger a boss encounter
+*/
+function shouldTriggerBoss() {
+    console.log('shouldTriggerBoss called for grid level:', G.gridLevel);
+    console.log('GAME_DATA:', !!GAME_DATA);
+    console.log('GAME_DATA.bosses:', !!GAME_DATA?.bosses);
+    
+    if (!GAME_DATA || !GAME_DATA.bosses) {
+        console.log('No boss data available');
+        return false;
+    }
+    
+    // Check if current grid level matches any boss unlock level
+    for (const [bossId, bossData] of Object.entries(GAME_DATA.bosses)) {
+        if (bossId === 'boss-enemies') continue;
+        console.log(`Checking ${bossId}: unlock level ${bossData.unlockLevel} vs current ${G.gridLevel}`);
+        if (bossData.unlockLevel === G.gridLevel) {
+            console.log(`BOSS MATCH! ${bossId} should trigger for grid ${G.gridLevel}`);
+            return true;
+        }
+    }
+    console.log('No boss matches found for grid level', G.gridLevel);
+    return false;
 }
 
 /**
@@ -406,7 +441,7 @@ export function startBossPhase() {
 /**
  * Start a fight phase (minions)
  */
-function startBossPhaseFight(phase) {
+function startBossPhaseFight(phase) {  // ← Add the parameter here!
     if (!phase.enemies || phase.enemies.length === 0) {
         addLogEntry('⚔️ No enemies to fight - phase complete!');
         completeBossPhase();
@@ -432,7 +467,7 @@ function startBossPhaseFight(phase) {
     }
     
     // Use regular combat but with boss phase flag
-    console.log('🐛 DEBUG: Starting boss phase minion fight with enemy:', enemyType);
+    console.log('🛠 DEBUG: Starting boss phase minion fight with enemy:', enemyType);
     return startCombat(enemyType, phase);
 }
 
@@ -499,16 +534,18 @@ export function completeBossPhase() {
     
     G.boss.phaseComplete = true;
     G.boss.currentPhase++;
-    G.boss.enemyIndex = 0; // Reset enemy index for next phase
+    G.boss.enemyIndex = 0;
     
     // Check if boss is fully defeated
     if (G.boss.currentPhase >= bossData.phases.length) {
+        console.log('🛠️ DEBUG: All phases complete, calling defeatBoss...');
         defeatBoss();
     } else {
         addLogEntry('📈 Phase complete. Preparing for next challenge...');
+        // DON'T consume tile - keep boss encounter active
+        console.log('🛠️ DEBUG: Boss phase complete, NOT consuming tile');
     }
 }
-
 /**
  * Handle boss defeat and victory
  */
@@ -516,8 +553,6 @@ function defeatBoss() {
     const bossData = GAME_DATA.bosses[G.boss.bossId];
     
     G.boss.defeated = true;
-    G.victory = true;
-    G.over = true;
     
     // Show victory messages
     addLogEntry(`🎉 ${bossData.victoryRewards.completionMessage}`);
@@ -530,12 +565,96 @@ function defeatBoss() {
         addLogEntry(`⭐ Gained ${bossData.victoryRewards.experience} experience!`);
     }
     
-    // Check if game is complete
+    // Check if this is the FINAL boss (only Void Empress should have gameComplete: true)
     if (bossData.victoryRewards.gameComplete) {
-        addLogEntry('🏁 Game Complete! You have saved all of existence!');
+        G.victory = true;
+        G.over = true;
+        addLogEntry('🏆 CAMPAIGN COMPLETE! You have saved all of existence!');
+        console.log('🏆 Final boss defeated! Game complete!');
+    } else {
+        // CAMPAIGN CONTINUES - Reset boss state but don't end game
+        console.log('⭐ Boss defeated but campaign continues...');
+        
+        // Campaign progression rewards
+        addLogEntry('⚡ The boss power flows through your party!');
+        addLogEntry('💚 All party members fully healed!');
+        addLogEntry('🔮 Party strength increased!');
+        
+        // Heal all party members to full
+        G.party.forEach(member => {
+            if (member.hp > 0) { // Only heal living members
+                member.hp = member.maxHp;
+            }
+        });
+        
+        // Stat boosts for campaign progression
+        const leader = G.party[0];
+        if (leader) {
+            leader.maxHp += 2;
+            leader.hp = leader.maxHp; // Set to new max
+            leader.atk += 1;
+            addLogEntry(`💪 ${leader.name} grows stronger! (+2 HP, +1 ATK)`);
+        }
+        
+        // CRITICAL FIX: Find the actual boss encounter tile, not player's current tile
+        const bossTile = G.board.tiles.find(tile => tile.type === 'boss-encounter');
+        console.log('🛠️ DEBUG: Converting boss tile:', bossTile);
+        console.log('🛠️ DEBUG: Boss tile type before conversion:', bossTile?.type);
+        
+        if (bossTile && bossTile.type === 'boss-encounter') {
+            console.log('🛠️ DEBUG: Boss tile found, converting to door...');
+            bossTile.type = 'door';
+            bossTile.consumed = false; // Make sure it's usable
+            console.log('🛠️ DEBUG: Boss tile type after conversion:', bossTile.type);
+            addLogEntry('🚪 A path to the deeper realms opens before you...');
+            
+            // Set key found so door can be used immediately
+            G.keyFound = true;
+            
+            // Continue exploring message
+            const nextBossLevel = getNextBossLevel();
+            if (nextBossLevel) {
+                addLogEntry(`🗺️ Use the door to continue your journey! Next challenge awaits at Grid ${nextBossLevel}`);
+            } else {
+                addLogEntry('🗺️ Use the door to face the ultimate evil!');
+            }
+        } else {
+            console.error('🚨 ERROR: Could not find boss encounter tile to convert to door!');
+            console.log('🛠️ DEBUG: Available tiles:', G.board.tiles.map(t => `${t.type}(${t.row},${t.col})`));
+        }
+        
+        // Reset boss encounter state AFTER tile conversion
+        G.boss.active = false;
+        G.boss.bossId = null;
+        G.boss.currentPhase = 0;
+        G.boss.phaseComplete = false;
+        G.boss.defeated = false;
+        G.boss.enemyIndex = 0;
     }
     
-    console.log('🏆 Boss defeated! Victory achieved!');
+    console.log('🏆 Boss defeat processing complete');
+}
+    
+/**
+ * Get the level of the next boss encounter  
+ */
+function getNextBossLevel() {
+    if (!GAME_DATA.bosses) return null;
+    
+    const currentLevel = G.gridLevel;
+    const bossLevels = [];
+    
+    // Collect all boss unlock levels
+    for (const [bossId, bossData] of Object.entries(GAME_DATA.bosses)) {
+        if (bossId === 'boss-enemies') continue; // Skip enemy definitions
+        if (bossData.unlockLevel && bossData.unlockLevel > currentLevel) {
+            bossLevels.push(bossData.unlockLevel);
+        }
+    }
+    
+    // Return the next boss level
+    bossLevels.sort((a, b) => a - b);
+    return bossLevels[0] || null;
 }
 
 /**
@@ -616,7 +735,7 @@ export function getCurrentBossPhase() {
 /**
  * Get current boss data
  */
-export function getCurrentBoss() {
+ export function getCurrentBoss() {
     if (!G.boss.active || !G.boss.bossId) return null;
     return GAME_DATA.bosses[G.boss.bossId];
 }
@@ -669,7 +788,7 @@ export function nextGrid() {
 // ================================================================
 
 /**
- * End combat with victory or defeat (modified for boss handling)
+ * End combat with victory or defeat (fixed for boss handling)
  */
 export function endCombat(victory) {
     console.log('🐛 DEBUG: endCombat called with victory:', victory, 'combat active:', G.combat.active);
@@ -681,73 +800,52 @@ export function endCombat(victory) {
     
     try {
         if (victory) {
-            console.log('🐛 DEBUG: Processing victory, enemy name:', G.combat.enemy?.name);
             addLogEntry(`🎉 Victory! You defeated the ${G.combat.enemy.name}!`);
-            console.log('🐛 DEBUG: Victory message added');
-            
-            console.log('🐛 DEBUG: Checking if boss fight - bossPhase:', !!G.combat.bossPhase, 'boss active:', G.boss.active);
             
             // Check if this was a boss fight
             if (G.combat.bossPhase) {
-                console.log('🐛 DEBUG: Boss fight detected, getting current phase...');
+                console.log('🐛 DEBUG: Boss fight victory detected');
                 
-                // Check if this is a sequential fight phase
                 const phase = getCurrentBossPhase();
                 
-                console.log('🐛 DEBUG: Boss fight detected - phase:', phase?.type, 'enemies:', phase?.enemies?.length);
-                
                 if (phase && phase.type === 'fight' && phase.enemies && phase.enemies.length > 1) {
-                    console.log('🐛 DEBUG: Sequential fight detected, advancing enemy index...');
-                    
                     // Sequential fight - advance to next enemy
                     G.boss.enemyIndex = (G.boss.enemyIndex || 0) + 1;
                     
-                    console.log('🐛 DEBUG: Advanced enemyIndex to:', G.boss.enemyIndex, 'out of', phase.enemies.length);
-                    
                     if (G.boss.enemyIndex >= phase.enemies.length) {
-                        console.log('🐛 DEBUG: All enemies defeated, completing phase...');
-                        // All enemies in sequence defeated - complete phase AND consume tile
+                        // All enemies in sequence defeated - complete phase
                         addLogEntry(`⚔️ All minions defeated! Phase complete!`);
-                        consumeCurrentTile(); // Only consume when phase is fully complete
                         completeBossPhase();
+                        // DON'T consume tile - let boss system handle it
                     } else {
-                        console.log('🐛 DEBUG: More enemies to fight, not consuming tile...');
                         // More enemies to fight - DON'T consume tile
                         const remaining = phase.enemies.length - G.boss.enemyIndex;
                         addLogEntry(`✅ Enemy defeated! ${remaining} enemies remain in this phase.`);
                         addLogEntry(`💀 Return to the boss encounter to continue fighting!`);
-                        console.log('🐛 DEBUG: Not consuming tile - more enemies to fight');
-                        // Don't consume tile yet - let player click boss tile again
                     }
                 } else {
-                    console.log('🐛 DEBUG: Single boss fight or final boss, completing phase...');
-                    // Single enemy fight or final boss - complete phase and consume
-                    consumeCurrentTile();
+                    // Single enemy fight or final boss - complete phase
+                    console.log('🐛 DEBUG: Final boss or single fight, completing phase...');
                     completeBossPhase();
+                    // DON'T consume current tile - let defeatBoss() handle boss tile conversion
                 }
             } else {
-                console.log('🐛 DEBUG: Normal combat - consuming tile');
-                // Normal combat - consume tile
+                // Normal combat - consume tile as usual
                 consumeCurrentTile();
             }
         } else {
-            console.log('🐛 DEBUG: Processing defeat...');
+            // Combat defeat
             addLogEntry(`💀 Defeat! The ${G.combat.enemy.name} has bested you!`);
             
-            // Check if game should end
             if (G.combat.playerHp <= 0) {
-                // If in boss fight, show boss defeat message
                 if (G.combat.bossPhase) {
                     const phase = G.combat.bossPhase;
                     if (phase.defeatText) {
                         addLogEntry(`💀 ${phase.defeatText}`);
                     }
                 }
-               
             }
         }
-        
-        console.log('🐛 DEBUG: Resetting combat state...');
         
         // Reset combat state
         G.combat.active = false;
@@ -756,13 +854,12 @@ export function endCombat(victory) {
         G.combat.enemyHp = 0;
         G.combat.turn = 'player';
         G.combat.lastRoll = null;
-        G.combat.bossPhase = null; // Clear boss phase data
+        G.combat.bossPhase = null;
         
         console.log('🐛 DEBUG: Combat state reset complete');
         
     } catch (error) {
         console.error('🚨 ERROR in endCombat:', error);
-        console.error('🚨 Error stack:', error.stack);
         
         // Fallback: reset combat state even if there was an error
         G.combat.active = false;
@@ -774,7 +871,6 @@ export function endCombat(victory) {
         G.combat.bossPhase = null;
     }
 }
-
 // ================================================================
 // EXISTING FUNCTIONS (unchanged)
 // ================================================================
