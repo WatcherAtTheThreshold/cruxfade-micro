@@ -1655,7 +1655,7 @@ section {
 }
 
 .exploration-area { background: rgba(125, 90, 82, 0.3); }
-.encounters { background: rgba(82, 125, 84, 0.3); }
+.encounters { background: rgba(82, 125, 84, 0.1); }
 .event-log { background: rgba(82, 101, 1255, 0.3); }
 .party-hand-section { background: rgba(123, 125, 82, 0.3); }
 
