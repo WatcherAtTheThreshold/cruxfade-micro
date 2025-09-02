@@ -641,7 +641,7 @@ if (currentTile && currentTile.type === 'boss-encounter') {
     
     console.log('🏆 Boss defeat processing complete');
 }
-}
+
     
 /**
  * Get the level of the next boss encounter  
