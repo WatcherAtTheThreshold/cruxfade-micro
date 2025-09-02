@@ -1680,22 +1680,7 @@ html body .wrap section.encounters {
     position: relative !important;
 }
 
-/* Force all child elements to be transparent */
-.encounters > * {
-    background-image: url('./images/sections/encounter-bg.png');
-    /*background: transparent !important;*/
-    position: relative;
-    z-index: 1;
-}
 
-/* If you need some background for readability, use semi-transparent */
-.party-status-compact,
-.encounter-content {
-    
-    background: rgba(20, 25, 38, 0.5) !important;
-    border-radius: var(--radius-sm);
-    padding: 8px;
-}
 
 /*---------------------------------------------------*/
 
