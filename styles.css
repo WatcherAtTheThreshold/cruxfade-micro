@@ -1647,7 +1647,7 @@ button,
    16. FOUR QUADRANT SYSTEM BACKGROUNDS
    ================================================================ */
 
-/* Four quadrant section backgrounds 
+/* Four quadrant section backgrounds */
 .exploration-area {
     background-image: url('./images/sections/exploration-bg.png');
     background-size: cover;
@@ -1670,7 +1670,7 @@ button,
     background-image: url('./images/sections/hand-bg.png');
     background-size: cover; 
     background-position: center;
-}*/
+}
 
 .exploration-area { background: rgba(255, 0, 0, 0.3) !important; }
 .encounters { background: rgba(0, 255, 0, 0.3) !important; }
