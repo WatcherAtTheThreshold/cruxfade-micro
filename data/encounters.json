@@ -64,7 +64,7 @@
       "empty": 0
     },
     "enemyPools": {
-      "common": ["orc", "skrunt"],
+      "common": ["orc", "skrunt", "cur"],
       "rare": ["orc-champion"]
     }
   },
@@ -80,8 +80,8 @@
       "empty": 0
     },
     "enemyPools": {
-      "common": ["orc-champion", "shadow-wisp"],
-      "rare": ["orc-champion"]
+      "common": ["orc-champion", "shadow-wisp", "cur", "skrunt"],
+      "rare": ["void-wraith"]
     }
   },
   
@@ -96,8 +96,8 @@
       "empty": 0
     },
     "enemyPools": {
-      "common": ["orc-champion", "goblin"],
-      "rare": ["orc-champion"]
+      "common": ["crystal-wisp", "void-spawn", "shadow-wisp"],
+      "rare": ["small-wyvern"]
     }
   },
   
@@ -112,7 +112,7 @@
       "empty": 0
     },
     "enemyPools": {
-      "common": ["small-wyvern", "shadow-wisp"],
+      "common": ["crystal-wisp", "void-spawn", "shadow-wisp"],
       "rare": ["small-wyvern"]
     }
   },
@@ -128,8 +128,8 @@
       "empty": 0
     },
     "enemyPools": {
-      "common": ["orc-champion", "orc-champion"],
-      "rare": ["orc-champion"]
+      "common": ["crystal-wisp", "void-spawn", "shadow-wisp"],
+      "rare": ["small-wyvern"]
     }
   },
   
@@ -144,8 +144,8 @@
       "empty": 0
     },
     "enemyPools": {
-      "common": ["orc-champion"],
-      "rare": ["orc-champion"]
+      "common": ["crystal-wisp", "void-spawn", "shadow-wisp"],
+      "rare": ["crystal-golem"]
     }
   },
   
@@ -160,8 +160,8 @@
       "empty": 0
     },
     "enemyPools": {
-      "common": ["orc-champion", "shadow-wisp"],
-      "rare": ["orc-champion"]
+      "common": ["void-wraith", "void-spawn", "shadow-wisp"],
+      "rare": ["void-ancient"]
     }
   },
   
@@ -176,8 +176,8 @@
       "empty": 0
     },
     "enemyPools": {
-      "common": ["orc-champion", "shadow-wisp"],
-      "rare": ["orc-champion"]
+      "common": ["void-wraith", "void-spawn"],
+      "rare": ["void-ancient"]
     }
   },
   
@@ -192,8 +192,8 @@
       "empty": 0
     },
     "enemyPools": {
-      "common": ["orc-champion"],
-      "rare": ["orc-champion"]
+      "common": ["void-wraith", "void-spawn"],
+      "rare": ["void-ancient"]
     }
   },
   
@@ -208,8 +208,8 @@
       "empty": 0
     },
     "enemyPools": {
-      "common": ["orc-champion"],
-      "rare": ["orc-champion"]
+      "common": ["void-wraith", "void-spawn"],
+      "rare": ["void-ancient"]
     }
   }
 }

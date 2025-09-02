@@ -48,6 +48,13 @@
     "atk": 2,
     "description": "A small black sleak-scaled dragon."
   },
+    "crystal-wisp": {
+    "name": "Crystal Wisp",
+    "hp": 6,
+    "atk": 2, 
+    "mag": 6,
+    "description": "A living crystal construct animated by the Tyrant's will"
+  },
     "crystal-guardian": {
     "name": "Crystal Guardian",
     "hp": 12,
@@ -55,16 +62,30 @@
     "mag": 2,
     "description": "A living crystal construct animated by the Tyrant's will"
   },
+    "crystal-golem": {
+    "name": "Crystal Golem",
+    "hp": 16,
+    "atk": 4, 
+    "mag": 2,
+    "description": "A living crystal construct animated by the Tyrant's will"
+  },
   "void-spawn": {
     "name": "Void Spawn",
     "hp": 8,
-    "atk": 3,
+    "atk": 2,
     "mag": 3,
     "description": "A creature of pure nothingness given form"
   },
   "void-wraith": {
     "name": "Void Wraith", 
     "hp": 10,
+    "atk": 3,
+    "mag": 4,
+    "description": "A spirit consumed by the void's hunger"
+  },
+   "void-ancient": {
+    "name": "Void Ancient", 
+    "hp": 15,
     "atk": 4,
     "mag": 4,
     "description": "A spirit consumed by the void's hunger"

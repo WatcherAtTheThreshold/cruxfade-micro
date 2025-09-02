@@ -142,12 +142,6 @@
 
 ## 💭 **PHASE 1 STARTING POINT**
 
-Since the data system is foundational, I'd recommend starting with:
-
 1. **enemies.json** - Move the goblin/orc data out of state.js
 2. **Simple data loader** - Add JSON loading to main.js  
 3. **Test encounter generation** - Verify same gameplay with data-driven approach
-
-This gives you the architecture to easily add content and balance without code changes.
-
-**Ready to dive into Phase 1?** The enemies.json would be a perfect starting file - clean, contained, immediate impact.
