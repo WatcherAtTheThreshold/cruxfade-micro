@@ -333,7 +333,7 @@ function revealAdjacentTilesAsDiscoverable(centerRow, centerCol) {
 
 /**
  * Check if current grid level should trigger a boss encounter
- */
+
 function shouldTriggerBoss() {
     if (!GAME_DATA.bosses) return false;
     
@@ -345,7 +345,28 @@ function shouldTriggerBoss() {
         }
     }
     return false;
-}
+} */
+
+/**
+ * Check if current grid level should trigger a boss encounter
+*/
+function shouldTriggerBoss() {
+    console.log('shouldTriggerBoss called, GAME_DATA:', !!GAME_DATA);
+    console.log('GAME_DATA.bosses:', !!GAME_DATA?.bosses);
+    
+    if (!GAME_DATA || !GAME_DATA.bosses) {
+        console.log('No boss data available');
+        return false;
+    }
+    // Check if current grid level matches any boss unlock level
+    for (const [bossId, bossData] of Object.entries(GAME_DATA.bosses)) {
+        if (bossId === 'boss-enemies') continue;
+        if (bossData.unlockLevel === G.gridLevel) {
+            return true;
+        }
+    }
+    return false;
+} 
 
 /**
  * Get the appropriate boss for current grid level
