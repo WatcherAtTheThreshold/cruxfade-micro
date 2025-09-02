@@ -1647,17 +1647,55 @@ button,
    16. FOUR QUADRANT SYSTEM BACKGROUNDS
    ================================================================ */
 
-/* Four quadrant section backgrounds */
+
+.exploration-area { background: rgba(125, 90, 82, 0.3); }
+.encounters { background: rgba(82, 125, 84, 0.1); }
+.event-log { background: rgba(82, 101, 1255, 0.3); }
+.party-hand-section { background: rgba(123, 125, 82, 0.3); }
 
 section {
     position: relative;  /* This is crucial! */
     z-index: 0;         /* Base layer */
 }
 
-.exploration-area { background: rgba(125, 90, 82, 0.3); }
-.encounters { background: rgba(82, 125, 84, 0.1); }
-.event-log { background: rgba(82, 101, 1255, 0.3); }
-.party-hand-section { background: rgba(123, 125, 82, 0.3); }
+/* Four quadrant section backgrounds 
+
+.encounters {
+    background-image: url('./images/sections/encounter-bg.png');  
+    background-size: cover;
+    background-position: center;
+    z-index: 0;
+}*/
+
+/*---------------------------------------------------
+    -----------------Debug------------------------
+---------------------------------------------------*/
+
+.encounters { 
+    background: rgba(0, 255, 0, 0.3);
+    background-image: url('./images/sections/encounter-bg.png');
+    background-size: 100% 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+    position: relative;
+}
+
+/* Force all child elements to be transparent */
+.encounters > * {
+    background: transparent !important;
+    position: relative;
+    z-index: 1;
+}
+
+/* If you need some background for readability, use semi-transparent */
+.party-status-compact,
+.encounter-content {
+    background: rgba(20, 25, 38, 0.7) !important;
+    border-radius: var(--radius-sm);
+    padding: 8px;
+}
+
+/*---------------------------------------------------*/
 
 .exploration-area {
     background-image: url('./images/sections/exploration-bg.png');
@@ -1665,12 +1703,7 @@ section {
     background-position: center;
 }
 
-.encounter-content {
-    background-image: url('./images/sections/encounter-bg.png');  
-    background-size: cover;
-    background-position: center;
-    z-index: 0;
-}
+
 
 .event-log {
     background-image: url('./images/sections/log-bg.png');
