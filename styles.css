@@ -1665,7 +1665,7 @@ section {
     background-position: center;
 }
 
-.encounters.party-status {
+.party-status {
     background-image: url('./images/sections/encounter-bg.png');  
     background-size: contain;
     background-position: center;
