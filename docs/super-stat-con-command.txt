@@ -1,0 +1,4 @@
+Cive super stats console command
+
+
+G.party[0].atk=25;G.party[0].hp=100;G.party[0].maxHp=100;window.CruxfadeMicro.update();
