@@ -1669,7 +1669,7 @@ section {
     background-image: url('./images/sections/encounter-bg.png');  
     background-size: cover;
     background-position: center;
-    z-index: 5;
+    z-index: 0;
 }
 
 .event-log {
