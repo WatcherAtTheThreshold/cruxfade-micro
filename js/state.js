@@ -549,7 +549,21 @@ export function completeBossPhase() {
  */
   function defeatBoss() {
     const bossData = GAME_DATA.bosses[G.boss.bossId];
-    
+
+    const currentTile = getCurrentTile();
+console.log('🛠️ DEBUG: Converting boss tile:', currentTile);
+console.log('🛠️ DEBUG: Tile type before conversion:', currentTile?.type);
+
+if (currentTile && currentTile.type === 'boss-encounter') {
+    console.log('🛠️ DEBUG: Condition passed, converting to door...');
+    currentTile.type = 'door';
+    currentTile.consumed = false;
+    console.log('🛠️ DEBUG: Tile type after conversion:', currentTile.type);
+    addLogEntry('🚪 A path to the deeper realms opens before you...');
+} else {
+    console.log('🛠️ DEBUG: Conversion failed - currentTile:', !!currentTile, 'type:', currentTile?.type);
+}
+      
     G.boss.defeated = true;
     
     // Show victory messages
