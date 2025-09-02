@@ -1670,7 +1670,7 @@ section {
     background-size: contain;
     background-position: center;
    position: relative;
-    z-index: 2;
+    z-index: -2;
 }
 
 .event-log {
