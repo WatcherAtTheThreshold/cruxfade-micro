@@ -21,7 +21,7 @@
    14. EQUIPMENT DISPLAY STYLES
    15. EQUIPMENT MANAGEMENT STYLES
    16. FOUR QUADRANT BACKGROUNDS
-
+   17. TILE ICON IMAGES
 */
 
 /* ================================================================
@@ -1668,7 +1668,7 @@ section {
 }*/
 
 /* ================================================================
-   16. CLEAN BACKGROUND IMAGES - FINAL VERSION
+   16. FOUR QUADRANT BACKGROUNDS 
    ================================================================ */
 
 /* Now that we know the files work, clean simple version */
@@ -1725,6 +1725,17 @@ section {
 .party-hand-section > * {
     position: relative;
     z-index: 1;
+}
+
+/* ================================================================
+   17. TILE ICON IMAGES
+   ================================================================ */
+
+.tile-icon-img {
+    width: 32px;
+    height: 32px;
+    object-fit: contain;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
 }
 /* End of Stylesheet */
 
