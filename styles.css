@@ -334,7 +334,7 @@ section {
   opacity: 0.9;
 }
 
-.tile-icon-img {
+.unknown-icon-img {
     width: 84px;
     height: 84px;
     margin-top: 10px;
@@ -344,8 +344,6 @@ section {
 
 /* Unknown icon styling for discoverable tiles */
 .tile.discoverable .unknown-icon {
-  width: 84px;
-  height: 84px;
   font-size: 1.8rem;
   color: var(--muted);
   font-weight: bold;
