@@ -149,9 +149,15 @@ function renderBoard() {
             tileElement.innerHTML = ''; // No content shown
             
         } else if (!tile.explored) {
-            // DISCOVERABLE TILE - Shows "?" icon, darkened
-            tileElement.classList.add('discoverable');
-            tileElement.innerHTML = '<img src="./images/icons/unknown.png" class="unknown-icon-img" alt="Unknown">';
+    // Special case: Start and empty tiles should show as empty, not unknown
+    if (tile.type === 'start' || tile.type === 'empty') {
+        tileElement.classList.add('explored');
+        tileElement.innerHTML = ''; // Show nothing
+    } else {
+        // DISCOVERABLE TILE - Shows "?" icon, darkened
+        tileElement.classList.add('discoverable');
+        tileElement.innerHTML = '<img src="./images/icons/unknown.png" class="unknown-icon-img">';
+    }
             
             // Add adjacent class for clicking if next to player
             if (isAdjacentToPlayer(row, col)) {
@@ -193,10 +199,6 @@ function renderBoard() {
 // ================================================================
 // NEW: EXPLORED TILE CONTENT FUNCTION - SINGLE ICON ONLY
 // ================================================================
-
-// ================================================================
-// NEW: EXPLORED TILE CONTENT FUNCTION - SINGLE ICON ONLY
-// ================================================================
 /**
  * Get display content for explored tiles - SINGLE ICON, no duplicates
  * @param {Object} tile - The tile object to get content for
@@ -215,7 +217,7 @@ function getExploredTileContent(tile) {
         'boss-encounter': '<img src="./images/tiles/boss.png" class="tile-icon-img" alt="Boss">'
     };
     
-    const icon = icons[tile.type] || '?';
+    const icon = tile.type in icons ? icons[tile.type] : '<img src="./images/icons/unknown.png" class="unknown-icon-img">';
     
     // Return just the icon - NO DUPLICATES
     return icon ? `<span class="tile-icon">${icon}</span>` : '';
