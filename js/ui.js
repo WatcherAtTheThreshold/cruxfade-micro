@@ -151,7 +151,7 @@ function renderBoard() {
         } else if (!tile.explored) {
             // DISCOVERABLE TILE - Shows "?" icon, darkened
             tileElement.classList.add('discoverable');
-            tileElement.innerHTML = '<span class="unknown-icon">?</span>';
+            tileElement.innerHTML = '<img src="./images/icons/unknown.png" class="unknown-icon-img" alt="Unknown">';
             
             // Add adjacent class for clicking if next to player
             if (isAdjacentToPlayer(row, col)) {
