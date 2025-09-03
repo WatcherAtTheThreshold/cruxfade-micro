@@ -149,9 +149,15 @@ function renderBoard() {
             tileElement.innerHTML = ''; // No content shown
             
         } else if (!tile.explored) {
-            // DISCOVERABLE TILE - Shows "?" icon, darkened
-            tileElement.classList.add('discoverable');
-            tileElement.innerHTML = '<img src="./images/icons/unknown.png" class="unknown-icon-img" alt="Unknown">';
+    // Special case: Start and empty tiles should show as empty, not unknown
+    if (tile.type === 'start' || tile.type === 'empty') {
+        tileElement.classList.add('explored');
+        tileElement.innerHTML = ''; // Show nothing
+    } else {
+        // DISCOVERABLE TILE - Shows "?" icon, darkened
+        tileElement.classList.add('discoverable');
+        tileElement.innerHTML = '<img src="./images/icons/unknown.png" class="unknown-icon-img">';
+    }
             
             // Add adjacent class for clicking if next to player
             if (isAdjacentToPlayer(row, col)) {
