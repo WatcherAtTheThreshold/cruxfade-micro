@@ -1667,57 +1667,65 @@ section {
     z-index: 0;
 }*/
 
-/*---------------------------------------------------
-    -----------------Debug------------------------
----------------------------------------------------*/
+/* ================================================================
+   16. CLEAN BACKGROUND IMAGES - FINAL VERSION
+   ================================================================ */
 
-html body .wrap section.encounters {
-    background-image: url('./images/sections/encounter-bg.png') !important;
-    background-size: 100% 100% !important;
-    background-position: center !important;
-    background-repeat: no-repeat !important;
-    position: relative !important;
-}
-
-
-
-/*---------------------------------------------------*/
-
+/* Now that we know the files work, clean simple version */
 .exploration-area {
     background-image: url('./images/sections/exploration-bg.png');
-    background-size: cover;
+    background-size: 100% 100%;  /* or cover, whatever looks best */
     background-position: center;
+    background-repeat: no-repeat;
+    position: relative;
 }
 
-
+.encounters {
+    background-image: url('./images/sections/encounter-bg.png'); /* Fresh working file */
+    background-size: 100% 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+    position: relative;
+}
 
 .event-log {
     background-image: url('./images/sections/log-bg.png');
-    background-size: contain; 
+    background-size: 100% 100%;
     background-position: center;
+    background-repeat: no-repeat;
+    position: relative;
 }
 
 .party-hand-section {
     background-image: url('./images/sections/hand-bg.png');
-    background-size: contain; 
+    background-size: 100% 100%;
     background-position: center;
+    background-repeat: no-repeat;
+    position: relative;
 }
 
-
-
-/* Optional: Subtle overlay to ensure text readability 
+/* Optional: Add subtle overlay for text readability */
 .exploration-area::before,
-.encounters::before, 
+.encounters::before,
 .event-log::before,
 .party-hand-section::before {
     content: '';
     position: absolute;
     inset: 0;
-    background: rgba(0, 0, 0, 0.3);
+    background: rgba(15, 15, 19, 0.3); /* Adjust opacity as needed */
     border-radius: var(--radius);
     pointer-events: none;
-}*/
+    z-index: 0;
+}
 
+/* Ensure content appears above backgrounds */
+.exploration-area > *,
+.encounters > *,
+.event-log > *,
+.party-hand-section > * {
+    position: relative;
+    z-index: 1;
+}
 /* End of Stylesheet */
 
 
