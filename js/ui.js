@@ -215,7 +215,7 @@ function getExploredTileContent(tile) {
         'boss-encounter': '<img src="./images/tiles/boss.png" class="tile-icon-img" alt="Boss">'
     };
     
-    const icon = icons[tile.type] || '?';
+    const icon = icons[tile.type] || '<img src="./images/icons/unknown.png" class="unknown-icon-img">';
     
     // Return just the icon - NO DUPLICATES
     return icon ? `<span class="tile-icon">${icon}</span>` : '';
