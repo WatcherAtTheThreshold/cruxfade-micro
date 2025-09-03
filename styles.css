@@ -286,9 +286,9 @@ section {
    ================================================================ */
 
 .tile-icon-img {
-    width: 64px;
-    height: 64px;
-    position: center;
+    width: 72px;
+    height: 72px;
+    margin: auto;
     object-fit: contain;
     filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
 }
@@ -406,7 +406,7 @@ section {
 
 .tile.consumed {
   opacity: 0.6; 
-  filter: saturate(0.5) brightness(0.7) contrast(0.7); /* Much more desaturated and darker */
+  filter: saturate(0.7) brightness(0.7) contrast(0.7); /* Much more desaturated and darker */
   transform: scale(0.9); /* Shrink effect */
   transition: all 0.5s ease; /* Smooth transition when becoming consumed */
 }
@@ -418,7 +418,7 @@ section {
 
 /* Hover effect for consumed tiles (optional - make them slightly less dim on hover) */
 .tile.consumed:hover {
-  opacity: 0.5; /* Slightly less transparent on hover */
+  opacity: 0.8; /* Slightly less transparent on hover */
   filter: saturate(0.4) brightness(0.6) contrast(0.8);
   transform: scale(0.95);
 }
@@ -1676,20 +1676,9 @@ section {
     z-index: 0;         /* Base layer */
 }
 
-/* Four quadrant section backgrounds 
 
-.encounters {
-    background-image: url('./images/sections/encounter-bg.png');  
-    background-size: cover;
-    background-position: center;
-    z-index: 0;
-}*/
+/* Four quadrant section backgrounds */
 
-/* ================================================================
-   16. FOUR QUADRANT BACKGROUNDS 
-   ================================================================ */
-
-/* Now that we know the files work, clean simple version */
 .exploration-area {
     background-image: url('./images/sections/exploration-bg.png');
     background-size: 100% 100%;  /* or cover, whatever looks best */
