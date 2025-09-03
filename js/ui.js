@@ -205,14 +205,14 @@ function renderBoard() {
 function getExploredTileContent(tile) {
     const icons = {
         start: '', // Empty for start tile - no icon needed
-        fight: '⚔️',
-        hazard: '⚡',
-        item: '📦',
-        ally: '🤝',
-        key: '🗝️',
-        door: '🚪',
+        fight: '<img src="./images/tiles/fight.png" class="tile-icon-img" alt="Fight">',
+        hazard: '<img src="./images/tiles/hazard.png" class="tile-icon-img" alt="Hazard">',
+        item: '<img src="./images/tiles/item.png" class="tile-icon-img" alt="Item">',
+        ally: '<img src="./images/tiles/ally.png" class="tile-icon-img" alt="Ally">',
+        key: '<img src="./images/tiles/key.png" class="tile-icon-img" alt="Key">',
+        door: '<img src="./images/tiles/door.png" class="tile-icon-img" alt="Door">',
         empty: '', // Empty tiles show no icon
-        'boss-encounter': '💀'
+        'boss-encounter': '<img src="./images/tiles/boss.png" class="tile-icon-img" alt="Boss">'
     };
     
     const icon = icons[tile.type] || '?';
