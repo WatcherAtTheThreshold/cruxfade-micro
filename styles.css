@@ -1668,10 +1668,10 @@ section {
 }*/
 
 /*---------------------------------------------------
-    -----------------Debug------------------------
+   html body .wrap section -----------------Debug------------------------
 ---------------------------------------------------*/
 
-html body .wrap section.encounters {
+.encounters {
     background-image: url('./images/sections/encounter-bg.png') !important;
     background-size: 100% 100% !important;
     background-position: center !important;
