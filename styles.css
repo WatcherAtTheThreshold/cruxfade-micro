@@ -334,8 +334,18 @@ section {
   opacity: 0.9;
 }
 
+.tile-icon-img {
+    width: 84px;
+    height: 84px;
+    margin-top: 10px;
+    object-fit: contain;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.4));
+}
+
 /* Unknown icon styling for discoverable tiles */
 .tile.discoverable .unknown-icon {
+  width: 84px;
+  height: 84px;
   font-size: 1.8rem;
   color: var(--muted);
   font-weight: bold;
