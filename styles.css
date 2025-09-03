@@ -286,11 +286,11 @@ section {
    ================================================================ */
 
 .tile-icon-img {
-    width: 72px;
-    height: 72px;
-    margin: auto;
+    width: 80px;
+    height: 80px;
+    margin-top: 5px;
     object-fit: contain;
-    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.4));
 }
 
 /* ================================================================
