@@ -199,10 +199,6 @@ function renderBoard() {
 // ================================================================
 // NEW: EXPLORED TILE CONTENT FUNCTION - SINGLE ICON ONLY
 // ================================================================
-
-// ================================================================
-// NEW: EXPLORED TILE CONTENT FUNCTION - SINGLE ICON ONLY
-// ================================================================
 /**
  * Get display content for explored tiles - SINGLE ICON, no duplicates
  * @param {Object} tile - The tile object to get content for
@@ -221,7 +217,7 @@ function getExploredTileContent(tile) {
         'boss-encounter': '<img src="./images/tiles/boss.png" class="tile-icon-img" alt="Boss">'
     };
     
-    const icon = icons[tile.type] || '<img src="./images/icons/unknown.png" class="unknown-icon-img">';
+    const icon = tile.type in icons ? icons[tile.type] : '<img src="./images/icons/unknown.png" class="unknown-icon-img">';
     
     // Return just the icon - NO DUPLICATES
     return icon ? `<span class="tile-icon">${icon}</span>` : '';
