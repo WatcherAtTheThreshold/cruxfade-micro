@@ -21,7 +21,7 @@
    14. EQUIPMENT DISPLAY STYLES
    15. EQUIPMENT MANAGEMENT STYLES
    16. FOUR QUADRANT BACKGROUNDS
-   17. TILE ICON IMAGES
+ 
 */
 
 /* ================================================================
@@ -282,6 +282,18 @@ section {
 }
 
 /* ================================================================
+   TILE ICON IMAGES
+   ================================================================ */
+
+.tile-icon-img {
+    width: 64px;
+    height: 64px;
+    position: center;
+    object-fit: contain;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+}
+
+/* ================================================================
    HIDDEN TILES - Completely invisible or very dark
    ================================================================ */
 .tile.hidden {
@@ -390,6 +402,8 @@ section {
 /* ================================================================
    CONSUMED ENCOUNTERS - Dimmed to show completion
    ================================================================ */
+
+
 .tile.consumed {
   opacity: 0.6; 
   filter: saturate(0.5) brightness(0.7) contrast(0.7); /* Much more desaturated and darker */
@@ -1731,16 +1745,7 @@ section {
     z-index: 1;
 }
 
-/* ================================================================
-   17. TILE ICON IMAGES
-   ================================================================ */
 
-.tile-icon-img {
-    width: 64px;
-    height: 64px;
-    object-fit: contain;
-    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
-}
 /* End of Stylesheet */
 
 
