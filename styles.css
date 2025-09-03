@@ -391,8 +391,10 @@ section {
    CONSUMED ENCOUNTERS - Dimmed to show completion
    ================================================================ */
 .tile.consumed {
-  opacity: 0.6;
-  filter: saturate(0.7) brightness(0.8);
+  opacity: 0.3;  /* Much more transparent (was 0.6) */
+  filter: saturate(0.3) brightness(0.5) contrast(0.7); /* Much more desaturated and darker */
+  transform: scale(0.85); /* Shrink effect */
+  transition: all 0.3s ease; /* Smooth transition when becoming consumed */
 }
 
 .tile.consumed .tile-icon {
