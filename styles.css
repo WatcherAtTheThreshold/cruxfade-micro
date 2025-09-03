@@ -293,6 +293,14 @@ section {
     filter: drop-shadow(0 2px 4px rgba(0,0,0,0.4));
 }
 
+.unknown-icon-img {
+    width: 60px;
+    height: 60px;
+    margin-top: 10px;
+    object-fit: contain;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.4));
+}
+
 /* ================================================================
    HIDDEN TILES - Completely invisible or very dark
    ================================================================ */
@@ -334,13 +342,7 @@ section {
   opacity: 0.9;
 }
 
-.unknown-icon-img {
-    width: 64px;
-    height: 64px;
-    margin-top: 10px;
-    object-fit: contain;
-    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.4));
-}
+
 
 /* Unknown icon styling for discoverable tiles */
 .tile.discoverable .unknown-icon {
