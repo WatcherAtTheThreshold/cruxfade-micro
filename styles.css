@@ -801,7 +801,7 @@ section {
 /* Basic card backgrounds */
 .playable-card-compact {
     background-image: url('./images/cards/card-background.png');
-    background-size: cover;
+    background-size: 100% 100%;
     background-position: center;
 }
 
@@ -821,7 +821,7 @@ section {
 /* Party member cards */
 .party-member {
     background-image: url('./images/cards/member-bg.png');
-    background-size: cover;
+    background-size: 100% 100%;
     background-position: center;
 }
 
