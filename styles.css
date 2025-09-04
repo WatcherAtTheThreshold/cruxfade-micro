@@ -602,7 +602,7 @@ section {
   background: var(--surface-light);
   border-radius: var(--radius);
   border: 1px solid var(--surface-border);
-  
+ 
   /* Hover effect */
   transition: all 0.2s ease;
   cursor: pointer;
@@ -610,7 +610,13 @@ section {
   /* Compact proportions - much shorter */
   height: 172px; /* Fixed height instead of aspect ratio */
 }
-
+/* Party member cards */
+.party-member {
+    background-image: url('./images/cards/member-bg.png');
+    background-size: 100% 100%;
+    background-position: center;
+    /*filter:  contrast(0.5) blur(1px);*/
+}
 
   /*.party-member {
     width: 110px;
@@ -826,12 +832,7 @@ section {
     background-image: url('./images/cards/utility-bg.png');
 }
 
-/* Party member cards */
-.party-member {
-    background-image: url('./images/cards/member-bg.png');
-    background-size: 100% 100%;
-    background-position: center;
-}
+
 
 /* ================================================================
    6.5. EVENT LOG AREA (Bottom Left - Moved from Party Status)
