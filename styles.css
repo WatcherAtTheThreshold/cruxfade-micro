@@ -620,6 +620,9 @@ section {
 
 
 .party-member:hover {
+  background-image: url('./images/cards/member-bg.png');
+  background-size: 100% 100%;
+  background-position: center;
   background: var(--surface);
   border-color: var(--accent);
   transform: translateY(-2px);
