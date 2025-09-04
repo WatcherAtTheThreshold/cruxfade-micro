@@ -397,6 +397,7 @@ section {
               0 4px 12px rgba(110, 167, 255, 0.3);
   cursor: default;
   transform: translateY(-2px);
+   filter: saturate(1.1) brightness(1) contrast(1) blur(0px);
   z-index: 3;
 }
 
