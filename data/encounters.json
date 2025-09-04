@@ -129,7 +129,7 @@
     },
     "enemyPools": {
       "common": ["crystal-wisp", "void-spawn", "shadow-wisp"],
-      "rare": ["small-wyvern"]
+      "rare": ["crystal-golem"]
     }
   },
   
