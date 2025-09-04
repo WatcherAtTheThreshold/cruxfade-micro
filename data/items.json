@@ -3,35 +3,43 @@
     "health-potion": {
       "name": "Health Potion",
       "stat": "hp",
-      "boost": 8,
-      "maxBoost": 10,
+      "boost": 3,
+      "maxBoost": 6,
       "rarity": "common"
     },
     "healing-herbs": {
       "name": "Healing Herbs",
       "stat": "hp", 
-      "boost": 10,
-      "maxBoost": 15,
+      "boost": 4,
+      "maxBoost": 8,
       "rarity": "common"
     },
     "greater-healing-potion": {
       "name": "Greater Healing Potion",
       "stat": "hp",
-      "boost": 15,
-      "maxBoost": 18,
+      "boost": 6,
+      "maxBoost": 12,
       "rarity": "uncommon"
     },
     "strength-elixir": {
       "name": "Strength Elixir",
       "stat": "atk",
-      "boost": 10,
+      "boost": 3,
+      "maxBoost": 6,
+      "rarity": "common"
+    },
+    "super-strength-elixir": {
+      "name": "Super Strength Elixir",
+      "stat": "atk",
+      "boost": 4,
+      "maxBoost": 8,
       "rarity": "common"
     },
     "magic-crystal": {
       "name": "Magic Crystal", 
       "stat": "mag",
       "boost": 6,
-      "rarity": "common"
+      "rarity": "rare"
     }
   },
   "equipment": {
@@ -52,21 +60,21 @@
     "war-hammer": {
       "name": "War Hammer",
       "slot": "weapon",
-      "statBonus": { "atk": 8 },
+      "statBonus": { "atk": 6 },
       "description": "A heavy two-handed weapon that deals massive damage",
       "rarity": "uncommon"
     },
     "leather-armor": {
       "name": "Leather Armor",
       "slot": "armor",
-      "statBonus": { "hp": 10 },
+      "statBonus": { "hp": 8 },
       "description": "Basic protection that increases maximum health",
       "rarity": "common"
     },
     "chain-mail": {
       "name": "Chain Mail",
       "slot": "armor",
-      "statBonus": { "hp": 10, "atk": 8 },
+      "statBonus": { "hp": 8, "atk": 6 },
       "description": "Heavy armor that provides excellent protection but limits mobility",
       "rarity": "uncommon"
     },
@@ -75,14 +83,14 @@
       "slot": "armor",
       "statBonus": { "mag": 6, "hp": 6 },
       "description": "Enchanted robes that enhance magical abilities",
-      "rarity": "uncommon"
+      "rarity": "rare"
     },
     "power-crystal": {
       "name": "Power Crystal",
       "slot": "accessory",
       "statBonus": { "mag": 6 },
       "description": "A glowing crystal that amplifies magical energy",
-      "rarity": "uncommon"
+      "rarity": "rare"
     },
     "berserker-ring": {
       "name": "Berserker Ring",
@@ -94,7 +102,7 @@
     "health-amulet": {
       "name": "Health Amulet",
       "slot": "accessory",
-      "statBonus": { "hp": 10 },
+      "statBonus": { "hp": 6 },
       "description": "A protective charm that significantly boosts health",
       "rarity": "uncommon"
     },
@@ -124,6 +132,14 @@
       "equipment": 0.5
     },
     "grid-3": {
+      "consumables": 0.4,
+      "equipment": 0.6
+    }
+    "grid-4": {
+      "consumables": 0.4,
+      "equipment": 0.6
+    }
+    "grid-5": {
       "consumables": 0.4,
       "equipment": 0.6
     }
