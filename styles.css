@@ -805,7 +805,7 @@ section {
 }
 
 
-}
+
 
 /* ================================================================
    6.25. CARD IMAGES
@@ -817,6 +817,7 @@ section {
     background-image: url('./images/cards/card-background.png');
     background-size: 100% 100%;
     background-position: center;
+   z-index: 2;
 }
 
 /* Card type specific backgrounds */
@@ -944,7 +945,7 @@ section {
   margin-left: -15px; /* Negative margin for overlap */
   
   /* Card styling */
-  background: var(--surface);
+  /*background: var(--surface);*/
   border: 1px solid var(--surface-border);
   border-radius: var(--radius);
   padding: 6px 4px; /* Smaller padding */
@@ -1014,7 +1015,7 @@ section {
   .playable-card-compact .card-type {
     font-size: 0.6rem;
   }
-}
+
 /* ================================================================
    8. ENCOUNTERS (Bottom Right - Combat & Events)
    ================================================================ */
@@ -1517,7 +1518,7 @@ button,
     .equipment-name {
         font-size: 0.7rem;
     }
-}
+
 
 /* ================================================================
    15. EQUIPMENT MANAGEMENT STYLES
