@@ -623,8 +623,8 @@ section {
   background-image: url('./images/cards/member-bg.png');
   background-size: 100% 100%;
   background-position: center;
-  background: var(--surface);
-  border-color: var(--accent);
+  /*background: var(--surface);
+  border-color: var(--accent);*/
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(110, 167, 255, 0.2);
 }
