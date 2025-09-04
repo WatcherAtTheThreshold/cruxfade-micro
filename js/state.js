@@ -955,14 +955,14 @@ function ensureKeyAndDoor() {
 }
 
 /**
- * Initialize the starting deck
+ * Initialize the starting deck  Hide this one.....{ id: 'move', name: 'Quick Move', type: 'utility' }
  */
 function initializeStartingDeck() {
     G.deck = [
         
         { id: 'basic-strike', name: 'Basic Strike', type: 'attack' },
         { id: 'defend', name: 'Defend', type: 'defense' },
-        { id: 'move', name: 'Quick Move', type: 'utility' }
+        
     ];
     
     G.discard = [];

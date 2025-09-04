@@ -293,6 +293,14 @@ section {
     filter: drop-shadow(0 2px 4px rgba(0,0,0,0.4));
 }
 
+.unknown-icon-img {
+    width: 62px;
+    height: 62px;
+    margin-top: 5px;
+    object-fit: contain;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.4));
+}
+
 /* ================================================================
    HIDDEN TILES - Completely invisible or very dark
    ================================================================ */
@@ -334,13 +342,7 @@ section {
   opacity: 0.9;
 }
 
-.unknown-icon-img {
-    width: 64px;
-    height: 64px;
-    margin-top: 10px;
-    object-fit: contain;
-    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.4));
-}
+
 
 /* Unknown icon styling for discoverable tiles */
 .tile.discoverable .unknown-icon {
@@ -1676,10 +1678,10 @@ button,
    ================================================================ */
 
 
-.exploration-area { background: rgba(125, 90, 82, 0.3); }
-.encounters { background: rgba(82, 125, 84, 0.1); }
-.event-log { background: rgba(82, 101, 1255, 0.3); }
-.party-hand-section { background: rgba(123, 125, 82, 0.3); }
+.exploration-area { background: rgba(33, 66, 99, 0.3); }
+.encounters { background: rgba(33, 66, 99, 0.3); }
+.event-log { background: rgba(33, 66, 99, 0.3); }
+.party-hand-section { background: rgba(33, 66, 99, 0.3); }
 
 section {
     position: relative;  /* This is crucial! */
