@@ -615,6 +615,7 @@ section {
     background-image: url('./images/cards/member-bg.png');
     background-size: 100% 100%;
     background-position: center;
+    opacity: 0.8;
     /*filter:  contrast(0.5) blur(1px);*/
 }
 
@@ -818,6 +819,7 @@ section {
     background-image: url('./images/cards/card-background.png');
     background-size: 100% 100%;
     background-position: center;
+    opacity: 0.8;
     
 }
 
@@ -826,18 +828,21 @@ section {
     background-image: url('./images/cards/attack-bg.png');
     background-size: 100% 100%;
     background-position: center;
+    opacity: 0.8;
 }
 
 .playable-card-compact .card-type.defense {
     background-image: url('./images/cards/defense-bg.png'); 
     background-size: 100% 100%;
     background-position: center;
+    opacity: 0.8;
 }
 
 .playable-card-compact .card-type.utility {
     background-image: url('./images/cards/utility-bg.png');
     background-size: 100% 100%;
     background-position: center;
+    opacity: 0.8;
 }
 
 
