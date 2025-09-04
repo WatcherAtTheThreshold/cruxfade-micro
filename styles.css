@@ -608,8 +608,16 @@ section {
   cursor: pointer;
   
   /* Compact proportions - much shorter */
-  height: 165px; /* Fixed height instead of aspect ratio */
+  height: 172px; /* Fixed height instead of aspect ratio */
 }
+
+
+  /*.party-member {
+    width: 110px;
+    min-width: 110px;
+    height: 125px;
+  }*/
+
 
 .party-member:hover {
   background: var(--surface);
@@ -786,11 +794,7 @@ section {
   line-height: 1;
 }
 
-  .party-member {
-    width: 110px;
-    min-width: 110px;
-    height: 125px;
-  }
+
 }
 
 /* ================================================================
