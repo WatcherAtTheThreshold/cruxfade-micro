@@ -11,6 +11,7 @@
    4. MAIN CONTAINER & LAYOUT SYSTEM
    5. EXPLORATION AREA (Top Left - 4x4 Grid)
    6. PARTY STATUS (Top Right - Stats & Cards Combined)
+   6.25 CARD IMAGES
    7. PARTY CARDS (Bottom Left - Overlapping Cards)  
    8. ENCOUNTERS (Bottom Right - Combat & Events)
    9. OVERLAY SYSTEM (Dice, Combat Popups)
@@ -790,6 +791,38 @@ section {
     min-width: 110px;
     height: 125px;
   }
+}
+
+/* ================================================================
+   6.25. CARD IMAGES
+   ================================================================ */
+
+
+/* Basic card backgrounds */
+.playable-card-compact {
+    background-image: url('./images/cards/card-background.png');
+    background-size: 100% 100%;
+    background-position: center;
+}
+
+/* Card type specific backgrounds */
+.playable-card-compact .card-type.attack {
+    background-image: url('./images/cards/attack-bg.png');
+}
+
+.playable-card-compact .card-type.defense {
+    background-image: url('./images/cards/defense-bg.png');  
+}
+
+.playable-card-compact .card-type.utility {
+    background-image: url('./images/cards/utility-bg.png');
+}
+
+/* Party member cards */
+.party-member {
+    background-image: url('./images/cards/member-bg.png');
+    background-size: 100% 100%;
+    background-position: center;
 }
 
 /* ================================================================
