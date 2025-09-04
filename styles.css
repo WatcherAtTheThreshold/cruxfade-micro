@@ -817,12 +817,13 @@ section {
     background-image: url('./images/cards/card-background.png');
     background-size: 100% 100%;
     background-position: center;
-   z-index: 2;
+    
 }
 
 /* Card type specific backgrounds */
 .playable-card-compact .card-type.attack {
     background-image: url('./images/cards/attack-bg.png');
+   z-index: 5;
 }
 
 .playable-card-compact .card-type.defense {
