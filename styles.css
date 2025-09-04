@@ -778,12 +778,13 @@ section {
 
 /* Fallen party member styling */
 .party-member.fallen {
+  display: none; 
   opacity: 0.6;
   background: var(--surface-border);
   border-color: var(--muted);
 }
 
-.party-member.fallen:hover {
+/*.party-member.fallen:hover {
   background: var(--surface-border);
   border-color: var(--muted);
   transform: none;
