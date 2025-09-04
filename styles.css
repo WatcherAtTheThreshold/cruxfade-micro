@@ -812,26 +812,31 @@ section {
    ================================================================ */
 
 
-/* Basic card backgrounds 
+/* Basic card backgrounds */
 .playable-card-compact {
     background-image: url('./images/cards/card-background.png');
     background-size: 100% 100%;
     background-position: center;
     
-}*/
+}
 
 /* Card type specific backgrounds */
 .playable-card-compact .card-type.attack {
     background-image: url('./images/cards/attack-bg.png');
-   z-index: 5;
+    background-size: 100% 100%;
+    background-position: center;
 }
 
 .playable-card-compact .card-type.defense {
-    background-image: url('./images/cards/defense-bg.png');  
+    background-image: url('./images/cards/defense-bg.png'); 
+    background-size: 100% 100%;
+    background-position: center;
 }
 
 .playable-card-compact .card-type.utility {
     background-image: url('./images/cards/utility-bg.png');
+    background-size: 100% 100%;
+    background-position: center;
 }
 
 
