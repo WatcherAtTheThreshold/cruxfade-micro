@@ -817,20 +817,26 @@ section {
     background-image: url('./images/cards/card-background.png');
     background-size: 100% 100%;
     background-position: center;
-   z-index: 2;
+    
 }
 
 /* Card type specific backgrounds */
 .playable-card-compact .card-type.attack {
     background-image: url('./images/cards/attack-bg.png');
+    background-size: 100% 100%;
+    background-position: center;
 }
 
 .playable-card-compact .card-type.defense {
-    background-image: url('./images/cards/defense-bg.png');  
+    background-image: url('./images/cards/defense-bg.png'); 
+    background-size: 100% 100%;
+    background-position: center;
 }
 
 .playable-card-compact .card-type.utility {
     background-image: url('./images/cards/utility-bg.png');
+    background-size: 100% 100%;
+    background-position: center;
 }
 
 
