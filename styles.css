@@ -793,6 +793,38 @@ section {
 }
 
 /* ================================================================
+   6.25. CARD IMAGES
+   ================================================================ */
+
+
+/* Basic card backgrounds */
+.playable-card-compact {
+    background-image: url('./images/cards/card-background.png');
+    background-size: cover;
+    background-position: center;
+}
+
+/* Card type specific backgrounds */
+.playable-card-compact .card-type.attack {
+    background-image: url('./images/cards/attack-bg.png');
+}
+
+.playable-card-compact .card-type.defense {
+    background-image: url('./images/cards/defense-bg.png');  
+}
+
+.playable-card-compact .card-type.utility {
+    background-image: url('./images/cards/utility-bg.png');
+}
+
+/* Party member cards */
+.party-member {
+    background-image: url('./images/cards/member-bg.png');
+    background-size: cover;
+    background-position: center;
+}
+
+/* ================================================================
    6.5. EVENT LOG AREA (Bottom Left - Moved from Party Status)
    ================================================================ */
 
