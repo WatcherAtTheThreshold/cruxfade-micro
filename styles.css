@@ -608,12 +608,23 @@ section {
   cursor: pointer;
   
   /* Compact proportions - much shorter */
-  height: 165px; /* Fixed height instead of aspect ratio */
+  height: 172px; /* Fixed height instead of aspect ratio */
 }
 
+
+  /*.party-member {
+    width: 110px;
+    min-width: 110px;
+    height: 125px;
+  }*/
+
+
 .party-member:hover {
-  background: var(--surface);
-  border-color: var(--accent);
+  background-image: url('./images/cards/member-bg.png');
+  background-size: 100% 100%;
+  background-position: center;
+  /*background: var(--surface);
+  border-color: var(--accent);*/
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(110, 167, 255, 0.2);
 }
@@ -732,7 +743,8 @@ section {
 
 /* Leader marker - very small */
 .leader-marker {
-  background: var(--accent);
+  display: none; 
+  /*background: var(--accent);
   color: white;
   padding: 1px 5px;
   border-radius: var(--radius-full);
@@ -742,7 +754,7 @@ section {
   letter-spacing: 0.05em;
   margin-top: 1px;
   margin-bottom: 1px;
-  line-height: 1;
+  line-height: 1;*/
 }
 
 /* Different slot styling - very subtle */
@@ -786,11 +798,7 @@ section {
   line-height: 1;
 }
 
-  .party-member {
-    width: 110px;
-    min-width: 110px;
-    height: 125px;
-  }
+
 }
 
 /* ================================================================
