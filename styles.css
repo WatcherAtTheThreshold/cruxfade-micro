@@ -390,6 +390,7 @@ section {
 .tile.explored.consumed.player-tile {
   filter: saturate(1.0) brightness(1.15) contrast(0.95) blur(1px);
   transform: scale(0.9);
+  animation: pulse-glow 2s ease-in-out infinite;
 }   
 
 .tile.player-tile {
