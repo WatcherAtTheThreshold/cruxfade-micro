@@ -387,6 +387,10 @@ section {
 /* ================================================================
    PLAYER POSITION - Clean blue glow without extra icons
    ================================================================ */
+.tile.explored.consumed.player-tile {
+   filter: saturate(1.1) brightness(1) contrast(1) blur(0px);
+}   
+
 .tile.player-tile {
   background: var(--accent);
   border: 2px solid var(--accent);
@@ -397,7 +401,7 @@ section {
               0 4px 12px rgba(110, 167, 255, 0.3);
   cursor: default;
   transform: translateY(-2px);
-   filter: saturate(1.1) brightness(1) contrast(1) blur(0px);
+   
   z-index: 3;
 }
 
