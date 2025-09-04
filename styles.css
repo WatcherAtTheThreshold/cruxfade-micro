@@ -743,7 +743,8 @@ section {
 
 /* Leader marker - very small */
 .leader-marker {
-  background: var(--accent);
+  display: none; 
+  /*background: var(--accent);
   color: white;
   padding: 1px 5px;
   border-radius: var(--radius-full);
@@ -753,7 +754,7 @@ section {
   letter-spacing: 0.05em;
   margin-top: 1px;
   margin-bottom: 1px;
-  line-height: 1;
+  line-height: 1;*/
 }
 
 /* Different slot styling - very subtle */
