@@ -582,8 +582,8 @@ section {
 
 /*-------------------Small Character Protraits---------------*/
 .char-icon {
-    width: 24px;
-    height: 24px;
+    width: 32px;
+    height: 32px;
     object-fit: cover;
     border-radius: 50%;
 }
