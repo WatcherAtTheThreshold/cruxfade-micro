@@ -985,7 +985,7 @@ function resetPartyToStart() {
         }
     ];
     
-    G.equipment = { you: [] };
+    G.equipment = { leader: [] };
 }
 
 // ================================================================
