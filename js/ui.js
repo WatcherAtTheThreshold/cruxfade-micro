@@ -300,7 +300,7 @@ function createPartyMemberElement(member, isLeader = false) {
 
   // Build compact DOM - reduce padding and spacing
   memberDiv.innerHTML = `
-    <div class="member-portrait" style="width: 32px; height: 32px;">
+    <div class="member-portrait">
      <img src="./images/icons/${member.id}.png" alt="${member.name}"
      onerror="this.onerror=null; this.src='./images/icons/${getIconFileName(member)}'; this.onload=function(){this.style.display='inline'}; this.onerror=function(){this.style.display='none'; this.nextElementSibling.style.display='inline'}">
       <span class="portrait-fallback" style="font-size: 1rem;">${getCharacterIcon(member)}</span>
