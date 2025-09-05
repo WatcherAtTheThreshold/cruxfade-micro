@@ -350,11 +350,12 @@ function createPartyMemberElement(member, isLeader = false) {
  * Get appropriate icon for character type
  */
 function getCharacterIcon(member) {
-  if (member.tags.includes('leader'))  return '⚔️';
-  if (member.tags.includes('warrior')) return '🛡️';
-  if (member.tags.includes('mage'))    return '🔮';
-  if (member.tags.includes('rogue'))   return '🗡️';
-  return '👤';
+  if (member.tags.includes('leader'))  return '<img src="./images/icons/leader.png" class="char-icon">';
+  if (member.tags.includes('warrior')) return '<img src="./images/icons/warrior.png" class="char-icon">';
+  if (member.tags.includes('mage'))    return '<img src="./images/icons/mage.png" class="char-icon">';
+  if (member.tags.includes('rogue'))   return '<img src="./images/icons/rogue.png" class="char-icon">';
+  if (member.tags.includes('scout'))   return '<img src="./images/icons/scout.png" class="char-icon">';  
+  return '<img src="./images/icons/default.png" class="char-icon">';
 }
 
 
