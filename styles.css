@@ -387,6 +387,12 @@ section {
 /* ================================================================
    PLAYER POSITION - Clean blue glow without extra icons
    ================================================================ */
+.tile.explored.consumed.player-tile {
+  filter: saturate(1.0) brightness(1.15) contrast(0.95) blur(1px);
+  transform: scale(0.9);
+  animation: pulse-glow 2s ease-in-out infinite;
+}   
+
 .tile.player-tile {
   background: var(--accent);
   border: 2px solid var(--accent);
@@ -397,6 +403,7 @@ section {
               0 4px 12px rgba(110, 167, 255, 0.3);
   cursor: default;
   transform: translateY(-2px);
+   
   z-index: 3;
 }
 
@@ -452,14 +459,19 @@ section {
 /* Subtle pulse animation for clickable tiles */
 @keyframes pulse-glow {
   0%, 100% { 
-    border-color: rgba(110, 167, 255, 0.4); 
+    border-color: rgba(110, 167, 255, 0.3); 
     box-shadow: 0 0 8px rgba(110, 167, 255, 0.2);
   }
   50% { 
-    border-color: rgba(110, 167, 255, 0.7); 
+    border-color: rgba(110, 167, 255, 0.6); 
     box-shadow: 0 0 12px rgba(110, 167, 255, 0.4);
   }
+   75% { 
+    border-color: rgba(110, 167, 255, 0.9); 
+    box-shadow: 0 0 12px rgba(110, 167, 255, 0.6);
+  }
 }
+  
 
 /* ================================================================
    TILE TYPE VARIANTS - Different discover/explored states for different encounters
