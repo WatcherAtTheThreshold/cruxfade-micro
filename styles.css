@@ -580,6 +580,16 @@ section {
    6. PARTY STATUS (Top Right - Stats & Cards Combined)
    ================================================================ */
 
+/*-------------------Small Character Protraits---------------*/
+.char-icon {
+    width: 24px;
+    height: 24px;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+/*-------------------Small Character Protraits End---------------*/
+
 .party-status {
   gap: 16px;
 }
