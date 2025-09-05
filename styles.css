@@ -1060,6 +1060,12 @@ section {
   position: relative;
 }
 
+.encounters { 
+    background: rgba(255,0,0,0.1) !important; 
+    z-index: 10 !important;
+    position: relative !important;
+}
+
 .encounter-content {
   flex: 1;
   display: grid;
