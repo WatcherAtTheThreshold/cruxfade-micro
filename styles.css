@@ -598,6 +598,7 @@ section {
   gap: 10px;
   overflow-x: auto;
   padding: 4px;
+  overflow: visible !important;
 }
 
 .party-member {
@@ -630,6 +631,8 @@ section {
     background-size: 100% 100%;
     background-position: center;
     opacity: 0.8;
+    transform-origin: center;
+    transition: transform 0.2s ease;
     /*filter:  contrast(0.5) blur(1px);*/
 }
 
@@ -648,8 +651,9 @@ section {
   border-color: var(--accent);*/
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(110, 167, 255, 0.2);
-  transform: scale(1.25); 
-  overflow: visible; 
+  transform: scale(1.25);
+    z-index: 10;
+    transition: transform 0.2s ease, z-index 0s; 
 }
 
 .party-member:active {
