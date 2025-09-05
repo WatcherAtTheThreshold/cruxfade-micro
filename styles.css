@@ -649,6 +649,7 @@ section {
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(110, 167, 255, 0.2);
   transform: scale(1.25); 
+  overflow: visible; 
 }
 
 .party-member:active {
