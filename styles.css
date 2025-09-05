@@ -659,8 +659,8 @@ section {
 
 /*-------------------Small Character Protraits---------------*/
 .member-portrait {
-  width: 40px;
-  height: 40px;
+  width: 48px;
+  height: 48px;
   border-radius: 50%;
   background: var(--tile);
   display: grid;
