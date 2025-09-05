@@ -121,6 +121,8 @@ export function renderAll() {
     console.log('🎨 UI rendered');
 }
 
+
+
 // ================================================================
 // UPDATED: BOARD RENDERING FUNCTION - FOG OF WAR COMPATIBLE
 // ================================================================
@@ -194,6 +196,21 @@ function renderBoard() {
             tileElement.classList.add('adjacent');
         }
     });
+}
+
+// ================================================================
+// portrait icon fallback
+// ================================================================
+
+/**
+ * Get icon filename based on member type
+ */
+function getIconFileName(member) {
+    if (member.tags.includes('leader')) return 'leader.png';
+    if (member.tags.includes('warrior')) return 'warrior.png';
+    if (member.tags.includes('mage')) return 'mage.png';
+    if (member.tags.includes('rogue')) return 'rogue.png';
+    return 'default.png';
 }
 
 // ================================================================
@@ -284,8 +301,8 @@ function createPartyMemberElement(member, isLeader = false) {
   // Build compact DOM - reduce padding and spacing
   memberDiv.innerHTML = `
     <div class="member-portrait" style="width: 32px; height: 32px;">
-      <img src="./images/portraits/${member.id}.png" alt="${member.name}"
-           onerror="this.style.display='none'; this.nextElementSibling.style.display='inline'">
+     <img src="./images/portraits/${member.id}.png" alt="${member.name}"
+     onerror="this.onerror=null; this.src='./images/icons/${getIconFileName(member)}'; this.onload=function(){this.style.display='inline'}; this.onerror=function(){this.style.display='none'; this.nextElementSibling.style.display='inline'}">
       <span class="portrait-fallback" style="font-size: 1rem;">${getCharacterIcon(member)}</span>
     </div>
     <div class="member-info" style="flex: 1;">
