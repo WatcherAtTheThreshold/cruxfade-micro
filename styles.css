@@ -459,14 +459,19 @@ section {
 /* Subtle pulse animation for clickable tiles */
 @keyframes pulse-glow {
   0%, 100% { 
-    border-color: rgba(110, 167, 255, 0.4); 
+    border-color: rgba(110, 167, 255, 0.3); 
     box-shadow: 0 0 8px rgba(110, 167, 255, 0.2);
   }
   50% { 
-    border-color: rgba(110, 167, 255, 0.7); 
+    border-color: rgba(110, 167, 255, 0.6); 
     box-shadow: 0 0 12px rgba(110, 167, 255, 0.4);
   }
+   75% { 
+    border-color: rgba(110, 167, 255, 0.9); 
+    box-shadow: 0 0 12px rgba(110, 167, 255, 0.6);
+  }
 }
+  
 
 /* ================================================================
    TILE TYPE VARIANTS - Different discover/explored states for different encounters
