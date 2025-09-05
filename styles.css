@@ -657,15 +657,15 @@ section {
 
 /*-------------------Small Character Protraits---------------*/
 .member-portrait {
-  width: 36px;
-  height: 36px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   background: var(--tile);
   display: grid;
   place-items: center;
   overflow: hidden;
   position: relative;
-  margin-bottom: 2px;
+  margin-bottom: 0px;
 }
 
 .member-portrait img {
@@ -704,7 +704,7 @@ section {
   gap: 1px;
   font-size: 0.7rem;
   color: var(--muted);
-  margin-bottom: 4px;
+  margin-bottom: 2px;
   line-height: 1;
 }
 
@@ -712,7 +712,7 @@ section {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 3px;
+  gap: 2px;
 }
 
 /* ATK and MAG on same line */
@@ -720,13 +720,13 @@ section {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  gap: 4px;
 }
 
 .stats span {
   display: flex;
   align-items: center;
-  gap: 3px;
+  gap: 2px;
 }
 
 /* Equipment display - very compact, icon + "None" */
