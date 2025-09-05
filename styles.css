@@ -652,6 +652,11 @@ section {
     transition: transform 0.2s ease; 
 }
 
+.encounters:has(.party-member:hover) {
+    z-index: 999;
+    position: relative;
+}
+
 .party-member:active {
   transform: translateY(0px);
   box-shadow: 0 2px 8px rgba(110, 167, 255, 0.3);
