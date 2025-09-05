@@ -583,8 +583,6 @@ section {
 /*-------------------Small Character Protraits---------------*/
 
 .member-portrait {
-    width: 36px;
-    height: 36px;
     border-radius: 50%;
     background: var(--tile);
     display: grid;
@@ -601,8 +599,8 @@ section {
 }
 
 .char-icon {
-    width: 32px;
-    height: 32px;
+    width: 40px;
+    height: 40px;
     object-fit: cover;
     border-radius: 50%;
 }
