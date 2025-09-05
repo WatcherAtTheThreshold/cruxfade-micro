@@ -210,6 +210,7 @@ function getIconFileName(member) {
     if (member.tags.includes('warrior')) return 'warrior.png';
     if (member.tags.includes('mage')) return 'mage.png';
     if (member.tags.includes('rogue')) return 'rogue.png';
+    if (member.tags.includes('scout')) return 'scout.png';
     return 'default.png';
 }
 
