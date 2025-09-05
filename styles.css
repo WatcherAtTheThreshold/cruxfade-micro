@@ -645,6 +645,7 @@ section {
   /*background: var(--surface);
   border-color: var(--accent);*/
   transform: translateY(-2px);
+  transform: translateX(15px); 
   box-shadow: 0 4px 12px rgba(110, 167, 255, 0.2);
   transform: scale(1.50);
   opacity: 1; 
