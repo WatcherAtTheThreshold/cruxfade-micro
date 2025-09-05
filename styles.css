@@ -646,7 +646,7 @@ section {
   border-color: var(--accent);*/
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(110, 167, 255, 0.2);
-  transform: scale(1.65);
+  transform: scale(1.55);
   opacity: 1; 
   z-index: 999;  /* Much higher to get above other UI elements */
   position: relative;  /* Ensures z-index takes effect */
