@@ -1236,7 +1236,7 @@ button {
   background: #162236;
   color: #e7ecff;
   border: 1px solid #2a3b5f;
-  padding: 8px 14px;
+  padding: 4px 7px;
   border-radius: var(--radius-sm);
   cursor: pointer;
   font-weight: 500;
