@@ -54,8 +54,8 @@ export const G = {
     // Party members (leader first)
     party: [
         { 
-            id: 'you', 
-            name: 'You',
+            id: 'leader', 
+            name: 'Leader',
             hp: 10, 
             maxHp: 10,
             atk: 2, 
@@ -975,8 +975,8 @@ function initializeStartingDeck() {
 function resetPartyToStart() {
     G.party = [
         { 
-            id: 'you', 
-            name: 'You',
+            id: 'leader', 
+            name: 'Leader',
             hp: 10, 
             maxHp: 10,
             atk: 2, 
