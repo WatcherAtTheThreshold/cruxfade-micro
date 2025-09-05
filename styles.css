@@ -580,32 +580,7 @@ section {
    6. PARTY STATUS (Top Right - Stats & Cards Combined)
    ================================================================ */
 
-/*-------------------Small Character Protraits---------------*/
 
-.member-portrait {
-    border-radius: 50%;
-    background: var(--tile);
-    display: grid;
-    place-items: center;
-    overflow: hidden;
-    position: relative;
-    margin-bottom: 2px;
-}
-
-.member-portrait img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-.char-icon {
-    width: 40px;
-    height: 40px;
-    object-fit: cover;
-    border-radius: 50%;
-}
-
-/*-------------------Small Character Protraits End---------------*/
 
 .party-status {
   gap: 16px;
@@ -680,9 +655,10 @@ section {
   box-shadow: 0 2px 8px rgba(110, 167, 255, 0.3);
 }
 
+/*-------------------Small Character Protraits---------------*/
 .member-portrait {
-  width: 28px;
-  height: 28px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
   background: var(--tile);
   display: grid;
@@ -697,6 +673,8 @@ section {
   height: 100%;
   object-fit: cover;
 }
+
+/*-------------------Small Character Protraits End---------------*/
 
 .portrait-fallback {
   font-size: 0.9rem;
