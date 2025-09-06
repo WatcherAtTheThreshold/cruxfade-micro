@@ -962,7 +962,7 @@ function renderFightEncounter() {
             G.combat.turn === 'enemy'
         );
         
-        DOM.encounterArea.innerHTML = `
+      DOM.encounterArea.innerHTML = `
             <div class="encounter-fight">
                 <h3>⚔️ Combat: ${G.combat.enemy.name}</h3>
                 <div class="encounter-cards">
@@ -970,17 +970,19 @@ function renderFightEncounter() {
                     <div class="encounter-vs">VS</div>
                     ${enemyCard}
                 </div>
+                <div class="encounter-inline-actions">
+                    ${G.combat.turn === 'player' ? 
+                        '<button class="btn-primary" data-action="player-attack">Attack!</button>' +
+                        '<button class="btn-secondary" data-action="flee-encounter">Flee</button>' :
+                        '<button class="btn-secondary" data-action="enemy-turn">Continue...</button>'
+                    }
+                </div>
                 ${G.combat.lastRoll ? `<p>🎲 Last roll: ${G.combat.lastRoll}</p>` : ''}
             </div>
         `;
         
-        DOM.encounterActions.innerHTML = `
-            ${G.combat.turn === 'player' ? 
-                '<button class="btn-primary" data-action="player-attack">Attack!</button>' +
-                '<button class="btn-secondary" data-action="flee-encounter">Flee</button>' :
-                '<button class="btn-secondary" data-action="enemy-turn">Continue...</button>'
-            }
-        `;
+        // Clear the regular actions area since we're using inline actions
+        DOM.encounterActions.innerHTML = ``;
     } else {
         // BEFORE COMBAT - Only show fight button (no flee option)
         const enemyType = getRandomEnemyType();
@@ -993,13 +995,14 @@ function renderFightEncounter() {
                     <strong>Grid ${G.gridLevel} Enemy</strong><br>
                     Prepare for battle...
                 </div>
+                <div class="encounter-inline-actions">
+                    <button class="btn-primary" data-action="start-combat">Fight!</button>
+                </div>
             </div>
         `;
         
-        DOM.encounterActions.innerHTML = `
-            <button class="btn-primary" data-action="start-combat">Fight!</button>
-        `;
-        // NO FLEE BUTTON - can't flee before combat starts
+        // Clear the regular actions area since we're using inline actions
+        DOM.encounterActions.innerHTML = ``;
     }
 }
 
