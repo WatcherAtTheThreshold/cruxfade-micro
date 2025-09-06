@@ -1983,7 +1983,7 @@ export function startCombat(enemyType = 'goblin', bossPhase = null) {
     }
     
     G.combat.active = true;
-    G.combat.enemy = { ...enemyTemplate }; // Copy enemy data
+    G.combat.enemy = { ...enemyTemplate, type: enemyType }; // Preserve enemy type for card display
     G.combat.playerHp = player.hp;
     G.combat.enemyHp = enemyTemplate.hp;
     G.combat.turn = 'player';
