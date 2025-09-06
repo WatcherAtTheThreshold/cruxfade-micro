@@ -644,12 +644,12 @@ section {
   background-position: center;
   /*background: var(--surface);
   border-color: var(--accent);*/
-  transform: translateY(-2px) scale(1.5); 
+  transform: translateY(-2px) scale(1.55); 
   box-shadow: 0 4px 12px rgba(110, 167, 255, 0.2);
   opacity: 1; 
   z-index: 9999;  /* Much higher to get above other UI elements */
   position: relative;  /* Ensures z-index takes effect */
-  transition: transform 1s ease; 
+  transition: transform 0.6s ease; 
 }
 .party-member:first-child:hover { 
   background-image: url('./images/cards/member-bg.png');
@@ -657,12 +657,12 @@ section {
   background-position: center;
   /*background: var(--surface);
   border-color: var(--accent);*/
-  transform: translateX(25px) translateY(-2px) scale(1.75); 
+  transform: translateX(25px) translateY(-2px) scale(1.6); 
   box-shadow: 0 4px 12px rgba(110, 167, 255, 0.2);
   opacity: 1; 
   z-index: 9999;  /* Much higher to get above other UI elements */
   position: relative;  /* Ensures z-index takes effect */
-  transition: transform 0.3s ease; 
+  transition: transform 0.6s ease; 
 }
 
 .party-member:active {
