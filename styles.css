@@ -1848,7 +1848,7 @@ section {
 
 /* Individual encounter card (larger than hand cards) */
 .encounter-card {
-    width: 180px;
+    width: 166px;
     height: 220px;
     background: var(--surface);
     border: 2px solid var(--surface-border);
