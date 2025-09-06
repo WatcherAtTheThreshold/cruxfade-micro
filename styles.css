@@ -1866,13 +1866,23 @@ section {
 /* Player card styling */
 .encounter-card.player-card {
     border-color: var(--accent);
-    background: linear-gradient(135deg, var(--surface) 0%, rgba(110, 167, 255, 0.1) 100%);
+    background-image: url('./images/cards/hero-card-bg.png');
+    background-size: 100% 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+    /* Fallback if image doesn't load */
+    background-color: var(--surface);
 }
 
 /* Enemy card styling */
 .encounter-card.enemy-card {
     border-color: var(--bad);
-    background: linear-gradient(135deg, var(--surface) 0%, rgba(239, 107, 115, 0.1) 100%);
+    background-image: url('./images/cards/monster-card-bg.png');
+    background-size: 100% 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+    /* Fallback if image doesn't load */
+    background-color: var(--surface);
 }
 
 /* Portrait area in encounter cards */
