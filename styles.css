@@ -580,15 +580,7 @@ section {
    6. PARTY STATUS (Top Right - Stats & Cards Combined)
    ================================================================ */
 
-/*-------------------Small Character Protraits---------------*/
-.char-icon {
-    width: 24px;
-    height: 24px;
-    object-fit: cover;
-    border-radius: 50%;
-}
 
-/*-------------------Small Character Protraits End---------------*/
 
 .party-status {
   gap: 16px;
@@ -606,6 +598,7 @@ section {
   gap: 10px;
   overflow-x: auto;
   padding: 4px;
+  overflow: visible !important;
 }
 
 .party-member {
@@ -638,14 +631,11 @@ section {
     background-size: 100% 100%;
     background-position: center;
     opacity: 0.8;
+     transform-origin: center;
+    transition: transform 0.2s ease, z-index 0s;
+    position: relative;  /* Base positioning */
     /*filter:  contrast(0.5) blur(1px);*/
 }
-
-  /*.party-member {
-    width: 110px;
-    min-width: 110px;
-    height: 125px;
-  }*/
 
 
 .party-member:hover {
@@ -654,8 +644,25 @@ section {
   background-position: center;
   /*background: var(--surface);
   border-color: var(--accent);*/
-  transform: translateY(-2px);
+  transform: translateY(-2px) scale(1.55); 
   box-shadow: 0 4px 12px rgba(110, 167, 255, 0.2);
+  opacity: 1; 
+  z-index: 9999;  /* Much higher to get above other UI elements */
+  position: relative;  /* Ensures z-index takes effect */
+  transition: transform 0.6s ease; 
+}
+.party-member:first-child:hover { 
+  background-image: url('./images/cards/member-bg.png');
+  background-size: 100% 100%;
+  background-position: center;
+  /*background: var(--surface);
+  border-color: var(--accent);*/
+  transform: translateX(25px) translateY(-2px) scale(1.6); 
+  box-shadow: 0 4px 12px rgba(110, 167, 255, 0.2);
+  opacity: 1; 
+  z-index: 9999;  /* Much higher to get above other UI elements */
+  position: relative;  /* Ensures z-index takes effect */
+  transition: transform 0.6s ease; 
 }
 
 .party-member:active {
@@ -663,16 +670,17 @@ section {
   box-shadow: 0 2px 8px rgba(110, 167, 255, 0.3);
 }
 
+/*-------------------Small Character Protraits---------------*/
 .member-portrait {
-  width: 28px;
-  height: 28px;
+  width: 48px;
+  height: 48px;
   border-radius: 50%;
   background: var(--tile);
   display: grid;
   place-items: center;
   overflow: hidden;
   position: relative;
-  margin-bottom: 2px;
+  margin-bottom: 0px;
 }
 
 .member-portrait img {
@@ -680,6 +688,8 @@ section {
   height: 100%;
   object-fit: cover;
 }
+
+/*-------------------Small Character Protraits End---------------*/
 
 .portrait-fallback {
   font-size: 0.9rem;
@@ -709,7 +719,7 @@ section {
   gap: 1px;
   font-size: 0.7rem;
   color: var(--muted);
-  margin-bottom: 4px;
+  margin-bottom: 2px;
   line-height: 1;
 }
 
@@ -717,7 +727,7 @@ section {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 3px;
+  gap: 2px;
 }
 
 /* ATK and MAG on same line */
@@ -725,13 +735,13 @@ section {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  gap: 4px;
 }
 
 .stats span {
   display: flex;
   align-items: center;
-  gap: 3px;
+  gap: 2px;
 }
 
 /* Equipment display - very compact, icon + "None" */
@@ -1239,7 +1249,7 @@ button {
   background: #162236;
   color: #e7ecff;
   border: 1px solid #2a3b5f;
-  padding: 8px 14px;
+  padding: 4px 7px;
   border-radius: var(--radius-sm);
   cursor: pointer;
   font-weight: 500;
@@ -1820,10 +1830,155 @@ section {
 .event-log > *,
 .party-hand-section > * {
     position: relative;
-    z-index: 1;
+    /*z-index: 1;*/
 }
 
+/* ================================================================
+   16. ENCOUNTER CARDS (Fight Display)
+   ================================================================ */
 
-/* End of Stylesheet */
+/* Container for encounter cards during combat */
+.encounter-cards {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    align-items: center;
+    margin: 16px 0;
+}
 
+/* Individual encounter card (larger than hand cards) */
+.encounter-card {
+    width: 180px;
+    height: 220px;
+    background: var(--surface);
+    border: 2px solid var(--surface-border);
+    border-radius: var(--radius);
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    text-align: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+/* Player card styling */
+.encounter-card.player-card {
+    border-color: var(--accent);
+    background-image: url('./images/cards/hero-card-bg.png');
+    background-size: 100% 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+    /* Fallback if image doesn't load */
+    background-color: var(--surface);
+}
+
+/* Enemy card styling */
+.encounter-card.enemy-card {
+    border-color: var(--bad);
+    background-image: url('./images/cards/monster-card-bg.png');
+    background-size: 100% 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+    /* Fallback if image doesn't load */
+    background-color: var(--surface);
+}
+
+/* Portrait area in encounter cards */
+.encounter-card-portrait {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: var(--tile);
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+    margin-bottom: 4px;
+}
+
+.encounter-card-portrait img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Card name */
+.encounter-card-name {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 4px;
+    line-height: 1.2;
+}
+
+/* HP display */
+.encounter-card-hp {
+    font-size: 1.1rem;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+.encounter-card-hp.low-health {
+    color: var(--bad);
+}
+
+.encounter-card-hp.medium-health {
+    color: var(--warning);
+}
+
+.encounter-card-hp.high-health {
+    color: var(--good);
+}
+
+/* Stats display */
+.encounter-card-stats {
+    display: flex;
+    gap: 12px;
+    font-size: 0.9rem;
+    color: var(--muted);
+}
+
+.encounter-card-stats span {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+}
+
+/* Turn indicator */
+.encounter-card.active-turn {
+    box-shadow: 0 0 0 3px var(--accent), 0 4px 16px rgba(110, 167, 255, 0.4);
+    transform: translateY(-2px);
+}
+
+.encounter-card.active-turn.enemy-card {
+    box-shadow: 0 0 0 3px var(--bad), 0 4px 16px rgba(239, 107, 115, 0.4);
+}
+
+/* Inline action buttons for encounter cards */
+.encounter-inline-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    margin-top: 16px;
+    padding: 0 16px;
+}
+
+.encounter-inline-actions button {
+    flex: 1;
+    max-width: 120px;
+    padding: 8px 16px;
+    font-weight: 600;
+}
+
+/* VS indicator */
+.encounter-vs {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--muted);
+    align-self: center;
+}
+
+/* ================================================================
+   17. FOUR QUADRANT SYSTEM BACKGROUNDS
+   ================================================================ */
 

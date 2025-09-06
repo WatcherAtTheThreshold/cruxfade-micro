@@ -54,8 +54,8 @@ export const G = {
     // Party members (leader first)
     party: [
         { 
-            id: 'you', 
-            name: 'You',
+            id: 'leader', 
+            name: 'Leader',
             hp: 10, 
             maxHp: 10,
             atk: 2, 
@@ -975,8 +975,8 @@ function initializeStartingDeck() {
 function resetPartyToStart() {
     G.party = [
         { 
-            id: 'you', 
-            name: 'You',
+            id: 'leader', 
+            name: 'Leader',
             hp: 10, 
             maxHp: 10,
             atk: 2, 
@@ -985,7 +985,7 @@ function resetPartyToStart() {
         }
     ];
     
-    G.equipment = { you: [] };
+    G.equipment = { leader: [] };
 }
 
 // ================================================================
@@ -1983,7 +1983,7 @@ export function startCombat(enemyType = 'goblin', bossPhase = null) {
     }
     
     G.combat.active = true;
-    G.combat.enemy = { ...enemyTemplate }; // Copy enemy data
+    G.combat.enemy = { ...enemyTemplate, type: enemyType }; // Preserve enemy type for card display
     G.combat.playerHp = player.hp;
     G.combat.enemyHp = enemyTemplate.hp;
     G.combat.turn = 'player';
