@@ -1944,6 +1944,22 @@ section {
     box-shadow: 0 0 0 3px var(--bad), 0 4px 16px rgba(239, 107, 115, 0.4);
 }
 
+/* Inline action buttons for encounter cards */
+.encounter-inline-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    margin-top: 16px;
+    padding: 0 16px;
+}
+
+.encounter-inline-actions button {
+    flex: 1;
+    max-width: 120px;
+    padding: 8px 16px;
+    font-weight: 600;
+}
+
 /* VS indicator */
 .encounter-vs {
     font-size: 1.5rem;
@@ -1955,6 +1971,4 @@ section {
 /* ================================================================
    17. FOUR QUADRANT SYSTEM BACKGROUNDS
    ================================================================ */
-/* End of Stylesheet */
-
 
