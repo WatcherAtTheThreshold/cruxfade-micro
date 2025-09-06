@@ -1391,11 +1391,10 @@ export function bindEventHandlers(updateGameCallback) {
     // Overlay handlers
     bindOverlayHandlers();
     
-    // Event delegation for encounter actions
-    // This handles ALL button clicks in the encounter area
-    const encounterActions = document.getElementById('encounter-actions');
-    if (encounterActions) {
-        encounterActions.addEventListener('click', (e) => {
+    // Event delegation for encounter actions (both old and new inline actions)
+            const encountersSection = document.querySelector('.encounters');
+            if (encountersSection) {
+            encountersSection.addEventListener('click', (e) => {
             // Find the button that was clicked
             const button = e.target.closest('button[data-action]');
             if (!button || button.disabled) return;
