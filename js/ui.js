@@ -843,6 +843,89 @@ function renderBossFinalCombat(boss, phase) {
 }
 
 // ================================================================
+// ENCOUNTER CARD GENERATION FUNCTIONS
+// ================================================================
+
+/**
+ * Create HTML for a player encounter card
+ */
+function createPlayerEncounterCard(player, hp, isActiveTurn = false) {
+    const healthPercent = hp / player.maxHp;
+    const healthClass = healthPercent > 0.6 ? 'high-health' : 
+                       healthPercent > 0.3 ? 'medium-health' : 'low-health';
+    
+    return `
+        <div class="encounter-card player-card ${isActiveTurn ? 'active-turn' : ''}">
+            <div class="encounter-card-portrait">
+                <img src="./images/portraits/${player.id}.png" alt="${player.name}"
+                     onerror="this.onerror=null; this.src='./images/icons/${getIconFileName(player)}'; this.onload=function(){this.style.display='inline'}; this.onerror=function(){this.style.display='none'; this.nextElementSibling.style.display='inline'}">
+                <span class="portrait-fallback" style="font-size: 1.5rem;">${getCharacterIcon(player)}</span>
+            </div>
+            <div class="encounter-card-name">${player.name}</div>
+            <div class="encounter-card-hp ${healthClass}">❤️ ${hp}/${player.maxHp}</div>
+            <div class="encounter-card-stats">
+                <span>⚔️ ${player.atk}</span>
+                <span>✨ ${player.mag}</span>
+            </div>
+            ${isActiveTurn ? '<div style="font-size: 0.8rem; color: var(--accent); font-weight: 600;">YOUR TURN</div>' : ''}
+        </div>
+    `;
+}
+
+/**
+ * Create HTML for an enemy encounter card
+ */
+function createEnemyEncounterCard(enemy, hp, isActiveTurn = false) {
+    const healthPercent = hp / enemy.hp;
+    const healthClass = healthPercent > 0.6 ? 'high-health' : 
+                       healthPercent > 0.3 ? 'medium-health' : 'low-health';
+    
+    // Get enemy icon based on type
+    const enemyIcon = getEnemyIcon(enemy.type);
+    
+    return `
+        <div class="encounter-card enemy-card ${isActiveTurn ? 'active-turn' : ''}">
+            <div class="encounter-card-portrait">
+                <img src="./images/enemies/${enemy.type || 'unknown'}.png" alt="${enemy.name}"
+                     onerror="this.style.display='none'; this.nextElementSibling.style.display='inline'">
+                <span class="portrait-fallback" style="font-size: 1.5rem;">${enemyIcon}</span>
+            </div>
+            <div class="encounter-card-name">${enemy.name}</div>
+            <div class="encounter-card-hp ${healthClass}">❤️ ${hp}/${enemy.hp}</div>
+            <div class="encounter-card-stats">
+                <span>⚔️ ${enemy.atk}</span>
+                ${enemy.mag ? `<span>✨ ${enemy.mag}</span>` : ''}
+            </div>
+            ${isActiveTurn ? '<div style="font-size: 0.8rem; color: var(--bad); font-weight: 600;">ENEMY TURN</div>' : ''}
+        </div>
+    `;
+}
+
+/**
+ * Get appropriate icon for enemy type
+ */
+function getEnemyIcon(enemyType) {
+    const enemyIcons = {
+        'goblin': '👺',
+        'orc': '🧌', 
+        'orc-champion': '⚔️',
+        'shadow-wisp': '👻',
+        'cur': '🐺',
+        'hob-goblin': '👹',
+        'skrunt': '🦔',
+        'small-wyvern': '🐉',
+        'crystal-wisp': '💎',
+        'crystal-guardian': '🗿',
+        'crystal-golem': '🗿',
+        'void-spawn': '🌑',
+        'void-wraith': '💀',
+        'void-ancient': '☠️'
+    };
+    
+    return enemyIcons[enemyType] || '👹'; // Default monster icon
+}
+
+// ================================================================
 // ENCOUNTER RENDERING FUNCTIONS (existing)
 // ================================================================
 
@@ -863,26 +946,31 @@ function renderFightEncounter() {
     }
     
     if (G.combat.active) {
-        // DURING COMBAT - Show attack and flee buttons
+        // DURING COMBAT - Show encounter cards
         const currentLeader = G.party[0];
         const leaderName = currentLeader ? currentLeader.name : 'You';
+        
+        const playerCard = createPlayerEncounterCard(
+            currentLeader, 
+            G.combat.playerHp, 
+            G.combat.turn === 'player'
+        );
+        
+        const enemyCard = createEnemyEncounterCard(
+            G.combat.enemy, 
+            G.combat.enemyHp, 
+            G.combat.turn === 'enemy'
+        );
         
         DOM.encounterArea.innerHTML = `
             <div class="encounter-fight">
                 <h3>⚔️ Combat: ${G.combat.enemy.name}</h3>
-                <div class="combat-status">
-                    <div class="combatant">
-                        <strong>${leaderName}</strong><br>
-                        ❤️ ${G.combat.playerHp} HP
-                    </div>
-                    <div class="vs">VS</div>
-                    <div class="combatant">
-                        <strong>${G.combat.enemy.name}</strong><br>
-                        ❤️ ${G.combat.enemyHp} HP
-                    </div>
+                <div class="encounter-cards">
+                    ${playerCard}
+                    <div class="encounter-vs">VS</div>
+                    ${enemyCard}
                 </div>
                 ${G.combat.lastRoll ? `<p>🎲 Last roll: ${G.combat.lastRoll}</p>` : ''}
-                <p>${G.combat.turn === 'player' ? `${leaderName}'s turn!` : 'Enemy turn...'}</p>
             </div>
         `;
         
