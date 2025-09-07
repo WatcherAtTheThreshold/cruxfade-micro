@@ -886,7 +886,7 @@ function createEnemyEncounterCard(enemy, hp, isActiveTurn = false) {
     return `
         <div class="encounter-card enemy-card ${isActiveTurn ? 'active-turn' : ''}">
             <div class="encounter-card-portrait">
-                <img src="./images/enemies/${enemy.type || 'unknown'}.png" alt="${enemy.name}"
+                <img src="${getEnemyPortraitPath(enemy)}" alt="${enemy.name}"
                      onerror="this.style.display='none'; this.nextElementSibling.style.display='inline'">
                 <span class="portrait-fallback" style="font-size: 1.5rem;">${enemyIcon}</span>
             </div>
@@ -923,6 +923,29 @@ function getEnemyIcon(enemyType) {
     };
     
     return enemyIcons[enemyType] || '👹'; // Default monster icon
+}
+
+/**
+ * Get the correct portrait path for enemy type (boss, general, or regular)
+ */
+function getEnemyPortraitPath(enemy) {
+    const enemyType = enemy.type || 'unknown';
+    
+    // Check if we're in a boss encounter
+    if (G.boss && G.boss.active) {
+        // Boss final enemies (like "shadow-lord-final", "crystal-tyrant-final")
+        if (enemyType.includes('-final')) {
+            return `./images/bosses/${enemyType}.png`;
+        }
+        // Boss generals/lieutenants (like "shadow-general", "crystal-warden")
+        else if (enemyType.includes('-general') || enemyType.includes('-warden') || 
+                 enemyType.includes('-lieutenant') || enemyType.includes('-champion')) {
+            return `./images/generals/${enemyType}.png`;
+        }
+    }
+    
+    // Default to regular enemies folder
+    return `./images/enemies/${enemyType}.png`;
 }
 
 // ================================================================
