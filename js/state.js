@@ -1308,10 +1308,31 @@ export function resolveHazard() {
 // ALLY SYSTEM FUNCTIONS  
 // ================================================================
 
+// ================================================================
+// UPDATED: getAllyCards() FUNCTION
+// Replace the existing getAllyCards() function with this version
+// Now works with both JSON data and hardcoded fallback
+// ================================================================
+
 /**
- * Get cards that an ally contributes to the deck
+ * Get cards that an ally contributes to the deck - UPDATED for JSON compatibility
  */
 function getAllyCards(ally) {
+    // First, try to use JSON data if available
+    if (GAME_DATA.allies) {
+        // Try to determine ally type and region from ally data
+        const allyType = determineAllyTypeFromTags(ally);
+        const currentRegion = getRegionForGrid(G.gridLevel);
+        
+        if (allyType && GAME_DATA.allies[currentRegion] && GAME_DATA.allies[currentRegion][allyType]) {
+            console.log(`🃏 Getting cards for ${ally.name} from JSON data (${allyType})`);
+            return getAllyCardsFromData(currentRegion, allyType, ally.id);
+        }
+    }
+    
+    // Fallback to hardcoded card sets (existing system)
+    console.log(`🃏 Using hardcoded cards for ${ally.name} (fallback)`);
+    
     const cardSets = {
         'warrior': [
             { id: `shield-bash-${ally.id}`, name: 'Shield Bash', type: 'attack', description: '+2 damage and stun enemy for 1 turn' },
@@ -1342,6 +1363,38 @@ function getAllyCards(ally) {
     return [
         { id: `help-${ally.id}`, name: 'Helping Hand', type: 'utility', description: 'Generic assistance from your ally' }
     ];
+}
+
+/**
+ * Helper function to determine ally type from tags for JSON lookup
+ */
+function determineAllyTypeFromTags(ally) {
+    // Try to map ally tags to JSON ally types
+    if (ally.tags.includes('warrior')) {
+        if (ally.tags.includes('dwarf')) return 'dwarven-fighter';
+        if (ally.tags.includes('void')) return 'void-knight';
+        if (ally.tags.includes('crystal')) return 'gem-knight';
+        return 'warrior';
+    }
+    
+    if (ally.tags.includes('mage')) {
+        if (ally.tags.includes('crystal')) return 'crystal-mage';
+        if (ally.tags.includes('void')) return 'void-cultist';
+        if (ally.tags.includes('healer')) return 'herbalist';
+        if (ally.tags.includes('druid')) return 'druid';
+        return 'mage';
+    }
+    
+    if (ally.tags.includes('ranger') || ally.tags.includes('scout')) {
+        if (ally.tags.includes('survivor')) return 'survivor';
+        if (ally.tags.includes('worker')) return 'miner';
+        return 'ranger';
+    }
+    
+    if (ally.tags.includes('corrupted')) return 'fallen-hero';
+    
+    // Default fallback
+    return null;
 }
 
 // ================================================================
