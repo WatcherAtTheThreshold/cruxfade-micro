@@ -46,6 +46,27 @@ import {
 } from './state.js';
 
 // ================================================================
+// SHORT NAME HELPER FUNCTION
+// Add this helper function to ui.js (near the top, after the imports)
+// ================================================================
+
+/**
+ * Extract just the first name from a full ally name for compact display
+ * "Marcus the Forest Guardian" → "Marcus"
+ * "You" → "You" (unchanged)
+ */
+function getShortName(fullName) {
+    // Handle the player character
+    if (fullName === 'You') {
+        return 'You';
+    }
+    
+    // Extract first name before " the " for allies
+    const parts = fullName.split(' the ');
+    return parts[0];
+}
+
+// ================================================================
 // MODULE VARIABLES
 // ================================================================
 
@@ -307,7 +328,7 @@ function createPartyMemberElement(member, isLeader = false) {
       <span class="portrait-fallback" style="font-size: 1rem;">${getCharacterIcon(member)}</span>
     </div>
     <div class="member-info" style="flex: 1;">
-      <strong style="font-size: 0.85rem;">${member.name}</strong>
+      <strong style="font-size: 0.85rem;">${getShortName(member.name)}</strong>
       <div class="stats">
   <span class="hp">❤️ <strong style="color:${hpColor}">${member.hp}</strong>/${member.maxHp}</span>
   <div class="atk-mag-row">
