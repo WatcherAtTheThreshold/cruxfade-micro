@@ -1,0 +1,429 @@
+{
+  "_meta": {
+    "description": "Data-driven ally system with regional theming and procedural naming",
+    "regions": {
+      "forest-region": "Grids 1-5: Rangers, herbalists, forest dwellers",
+      "mountain-region": "Grids 7-10: Dwarven fighters, crystal mages, miners", 
+      "void-region": "Grids 12-15: Fallen heroes, void cultists, desperate survivors"
+    },
+    "rarity_weights": {
+      "common": 3,
+      "uncommon": 2, 
+      "rare": 1
+    }
+  },
+
+  "forest-region": {
+    "warrior": {
+      "rarity": "common",
+      "weight": 3,
+      "names": ["Marcus", "Elena", "Thorin", "Lyra", "Gareth", "Vera", "Finn", "Sage"],
+      "titles": ["the Brave", "the Stalwart", "the Forest Guardian", "the Shield-Bearer", "the Woodland Protector"],
+      "baseStats": { 
+        "hp": 12, 
+        "maxHp": 12, 
+        "atk": 4, 
+        "mag": 0 
+      },
+      "tags": ["human", "warrior"],
+      "description": "A stalwart fighter trained in forest combat",
+      "cards": [
+        { 
+          "id": "shield-bash", 
+          "name": "Shield Bash", 
+          "type": "attack",
+          "description": "+2 damage and stun enemy for 1 turn"
+        },
+        { 
+          "id": "defensive-stance", 
+          "name": "Defensive Stance", 
+          "type": "defense",
+          "description": "Reduce incoming damage by half"
+        }
+      ],
+      "joinConditions": {
+        "minGridLevel": 1,
+        "maxPartySize": 4,
+        "regions": ["forest-region", "mountain-region"]
+      }
+    },
+
+    "ranger": {
+      "rarity": "common", 
+      "weight": 3,
+      "names": ["Robin", "Willow", "Ash", "Rowan", "Glen", "Fern", "Brook", "Vale"],
+      "titles": ["the Scout", "the Tracker", "the Pathfinder", "the Swift", "the Eagle-Eyed"],
+      "baseStats": { 
+        "hp": 10, 
+        "maxHp": 10, 
+        "atk": 3, 
+        "mag": 1 
+      },
+      "tags": ["human", "ranger", "scout"],
+      "description": "A skilled woodsman with keen senses",
+      "cards": [
+        { 
+          "id": "track", 
+          "name": "Track", 
+          "type": "utility",
+          "description": "Reveal hidden encounters on the grid"
+        },
+        { 
+          "id": "sneak-attack", 
+          "name": "Sneak Attack", 
+          "type": "attack",
+          "description": "Deal double damage if enemy is unaware"
+        }
+      ],
+      "joinConditions": {
+        "minGridLevel": 1,
+        "maxPartySize": 4,
+        "regions": ["forest-region"]
+      }
+    },
+
+    "herbalist": {
+      "rarity": "uncommon",
+      "weight": 2, 
+      "names": ["Celeste", "Sage", "Willow", "Moss", "Ivy", "Clover", "Basil", "Mint"],
+      "titles": ["the Wise", "the Healer", "the Grove Keeper", "the Green Thumb", "the Life-Bringer"],
+      "baseStats": { 
+        "hp": 8, 
+        "maxHp": 8, 
+        "atk": 1, 
+        "mag": 4 
+      },
+      "tags": ["human", "mage", "healer"],
+      "description": "A forest mystic who communes with nature",
+      "cards": [
+        { 
+          "id": "heal", 
+          "name": "Nature's Blessing", 
+          "type": "utility",
+          "description": "Restore HP to party leader"
+        },
+        { 
+          "id": "first-aid", 
+          "name": "Herbal Remedy", 
+          "type": "utility",
+          "description": "Heal minor wounds during exploration"
+        }
+      ],
+      "joinConditions": {
+        "minGridLevel": 2,
+        "maxPartySize": 4,
+        "regions": ["forest-region", "mountain-region"]
+      }
+    },
+
+    "druid": {
+      "rarity": "rare",
+      "weight": 1,
+      "names": ["Oakenheart", "Stormcaller", "Moonwhisper", "Thornweaver", "Mistwalker"],
+      "titles": ["the Ancient", "the Wild", "the Storm-Born", "the Earth-Speaker"],
+      "baseStats": { 
+        "hp": 10, 
+        "maxHp": 10, 
+        "atk": 2, 
+        "mag": 5 
+      },
+      "tags": ["human", "mage", "druid"],
+      "description": "A powerful nature mage with primal magic",
+      "cards": [
+        { 
+          "id": "magic-bolt", 
+          "name": "Lightning Strike", 
+          "type": "attack",
+          "description": "Deal magic damage, bypasses armor"
+        },
+        { 
+          "id": "heal", 
+          "name": "Regeneration", 
+          "type": "utility",
+          "description": "Powerful healing magic"
+        }
+      ],
+      "joinConditions": {
+        "minGridLevel": 3,
+        "maxPartySize": 4,
+        "regions": ["forest-region"]
+      }
+    }
+  },
+
+  "mountain-region": {
+    "dwarven-fighter": {
+      "rarity": "common",
+      "weight": 3,
+      "names": ["Kael", "Vera", "Stone", "Peak", "Forge", "Hammer", "Iron", "Steel"],
+      "titles": ["the Mountain-Born", "the Unbreakable", "the Stone-Heart", "the Hammer-Wielder", "the Iron-Willed"],
+      "baseStats": { 
+        "hp": 14, 
+        "maxHp": 14, 
+        "atk": 5, 
+        "mag": 0 
+      },
+      "tags": ["dwarf", "warrior"],
+      "description": "A tough mountain warrior with incredible endurance",
+      "cards": [
+        { 
+          "id": "shield-bash", 
+          "name": "Mountain Slam", 
+          "type": "attack",
+          "description": "Devastating dwarven combat technique"
+        },
+        { 
+          "id": "taunt", 
+          "name": "Stone Stance", 
+          "type": "defense",
+          "description": "Unmovable as the mountains"
+        }
+      ],
+      "joinConditions": {
+        "minGridLevel": 7,
+        "maxPartySize": 4,
+        "regions": ["mountain-region", "void-region"]
+      }
+    },
+
+    "crystal-mage": {
+      "rarity": "uncommon",
+      "weight": 2,
+      "names": ["Prism", "Shard", "Gleam", "Facet", "Radiance", "Shimmer", "Glow", "Sparkle"],
+      "titles": ["the Crystal-Touched", "the Gem-Speaker", "the Light-Bringer", "the Prism-Walker"],
+      "baseStats": { 
+        "hp": 9, 
+        "maxHp": 9, 
+        "atk": 2, 
+        "mag": 5 
+      },
+      "tags": ["human", "mage", "crystal"],
+      "description": "A mage who channels power through mountain crystals",
+      "cards": [
+        { 
+          "id": "magic-bolt", 
+          "name": "Crystal Lance", 
+          "type": "attack",
+          "description": "Pure crystalline energy pierces all defenses"
+        },
+        { 
+          "id": "heal", 
+          "name": "Crystal Harmony", 
+          "type": "utility",
+          "description": "Crystals resonate with life energy"
+        }
+      ],
+      "joinConditions": {
+        "minGridLevel": 8,
+        "maxPartySize": 4,
+        "regions": ["mountain-region"]
+      }
+    },
+
+    "miner": {
+      "rarity": "common",
+      "weight": 3,
+      "names": ["Pick", "Tunnel", "Deep", "Shaft", "Ore", "Vein", "Quarry", "Dig"],
+      "titles": ["the Delver", "the Deep-Walker", "the Cave-Born", "the Tunnel-Rat", "the Earth-Breaker"],
+      "baseStats": { 
+        "hp": 11, 
+        "maxHp": 11, 
+        "atk": 4, 
+        "mag": 1 
+      },
+      "tags": ["dwarf", "worker", "scout"],
+      "description": "A hardy cave worker with underground knowledge",
+      "cards": [
+        { 
+          "id": "track", 
+          "name": "Cave Sense", 
+          "type": "utility",
+          "description": "Navigate underground passages with ease"
+        },
+        { 
+          "id": "basic-strike", 
+          "name": "Pickaxe Swing", 
+          "type": "attack",
+          "description": "Heavy mining tool makes effective weapon"
+        }
+      ],
+      "joinConditions": {
+        "minGridLevel": 7,
+        "maxPartySize": 4,
+        "regions": ["mountain-region"]
+      }
+    },
+
+    "gem-knight": {
+      "rarity": "rare",
+      "weight": 1,
+      "names": ["Diamond", "Ruby", "Sapphire", "Emerald", "Topaz", "Onyx", "Opal", "Garnet"],
+      "titles": ["the Gem-Forged", "the Crystal Warrior", "the Jeweled", "the Precious"],
+      "baseStats": { 
+        "hp": 13, 
+        "maxHp": 13, 
+        "atk": 5, 
+        "mag": 3 
+      },
+      "tags": ["human", "warrior", "crystal"],
+      "description": "An elite warrior infused with crystal power",
+      "cards": [
+        { 
+          "id": "shield-bash", 
+          "name": "Crystal Edge", 
+          "type": "attack",
+          "description": "Weapon enhanced with crystalline sharpness"
+        },
+        { 
+          "id": "magic-bolt", 
+          "name": "Gem Burst", 
+          "type": "attack",
+          "description": "Release stored crystal energy"
+        }
+      ],
+      "joinConditions": {
+        "minGridLevel": 9,
+        "maxPartySize": 4,
+        "regions": ["mountain-region"]
+      }
+    }
+  },
+
+  "void-region": {
+    "fallen-hero": {
+      "rarity": "uncommon",
+      "weight": 2,
+      "names": ["Ash", "Lost", "Echo", "Broken", "Faded", "Hollow", "Remnant", "Ghost"],
+      "titles": ["the Fallen", "the Lost", "the Broken", "the Once-Great", "the Void-Touched"],
+      "baseStats": { 
+        "hp": 10, 
+        "maxHp": 10, 
+        "atk": 4, 
+        "mag": 3 
+      },
+      "tags": ["human", "warrior", "corrupted"],
+      "description": "A once-great hero, scarred by the void's touch",
+      "cards": [
+        { 
+          "id": "sneak-attack", 
+          "name": "Desperate Strike", 
+          "type": "attack",
+          "description": "Fighting with nothing left to lose"
+        },
+        { 
+          "id": "dodge", 
+          "name": "Void Step", 
+          "type": "defense",
+          "description": "Phase partially through reality"
+        }
+      ],
+      "joinConditions": {
+        "minGridLevel": 12,
+        "maxPartySize": 4,
+        "regions": ["void-region"]
+      }
+    },
+
+    "void-cultist": {
+      "rarity": "rare",
+      "weight": 1,
+      "names": ["Null", "Void", "Empty", "Nothing", "Zero", "Blank", "Absence", "Chaos"],
+      "titles": ["the Devoted", "the Converted", "the Enlightened", "the Void-Speaker", "the Emptiness"],
+      "baseStats": { 
+        "hp": 8, 
+        "maxHp": 8, 
+        "atk": 2, 
+        "mag": 6 
+      },
+      "tags": ["human", "mage", "void"],
+      "description": "A mage who embraces the void's dark power",
+      "cards": [
+        { 
+          "id": "magic-bolt", 
+          "name": "Void Bolt", 
+          "type": "attack",
+          "description": "Pure nothingness tears through enemies"
+        },
+        { 
+          "id": "heal", 
+          "name": "Void Drain", 
+          "type": "utility",
+          "description": "Steal life force from the void"
+        }
+      ],
+      "joinConditions": {
+        "minGridLevel": 13,
+        "maxPartySize": 4,
+        "regions": ["void-region"]
+      }
+    },
+
+    "survivor": {
+      "rarity": "common",
+      "weight": 3,
+      "names": ["Scratch", "Scar", "Grit", "Tough", "Hard", "Steel", "Flint", "Stone"],
+      "titles": ["the Survivor", "the Enduring", "the Stubborn", "the Unbroken", "the Last"],
+      "baseStats": { 
+        "hp": 12, 
+        "maxHp": 12, 
+        "atk": 3, 
+        "mag": 2 
+      },
+      "tags": ["human", "scout", "survivor"],
+      "description": "Someone who has survived the void's horrors",
+      "cards": [
+        { 
+          "id": "first-aid", 
+          "name": "Field Medicine", 
+          "type": "utility",
+          "description": "Makeshift healing from scrounged supplies"
+        },
+        { 
+          "id": "track", 
+          "name": "Danger Sense", 
+          "type": "utility",
+          "description": "Instincts honed by constant peril"
+        }
+      ],
+      "joinConditions": {
+        "minGridLevel": 12,
+        "maxPartySize": 4,
+        "regions": ["void-region"]
+      }
+    },
+
+    "void-knight": {
+      "rarity": "rare", 
+      "weight": 1,
+      "names": ["Abyss", "Darkness", "Entropy", "Nihil", "Oblivion", "Shadowbane", "Dread", "Terror"],
+      "titles": ["the Void-Sworn", "the Dark Knight", "the Nihilistic", "the End-Bringer"],
+      "baseStats": { 
+        "hp": 13, 
+        "maxHp": 13, 
+        "atk": 6, 
+        "mag": 2 
+      },
+      "tags": ["human", "warrior", "void"],
+      "description": "A knight who has embraced the void's power",
+      "cards": [
+        { 
+          "id": "shield-bash", 
+          "name": "Void Slam", 
+          "type": "attack",
+          "description": "Strike infused with entropic energy"
+        },
+        { 
+          "id": "taunt", 
+          "name": "Nihil Aura", 
+          "type": "defense",
+          "description": "Presence of nothingness weakens foes"
+        }
+      ],
+      "joinConditions": {
+        "minGridLevel": 14,
+        "maxPartySize": 4,
+        "regions": ["void-region"]
+      }
+    }
+  }
+}
