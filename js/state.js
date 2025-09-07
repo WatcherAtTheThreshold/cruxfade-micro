@@ -1454,11 +1454,77 @@ function getAllyCardsFromData(region, allyType, allyId) {
     }));
 }
 
+// ================================================================
+// UPDATED: DATA-DRIVEN ALLY RECRUITMENT FUNCTION
+// Replace the existing recruitRandomAlly() function with this version
+// ================================================================
+
 /**
- * Recruit a random ally to join the party
+ * Recruit a random ally to join the party - NOW DATA-DRIVEN!
  */
 export function recruitRandomAlly() {
-    // Potential allies with different specializations
+    // Check if allies data is available
+    if (!GAME_DATA.allies) {
+        console.log('⚠️ No allies data available, using fallback recruitment');
+        return recruitFallbackAlly(); // Keep old system as fallback
+    }
+    
+    // Get current region and check for available allies
+    const currentRegion = getRegionForGrid(G.gridLevel);
+    const selectedAllyType = getWeightedAllyTypes(currentRegion, G.gridLevel);
+    
+    if (!selectedAllyType) {
+        addLogEntry('🤝 No allies are available in this area.');
+        consumeCurrentTile();
+        return false;
+    }
+    
+    // Check party size limit
+    if (G.party.length >= 4) {
+        addLogEntry(`🤝 A ${selectedAllyType} wants to join, but your party is full!`);
+        consumeCurrentTile();
+        return false;
+    }
+    
+    // Create ally from JSON data
+    const ally = createAllyFromData(currentRegion, selectedAllyType);
+    if (!ally) {
+        addLogEntry('🤝 An ally approaches but seems confused and wanders off...');
+        consumeCurrentTile();
+        return false;
+    }
+    
+    // Get ally's cards from JSON data
+    const allyCards = getAllyCardsFromData(currentRegion, selectedAllyType, ally.id);
+    
+    // Check if adding ally cards would cause overflow
+    const totalNewCards = allyCards.length;
+    const currentHandSize = G.hand.length;
+    const wouldOverflow = currentHandSize + totalNewCards > getMaxHandSize();
+    
+    if (wouldOverflow) {
+        // Handle card overflow - same logic as before
+        addLogEntry(`🤝 ${ally.name} wants to join and offers cards, but your hand is full!`);
+        addLogEntry(`📋 They offer: ${allyCards.map(card => card.name).join(', ')}`);
+        
+        // Store ally and cards for later resolution
+        G._pendingAlly = ally;
+        G._pendingCards = allyCards;
+        
+        // Signal that overflow needs to be handled
+        consumeCurrentTile();
+        return { overflow: true, ally: ally, cards: allyCards };
+    } else {
+        // No overflow - add ally and cards directly
+        return completeAllyRecruitment(ally, allyCards);
+    }
+}
+
+/**
+ * Fallback ally recruitment using old hardcoded system
+ */
+function recruitFallbackAlly() {
+    // Original hardcoded allies as fallback
     const allies = [
         { 
             id: 'warrior-' + Date.now(), 
@@ -1502,39 +1568,30 @@ export function recruitRandomAlly() {
         }
     ];
     
-    // Pick random ally
+    // Use old logic for fallback
     const allyTemplate = pickRandom(allies);
     
-    // Check party size limit
     if (G.party.length >= 4) {
         addLogEntry(`🤝 The ${allyTemplate.name} wants to join, but your party is full!`);
         consumeCurrentTile();
         return false;
     }
     
-    // Get the cards this ally would contribute
     const allyCards = getAllyCards(allyTemplate);
-    
-    // Check if adding ally cards would cause overflow
     const totalNewCards = allyCards.length;
     const currentHandSize = G.hand.length;
     const wouldOverflow = currentHandSize + totalNewCards > getMaxHandSize();
     
     if (wouldOverflow) {
-        // We need to handle card overflow
         addLogEntry(`🤝 ${allyTemplate.name} wants to join and offers cards, but your hand is full!`);
         addLogEntry(`📋 They offer: ${allyCards.map(card => card.name).join(', ')}`);
         
-        // Store ally and cards for later resolution
         G._pendingAlly = allyTemplate;
         G._pendingCards = allyCards;
         
-        // We'll trigger the overflow UI from the UI layer
-        // For now, just signal that overflow needs to be handled
         consumeCurrentTile();
         return { overflow: true, ally: allyTemplate, cards: allyCards };
     } else {
-        // No overflow - add ally and cards directly
         return completeAllyRecruitment(allyTemplate, allyCards);
     }
 }
