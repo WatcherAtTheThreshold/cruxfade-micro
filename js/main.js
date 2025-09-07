@@ -100,8 +100,13 @@ function checkGameEndConditions() {
 // DATA LOADING SYSTEM
 // ================================================================
 
+// ================================================================
+// UPDATE TO MAIN.JS - ADD ALLIES.JSON LOADING
+// Find the loadGameData() function and update it to include allies
+// ================================================================
+
 /**
- * Load all game data from JSON files
+ * Load all game data from JSON files - UPDATED to include allies
  */
 async function loadGameData() {
     try {
@@ -118,6 +123,7 @@ async function loadGameData() {
         let encounters = null;
         let items = null;
         let bosses = null;
+        let allies = null;  // NEW: Add allies variable
         
         try {
             const encountersResponse = await fetch('./data/encounters.json');
@@ -150,11 +156,24 @@ async function loadGameData() {
             console.log('⚠️ bosses.json not found (boss encounters disabled)');
         }
         
+        // NEW: Load allies.json
+        try {
+            const alliesResponse = await fetch('./data/allies.json');
+            if (alliesResponse.ok) {
+                allies = await alliesResponse.json();
+                console.log('✅ Allies loaded:', allies);
+                console.log('🤝 Available ally regions:', Object.keys(allies).filter(key => key !== '_meta'));
+            }
+        } catch (e) {
+            console.log('⚠️ allies.json not found (hardcoded allies will be used)');
+        }
+        
         const gameData = {
             enemies: enemies,
             encounters: encounters,
             items: items,
-            bosses: bosses
+            bosses: bosses,
+            allies: allies  // NEW: Add allies to game data
         };
         
         console.log('🎮 Game data loaded:', gameData);
