@@ -1344,6 +1344,116 @@ function getAllyCards(ally) {
     ];
 }
 
+// ================================================================
+// NEW ALLY SYSTEM HELPER FUNCTIONS
+// Add these functions to state.js (before the existing recruitRandomAlly function)
+// ================================================================
+
+/**
+ * Get the current region based on grid level
+ */
+function getRegionForGrid(gridLevel) {
+    if (gridLevel <= 5) return "forest-region";
+    if (gridLevel <= 10) return "mountain-region";  
+    return "void-region";
+}
+
+/**
+ * Generate a procedural name from ally data
+ */
+function generateAllyName(allyData) {
+    const names = allyData.names || ["Unknown"];
+    const titles = allyData.titles || ["the Wanderer"];
+    const name = pickRandom(names);
+    const title = pickRandom(titles);
+    return `${name} ${title}`;
+}
+
+/**
+ * Get available ally types for the current region with rarity weighting
+ */
+function getWeightedAllyTypes(region, gridLevel) {
+    if (!GAME_DATA.allies || !GAME_DATA.allies[region]) {
+        return null; // No allies data available
+    }
+    
+    const regionAllies = GAME_DATA.allies[region];
+    const availableTypes = [];
+    const weights = [];
+    
+    // Filter allies by join conditions and build weighted arrays
+    for (const [allyType, allyData] of Object.entries(regionAllies)) {
+        const conditions = allyData.joinConditions || {};
+        
+        // Check minimum grid level
+        if (conditions.minGridLevel && gridLevel < conditions.minGridLevel) {
+            continue;
+        }
+        
+        // Check party size limit
+        if (conditions.maxPartySize && G.party.length >= conditions.maxPartySize) {
+            continue;
+        }
+        
+        // Add to available types with weight
+        availableTypes.push(allyType);
+        weights.push(allyData.weight || 1);
+    }
+    
+    if (availableTypes.length === 0) {
+        return null; // No eligible allies
+    }
+    
+    // Use weighted random selection
+    const selectedType = getWeightedRandom(availableTypes, weights);
+    return selectedType;
+}
+
+/**
+ * Create an ally from JSON data
+ */
+function createAllyFromData(region, allyType) {
+    const allyData = GAME_DATA.allies[region][allyType];
+    if (!allyData) {
+        console.error('Ally data not found:', region, allyType);
+        return null;
+    }
+    
+    // Generate unique ID and procedural name
+    const allyId = `${allyType}-${Date.now()}`;
+    const allyName = generateAllyName(allyData);
+    
+    // Create ally object with JSON stats
+    const ally = {
+        id: allyId,
+        name: allyName,
+        ...allyData.baseStats, // Spread hp, maxHp, atk, mag
+        tags: [...allyData.tags], // Copy tags array
+        description: allyData.description || "A mysterious ally"
+    };
+    
+    console.log(`🤝 Created ally: ${allyName} (${allyType})`, ally);
+    return ally;
+}
+
+/**
+ * Get cards for an ally from JSON data
+ */
+function getAllyCardsFromData(region, allyType, allyId) {
+    const allyData = GAME_DATA.allies[region][allyType];
+    if (!allyData || !allyData.cards) {
+        return [];
+    }
+    
+    // Create cards with unique IDs for this ally
+    return allyData.cards.map(cardTemplate => ({
+        id: `${cardTemplate.id}-${allyId}`,
+        name: cardTemplate.name,
+        type: cardTemplate.type,
+        description: cardTemplate.description || "An ally's special ability"
+    }));
+}
+
 /**
  * Recruit a random ally to join the party
  */
