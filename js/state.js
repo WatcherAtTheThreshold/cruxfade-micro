@@ -1402,11 +1402,6 @@ function determineAllyTypeFromTags(ally) {
 // Replace the existing functions in state.js with these versions
 // ================================================================
 
-// ================================================================
-// ADD THIS FUNCTION TO state.js
-// Place it right before the generateAllyName() function (around line 1147)
-// ================================================================
-
 /**
  * Get the current region based on grid level
  */
