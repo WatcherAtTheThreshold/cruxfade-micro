@@ -1105,7 +1105,7 @@ function renderItemEncounter() {
 }
 
 /**
- * Render an ally encounter
+ * Render an ally encounter - UPDATED for abandoned camp techniques
  */
 function renderAllyEncounter() {
     if (isCurrentTileConsumed()) {
@@ -1117,17 +1117,46 @@ function renderAllyEncounter() {
             </div>
         `;
         DOM.encounterActions.innerHTML = ``; // No buttons
+    } else if (G._pendingTechniques && G._pendingTechniques.length > 0) {
+        // Show technique selection for abandoned camp
+        const currentRegion = getRegionForGrid(G.gridLevel);
+        const regionName = currentRegion.replace('-region', '');
+        
+        DOM.encounterArea.innerHTML = `
+            <div class="encounter-ally">
+                <h3>🏕️ Abandoned ${regionName.charAt(0).toUpperCase() + regionName.slice(1)} Camp</h3>
+                <p>You discover an empty camp with useful techniques left behind...</p>
+                <div class="technique-preview">
+                    <h4>📜 Available Techniques:</h4>
+                    ${G._pendingTechniques.map(tech => `
+                        <div class="technique-option" data-technique-id="${tech.id}">
+                            <strong>${tech.name}</strong> (${tech.type})
+                            <p class="technique-description">${tech.description}</p>
+                        </div>
+                    `).join('')}
+                </div>
+                <div class="encounter-inline-actions">
+                    <button class="btn-primary" data-action="select-technique">Choose Technique</button>
+                </div>
+            </div>
+        `;
+        
+        // Clear the regular actions area since we're using inline actions
+        DOM.encounterActions.innerHTML = ``;
     } else {
         // Show normal ally encounter
         DOM.encounterArea.innerHTML = `
             <div class="encounter-ally">
                 <h3>🤝 Potential Ally</h3>
                 <p>A warrior offers to join your party...</p>
+                <div class="encounter-inline-actions">
+                    <button class="btn-primary" data-action="recruit-ally">Recruit</button>
+                </div>
             </div>
         `;
-        DOM.encounterActions.innerHTML = `
-            <button class="btn-primary" data-action="recruit-ally">Recruit</button>
-        `;
+        
+        // Clear the regular actions area since we're using inline actions
+        DOM.encounterActions.innerHTML = ``;
     }
 }
 
