@@ -1118,7 +1118,7 @@ function renderItemEncounter() {
 }
 
 /**
- * Render an ally encounter - FIXED with proper data-action attributes
+ * Render an ally encounter - WITH DIRECT EVENT LISTENERS FOR DEBUG
  */
 function renderAllyEncounter() {
     // CHECK FOR PENDING TECHNIQUES FIRST (before checking if consumed)
@@ -1137,7 +1137,7 @@ function renderAllyEncounter() {
                         <div class="technique-option clickable-technique" 
                              data-technique-index="${index}"
                              data-action="learn-technique"
-                             style="cursor: pointer;">
+                             id="technique-${index}">
                             <strong>${tech.name}</strong> <span class="technique-type-label">(${tech.type})</span>
                             <p class="technique-description">${tech.description}</p>
                         </div>
@@ -1146,6 +1146,33 @@ function renderAllyEncounter() {
                 <p class="technique-instruction">💡 Click any technique above to learn it!</p>
             </div>
         `;
+        
+        // ADD DIRECT EVENT LISTENERS FOR DEBUG
+        setTimeout(() => {
+            G._pendingTechniques.forEach((tech, index) => {
+                const element = document.getElementById(`technique-${index}`);
+                if (element) {
+                    console.log(`🔧 DEBUG: Adding click listener to technique-${index}`);
+                    element.addEventListener('click', (e) => {
+                        console.log(`🎯 DEBUG: Direct click on technique ${index}: ${tech.name}`);
+                        console.log(`🔧 DEBUG: Event target:`, e.target);
+                        console.log(`🔧 DEBUG: Data attributes:`, element.dataset);
+                        
+                        // Try the original logic here
+                        import('./state.js').then(({ learnTechnique }) => {
+                            console.log('📚 DEBUG: About to call learnTechnique...');
+                            const result = learnTechnique(tech);
+                            console.log('✅ DEBUG: learnTechnique result:', result);
+                            _updateGameCallback();
+                        }).catch(error => {
+                            console.error('❌ DEBUG: Import/execution failed:', error);
+                        });
+                    });
+                } else {
+                    console.error(`❌ DEBUG: Could not find element technique-${index}`);
+                }
+            });
+        }, 100); // Small delay to ensure DOM is ready
         
         // Clear the regular actions area since we're using direct clicking
         DOM.encounterActions.innerHTML = ``;
