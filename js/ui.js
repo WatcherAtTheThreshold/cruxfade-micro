@@ -67,6 +67,19 @@ function getShortName(fullName) {
 }
 
 // ================================================================
+// MISSING HELPER FUNCTION FOR UI.JS
+// Add this function NEAR THE TOP of ui.js (after the imports section)
+// ================================================================
+/**
+ * Helper to get current region for UI display - LOCAL VERSION FOR UI.JS
+ */
+function getRegionForGrid(gridLevel) {
+    if (gridLevel <= 5) return "forest-region";
+    if (gridLevel <= 10) return "mountain-region";  
+    return "void-region";
+}
+
+// ================================================================
 // MODULE VARIABLES
 // ================================================================
 
