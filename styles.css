@@ -1487,6 +1487,136 @@ button,
 }
 
 /* ================================================================
+   TECHNIQUE SELECTION STYLES
+   Add these styles to styles.css after the card overflow styles
+   ================================================================ */
+
+/* Technique selection specific styling */
+.technique-selection {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    margin-top: 16px;
+}
+
+.technique-option {
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 2px solid var(--surface-border);
+    background: var(--surface-light);
+}
+
+.technique-option:hover {
+    transform: translateY(-4px);
+    border-color: var(--accent);
+    box-shadow: 0 8px 24px rgba(110, 167, 255, 0.3);
+    background: rgba(110, 167, 255, 0.1);
+}
+
+/* Technique type styling */
+.technique-type {
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    padding: 2px 6px;
+    border-radius: var(--radius-full);
+    letter-spacing: 0.05em;
+}
+
+.technique-type.attack {
+    background: rgba(239, 107, 115, 0.2);
+    color: var(--bad);
+}
+
+.technique-type.defense {
+    background: rgba(110, 167, 255, 0.2);
+    color: var(--accent);
+}
+
+.technique-type.utility {
+    background: rgba(104, 211, 145, 0.2);
+    color: var(--good);
+}
+
+/* Technique region indicator */
+.technique-region {
+    font-size: 0.75rem;
+    color: var(--muted);
+    text-align: center;
+    margin-top: 8px;
+    font-style: italic;
+    border-top: 1px solid var(--surface-border);
+    padding-top: 6px;
+}
+
+/* Technique tip styling */
+.technique-tip {
+    margin-top: 20px;
+    padding: 12px;
+    background: rgba(110, 167, 255, 0.1);
+    border: 1px solid rgba(110, 167, 255, 0.3);
+    border-radius: var(--radius-sm);
+    text-align: center;
+}
+
+.technique-tip p {
+    margin: 0;
+    font-size: 0.85rem;
+    color: var(--accent);
+}
+
+/* Technique preview in encounter area */
+.technique-preview {
+    margin: 16px 0;
+    padding: 12px;
+    background: var(--surface-light);
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--surface-border);
+}
+
+.technique-preview h4 {
+    margin-bottom: 12px;
+    color: var(--accent);
+    font-size: 0.95rem;
+}
+
+.encounter-ally .technique-option {
+    padding: 8px;
+    margin-bottom: 8px;
+    background: var(--surface);
+    border: 1px solid var(--surface-border);
+    border-radius: var(--radius-sm);
+    cursor: default;
+}
+
+.encounter-ally .technique-option strong {
+    color: var(--ink);
+    font-size: 0.9rem;
+}
+
+.encounter-ally .technique-description {
+    font-size: 0.8rem;
+    color: var(--muted);
+    margin: 4px 0 0 0;
+    line-height: 1.3;
+}
+
+/* Mobile responsive */
+@media (max-width: 700px) {
+    .technique-selection {
+        grid-template-columns: 1fr;
+    }
+    
+    .technique-preview .technique-option {
+        padding: 6px;
+    }
+    
+    .technique-tip {
+        padding: 8px;
+    }
+}
+
+/* ================================================================
   14. EQUIPMENT DISPLAY STYLES
    ================================================================ */
 
