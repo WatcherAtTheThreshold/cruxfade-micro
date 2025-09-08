@@ -1630,6 +1630,39 @@ export function bindEventHandlers(updateGameCallback) {
     } else {
         console.error('No pending techniques available');
     }
+    break;  
+                case 'learn-technique':
+    console.log('📚 Learning technique directly...');
+    
+    // Get the technique index from the clicked element
+    const techniqueIndex = parseInt(e.target.closest('[data-technique-index]').dataset.techniqueIndex);
+    
+    if (G._pendingTechniques && G._pendingTechniques[techniqueIndex]) {
+        const selectedTechnique = G._pendingTechniques[techniqueIndex];
+        console.log('📚 Selected technique:', selectedTechnique.name);
+        
+        // Import and use the learnTechnique function
+        import('./state.js').then(({ learnTechnique }) => {
+            const result = learnTechnique(selectedTechnique);
+            
+            if (result && result.overflow) {
+                // Handle overflow with existing system
+                showCardOverflowSelection(result.card, (resolved) => {
+                    if (resolved) {
+                        import('./state.js').then(({ resolvePendingTechnique }) => {
+                            resolvePendingTechnique();
+                            _updateGameCallback();
+                        }).catch(console.error);
+                    }
+                });
+            } else {
+                // Normal technique learning completed
+                _updateGameCallback();
+            }
+        }).catch(console.error);
+    } else {
+        console.error('Invalid technique index:', techniqueIndex);
+    }
     break;    
                 case 'take-key':
                     console.log('🗝️ Taking key...');
