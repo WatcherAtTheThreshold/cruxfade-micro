@@ -1118,7 +1118,7 @@ function renderItemEncounter() {
 }
 
 /**
- * Render an ally encounter - FIXED order of checks for techniques
+ * Render an ally encounter - UPDATED with directly clickable technique cards
  */
 function renderAllyEncounter() {
     // CHECK FOR PENDING TECHNIQUES FIRST (before checking if consumed)
@@ -1132,21 +1132,21 @@ function renderAllyEncounter() {
                 <h3>🏕️ Abandoned ${regionName.charAt(0).toUpperCase() + regionName.slice(1)} Camp</h3>
                 <p>You discover an empty camp with useful techniques left behind...</p>
                 <div class="technique-preview">
-                    <h4>📜 Available Techniques:</h4>
-                    ${G._pendingTechniques.map(tech => `
-                        <div class="technique-option" data-technique-id="${tech.id}">
-                            <strong>${tech.name}</strong> (${tech.type})
+                    <h4>📜 Click a technique to learn it:</h4>
+                    ${G._pendingTechniques.map((tech, index) => `
+                        <div class="technique-option clickable-technique" 
+                             data-technique-index="${index}"
+                             data-action="learn-technique">
+                            <strong>${tech.name}</strong> <span class="technique-type-label">(${tech.type})</span>
                             <p class="technique-description">${tech.description}</p>
                         </div>
                     `).join('')}
                 </div>
-                <div class="encounter-inline-actions">
-                    <button class="btn-primary" data-action="select-technique">Choose Technique</button>
-                </div>
+                <p class="technique-instruction">💡 Click any technique above to learn it!</p>
             </div>
         `;
         
-        // Clear the regular actions area since we're using inline actions
+        // Clear the regular actions area since we're using direct clicking
         DOM.encounterActions.innerHTML = ``;
         return; // Exit early - don't check other conditions
     }
