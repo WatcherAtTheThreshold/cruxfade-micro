@@ -1402,6 +1402,20 @@ function determineAllyTypeFromTags(ally) {
 // Replace the existing functions in state.js with these versions
 // ================================================================
 
+// ================================================================
+// ADD THIS FUNCTION TO state.js
+// Place it right before the generateAllyName() function (around line 1147)
+// ================================================================
+
+/**
+ * Get the current region based on grid level
+ */
+function getRegionForGrid(gridLevel) {
+    if (gridLevel <= 5) return "forest-region";
+    if (gridLevel <= 10) return "mountain-region";  
+    return "void-region";
+}
+
 /**
  * Generate a procedural name from ally data - DEBUG VERSION
  */
