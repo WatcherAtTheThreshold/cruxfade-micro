@@ -1105,19 +1105,11 @@ function renderItemEncounter() {
 }
 
 /**
- * Render an ally encounter - UPDATED for abandoned camp techniques
+ * Render an ally encounter - FIXED order of checks for techniques
  */
 function renderAllyEncounter() {
-    if (isCurrentTileConsumed()) {
-        // Show consumed state
-        DOM.encounterArea.innerHTML = `
-            <div class="encounter-ally">
-                <h3>🤝 Empty Camp</h3>
-                <p>The ally has moved on. Only traces of their camp remain.</p>
-            </div>
-        `;
-        DOM.encounterActions.innerHTML = ``; // No buttons
-    } else if (G._pendingTechniques && G._pendingTechniques.length > 0) {
+    // CHECK FOR PENDING TECHNIQUES FIRST (before checking if consumed)
+    if (G._pendingTechniques && G._pendingTechniques.length > 0) {
         // Show technique selection for abandoned camp
         const currentRegion = getRegionForGrid(G.gridLevel);
         const regionName = currentRegion.replace('-region', '');
@@ -1143,6 +1135,19 @@ function renderAllyEncounter() {
         
         // Clear the regular actions area since we're using inline actions
         DOM.encounterActions.innerHTML = ``;
+        return; // Exit early - don't check other conditions
+    }
+    
+    // THEN check if consumed (after technique check)
+    if (isCurrentTileConsumed()) {
+        // Show consumed state
+        DOM.encounterArea.innerHTML = `
+            <div class="encounter-ally">
+                <h3>🤝 Empty Camp</h3>
+                <p>The ally has moved on. Only traces of their camp remain.</p>
+            </div>
+        `;
+        DOM.encounterActions.innerHTML = ``; // No buttons
     } else {
         // Show normal ally encounter
         DOM.encounterArea.innerHTML = `
@@ -1159,7 +1164,6 @@ function renderAllyEncounter() {
         DOM.encounterActions.innerHTML = ``;
     }
 }
-
 /**
  * Render a key encounter
  */
