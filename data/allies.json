@@ -151,6 +151,47 @@
     }
   },
 
+  {
+  "forest-region": {
+    "techniques": [
+      {
+        "id": "forest-lore",
+        "name": "Forest Lore",
+        "type": "utility",
+        "weight": 3,
+        "description": "Deep knowledge of woodland secrets reveals hidden paths"
+      },
+      {
+        "id": "nature-bond",
+        "name": "Nature Bond", 
+        "type": "defense",
+        "weight": 2,
+        "description": "Call upon forest spirits for protection"
+      },
+      {
+        "id": "herb-mastery",
+        "name": "Herb Mastery",
+        "type": "utility", 
+        "weight": 3,
+        "description": "Advanced knowledge of healing plants"
+      },
+      {
+        "id": "beast-speech",
+        "name": "Beast Speech",
+        "type": "utility",
+        "weight": 2,
+        "description": "Communicate with forest creatures for aid"
+      },
+      {
+        "id": "ancient-wisdom",
+        "name": "Ancient Wisdom",
+        "type": "utility",
+        "weight": 1,
+        "description": "Rare knowledge passed down through generations"
+      }
+    ]
+  },
+  
   "mountain-region": {
     "dwarven-fighter": {
       "rarity": "common",
@@ -289,6 +330,47 @@
     }
   },
 
+   "mountain-region": {
+    "techniques": [
+      {
+        "id": "stone-skin",
+        "name": "Stone Skin",
+        "type": "defense",
+        "weight": 3,
+        "description": "Harden your body like mountain stone"
+      },
+      {
+        "id": "crystal-focus",
+        "name": "Crystal Focus",
+        "type": "attack",
+        "weight": 2,
+        "description": "Channel energy through crystalline formations"
+      },
+      {
+        "id": "mountain-endurance",
+        "name": "Mountain Endurance",
+        "type": "utility",
+        "weight": 3,
+        "description": "Stamina techniques from high-altitude training"
+      },
+      {
+        "id": "forge-mastery",
+        "name": "Forge Mastery", 
+        "type": "utility",
+        "weight": 2,
+        "description": "Dwarven metalworking techniques"
+      },
+      {
+        "id": "gem-sight",
+        "name": "Gem Sight",
+        "type": "utility",
+        "weight": 1,
+        "description": "See the true nature of crystalline magic"
+      }
+    ]
+  },
+
+  
   "void-region": {
     "fallen-hero": {
       "rarity": "uncommon",
@@ -425,5 +507,47 @@
         "regions": ["void-region"]
       }
     }
+  }
+}
+
+    
+  "void-region": {
+    "techniques": [
+      {
+        "id": "void-touch",
+        "name": "Void Touch",
+        "type": "attack",
+        "weight": 3,
+        "description": "Channel the emptiness between worlds"
+      },
+      {
+        "id": "desperation",
+        "name": "Desperation",
+        "type": "attack",
+        "weight": 2,
+        "description": "Fighting with nothing left to lose"
+      },
+      {
+        "id": "survival-instinct",
+        "name": "Survival Instinct",
+        "type": "defense",
+        "weight": 3,
+        "description": "Techniques learned from constant danger"
+      },
+      {
+        "id": "entropy-mastery",
+        "name": "Entropy Mastery",
+        "type": "utility",
+        "weight": 2,
+        "description": "Understanding of decay and dissolution"
+      },
+      {
+        "id": "forbidden-knowledge",
+        "name": "Forbidden Knowledge",
+        "type": "utility",
+        "weight": 1,
+        "description": "Dark secrets that should not be known"
+      }
+    ]
   }
 }
