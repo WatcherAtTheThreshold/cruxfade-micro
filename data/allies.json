@@ -148,11 +148,8 @@
         "maxPartySize": 4,
         "regions": ["forest-region"]
       }
-    }
-  },
+    },
 
-  {
-  "forest-region": {
     "techniques": [
       {
         "id": "forest-lore",
@@ -191,7 +188,7 @@
       }
     ]
   },
-  
+
   "mountain-region": {
     "dwarven-fighter": {
       "rarity": "common",
@@ -327,10 +324,8 @@
         "maxPartySize": 4,
         "regions": ["mountain-region"]
       }
-    }
-  },
+    },
 
-   "mountain-region": {
     "techniques": [
       {
         "id": "stone-skin",
@@ -370,7 +365,6 @@
     ]
   },
 
-  
   "void-region": {
     "fallen-hero": {
       "rarity": "uncommon",
@@ -506,12 +500,8 @@
         "maxPartySize": 4,
         "regions": ["void-region"]
       }
-    }
-  }
-}
+    },
 
-    
-  "void-region": {
     "techniques": [
       {
         "id": "void-touch",
