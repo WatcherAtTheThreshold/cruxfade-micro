@@ -1118,7 +1118,7 @@ function renderItemEncounter() {
 }
 
 /**
- * Render an ally encounter - UPDATED with directly clickable technique cards
+ * Render an ally encounter - FIXED with proper data-action attributes
  */
 function renderAllyEncounter() {
     // CHECK FOR PENDING TECHNIQUES FIRST (before checking if consumed)
@@ -1136,7 +1136,8 @@ function renderAllyEncounter() {
                     ${G._pendingTechniques.map((tech, index) => `
                         <div class="technique-option clickable-technique" 
                              data-technique-index="${index}"
-                             data-action="learn-technique">
+                             data-action="learn-technique"
+                             style="cursor: pointer;">
                             <strong>${tech.name}</strong> <span class="technique-type-label">(${tech.type})</span>
                             <p class="technique-description">${tech.description}</p>
                         </div>
