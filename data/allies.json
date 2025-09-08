@@ -59,7 +59,7 @@
         "atk": 3, 
         "mag": 1 
       },
-      "tags": ["human", "ranger", "scout"],
+      "tags": ["human", "ranger", "rogue", "scout"],
       "description": "A skilled woodsman with keen senses",
       "cards": [
         { 
