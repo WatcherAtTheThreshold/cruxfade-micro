@@ -1726,12 +1726,12 @@ export function resolvePendingTechnique() {
 }
 
 // ================================================================
-// DEBUGGING VERSION OF recruitRandomAlly() FUNCTION
-// Replace the existing function in state.js with this version
+// FIXED recruitRandomAlly() FUNCTION - PARTY SIZE CHECK MOVED UP
+// Replace your existing recruitRandomAlly() function with this version
 // ================================================================
 
 /**
- * Recruit a random ally to join the party - DEBUG VERSION WITH EXTENSIVE LOGGING
+ * Recruit a random ally to join the party - FIXED party size logic
  */
 export function recruitRandomAlly() {
     console.log('🤝 DEBUG: recruitRandomAlly() called');
@@ -1747,6 +1747,13 @@ export function recruitRandomAlly() {
     
     console.log('✅ DEBUG: Allies data found!');
     console.log('🤝 DEBUG: Available ally regions:', Object.keys(GAME_DATA.allies));
+    
+    // MOVED UP: Check party size limit FIRST - offer abandoned camp techniques if full
+    console.log('👥 DEBUG: Current party size:', G.party.length);
+    if (G.party.length >= 4) {
+        console.log('🏕️ DEBUG: Party full - discovering abandoned camp instead');
+        return discoverAbandonedCamp();
+    }
     
     // Get current region and check for available allies
     const currentRegion = getRegionForGrid(G.gridLevel);
@@ -1765,12 +1772,6 @@ export function recruitRandomAlly() {
         addLogEntry('🤝 No allies are available in this area.');
         consumeCurrentTile();
         return false;
-    }
-    
-    // NEW: Check party size limit - offer abandoned camp techniques if full
-    if (G.party.length >= 4) {
-        console.log('🏕️ DEBUG: Party full - discovering abandoned camp instead');
-        return discoverAbandonedCamp();
     }
     
     // Create ally from JSON data
