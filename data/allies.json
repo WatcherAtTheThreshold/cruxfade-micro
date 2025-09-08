@@ -59,7 +59,7 @@
         "atk": 3, 
         "mag": 1 
       },
-      "tags": ["human", "ranger", "rogue", "scout"],
+      "tags": ["human", "ranger", "scout"],
       "description": "A skilled woodsman with keen senses",
       "cards": [
         { 
@@ -149,6 +149,39 @@
         "regions": ["forest-region"]
       }
     },
+    "rogue": {
+  "rarity": "uncommon",
+  "weight": 2,
+  "names": ["Shadow", "Swift", "Whisper", "Thorn", "Flint", "Shade", "Quick", "Silent"],
+  "titles": ["the Silent", "the Quick", "the Shadow", "the Nimble", "the Cutpurse", "the Swift-Fingered"],
+  "baseStats": { 
+    "hp": 9, 
+    "maxHp": 9, 
+    "atk": 3, 
+    "mag": 2 
+  },
+  "tags": ["human", "rogue"],
+  "description": "A stealthy figure skilled in stealth and misdirection",
+  "cards": [
+    { 
+      "id": "sneak-attack", 
+      "name": "Backstab", 
+      "type": "attack",
+      "description": "Deal double damage when attacking from stealth"
+    },
+    { 
+      "id": "dodge", 
+      "name": "Shadow Step", 
+      "type": "defense",
+      "description": "Phase into shadows to avoid the next attack"
+    }
+  ],
+  "joinConditions": {
+    "minGridLevel": 2,
+    "maxPartySize": 4,
+    "regions": ["forest-region", "mountain-region", "void-region"]
+  }
+}
 
     "techniques": [
       {
