@@ -1617,6 +1617,71 @@ button,
 }
 
 /* ================================================================
+   CLICKABLE TECHNIQUE STYLES
+   Add these styles to styles.css after the existing technique styles
+   ================================================================ */
+
+/* Make technique cards in encounter area clickable */
+.clickable-technique {
+    cursor: pointer !important;
+    transition: all 0.3s ease;
+    border: 2px solid var(--surface-border);
+    border-radius: var(--radius-sm);
+    background: var(--surface-light);
+    margin-bottom: 8px;
+    padding: 12px;
+}
+
+.clickable-technique:hover {
+    transform: translateY(-2px);
+    border-color: var(--accent);
+    background: rgba(110, 167, 255, 0.1);
+    box-shadow: 0 4px 12px rgba(110, 167, 255, 0.3);
+}
+
+.clickable-technique:active {
+    transform: translateY(0px);
+    box-shadow: 0 2px 8px rgba(110, 167, 255, 0.4);
+}
+
+/* Technique type label styling */
+.technique-type-label {
+    color: var(--accent);
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+/* Instruction text styling */
+.technique-instruction {
+    text-align: center;
+    font-size: 0.85rem;
+    color: var(--accent);
+    margin-top: 12px;
+    font-weight: 600;
+    background: rgba(110, 167, 255, 0.1);
+    padding: 8px;
+    border-radius: var(--radius-sm);
+    border: 1px solid rgba(110, 167, 255, 0.3);
+}
+
+/* Enhance existing technique preview */
+.technique-preview h4 {
+    color: var(--accent);
+    font-size: 1rem;
+    margin-bottom: 16px;
+    text-align: center;
+}
+
+/* Better spacing for technique descriptions */
+.encounter-ally .technique-description {
+    margin-top: 6px;
+    font-size: 0.85rem;
+    line-height: 1.4;
+    color: var(--muted);
+}
+
+/* ================================================================
   14. EQUIPMENT DISPLAY STYLES
    ================================================================ */
 
