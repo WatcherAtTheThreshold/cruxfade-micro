@@ -1631,8 +1631,8 @@ export function bindEventHandlers(updateGameCallback) {
         console.error('No pending techniques available');
     }
     break;  
-                case 'learn-technique':
-         console.log('📚 Learning technique directly...');
+               case 'learn-technique':
+    console.log('📚 Learning technique directly...');
     
     // Get the technique index from the clicked element
     const techniqueIndex = parseInt(e.target.closest('[data-technique-index]').dataset.techniqueIndex);
@@ -1669,7 +1669,7 @@ export function bindEventHandlers(updateGameCallback) {
     } else {
         console.error('❌ DEBUG: Invalid technique index or no pending techniques');
     }
-        break;
+    break;
                 case 'take-key':
                     console.log('🗝️ Taking key...');
                     foundKey();
