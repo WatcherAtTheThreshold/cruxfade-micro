@@ -1398,83 +1398,120 @@ function determineAllyTypeFromTags(ally) {
 }
 
 // ================================================================
-// NEW ALLY SYSTEM HELPER FUNCTIONS
-// Add these functions to state.js (before the existing recruitRandomAlly function)
+// DEBUG VERSIONS OF ALLY HELPER FUNCTIONS
+// Replace the existing functions in state.js with these versions
 // ================================================================
 
 /**
- * Get the current region based on grid level
- */
-function getRegionForGrid(gridLevel) {
-    if (gridLevel <= 5) return "forest-region";
-    if (gridLevel <= 10) return "mountain-region";  
-    return "void-region";
-}
-
-/**
- * Generate a procedural name from ally data
+ * Generate a procedural name from ally data - DEBUG VERSION
  */
 function generateAllyName(allyData) {
+    console.log('📛 DEBUG: generateAllyName called with:', allyData);
+    
     const names = allyData.names || ["Unknown"];
     const titles = allyData.titles || ["the Wanderer"];
+    
+    console.log('📛 DEBUG: Available names:', names);
+    console.log('📛 DEBUG: Available titles:', titles);
+    
     const name = pickRandom(names);
     const title = pickRandom(titles);
-    return `${name} ${title}`;
+    
+    console.log('📛 DEBUG: Picked name:', name);
+    console.log('📛 DEBUG: Picked title:', title);
+    
+    const fullName = `${name} ${title}`;
+    console.log('📛 DEBUG: Generated full name:', fullName);
+    
+    return fullName;
 }
 
 /**
- * Get available ally types for the current region with rarity weighting
+ * Get available ally types for the current region with rarity weighting - DEBUG VERSION
  */
 function getWeightedAllyTypes(region, gridLevel) {
+    console.log('⚖️ DEBUG: getWeightedAllyTypes called');
+    console.log('⚖️ DEBUG: region:', region);
+    console.log('⚖️ DEBUG: gridLevel:', gridLevel);
+    console.log('⚖️ DEBUG: GAME_DATA.allies exists:', !!GAME_DATA.allies);
+    
     if (!GAME_DATA.allies || !GAME_DATA.allies[region]) {
+        console.log('❌ DEBUG: No allies data for region:', region);
         return null; // No allies data available
     }
     
     const regionAllies = GAME_DATA.allies[region];
+    console.log('⚖️ DEBUG: Region allies data:', regionAllies);
+    console.log('⚖️ DEBUG: Available ally types in region:', Object.keys(regionAllies).filter(key => key !== 'techniques'));
+    
     const availableTypes = [];
     const weights = [];
     
     // Filter allies by join conditions and build weighted arrays
     for (const [allyType, allyData] of Object.entries(regionAllies)) {
+        if (allyType === 'techniques') continue; // Skip techniques
+        
+        console.log(`⚖️ DEBUG: Checking ally type: ${allyType}`);
+        console.log(`⚖️ DEBUG: Ally data:`, allyData);
+        
         const conditions = allyData.joinConditions || {};
+        console.log(`⚖️ DEBUG: Join conditions:`, conditions);
         
         // Check minimum grid level
         if (conditions.minGridLevel && gridLevel < conditions.minGridLevel) {
+            console.log(`❌ DEBUG: ${allyType} requires grid level ${conditions.minGridLevel}, current: ${gridLevel}`);
             continue;
         }
         
         // Check party size limit
         if (conditions.maxPartySize && G.party.length >= conditions.maxPartySize) {
+            console.log(`❌ DEBUG: ${allyType} party size limit exceeded (${G.party.length}/${conditions.maxPartySize})`);
             continue;
         }
         
         // Add to available types with weight
         availableTypes.push(allyType);
         weights.push(allyData.weight || 1);
+        console.log(`✅ DEBUG: ${allyType} added to available types with weight ${allyData.weight || 1}`);
     }
     
+    console.log('⚖️ DEBUG: Final available types:', availableTypes);
+    console.log('⚖️ DEBUG: Final weights:', weights);
+    
     if (availableTypes.length === 0) {
+        console.log('❌ DEBUG: No eligible allies found');
         return null; // No eligible allies
     }
     
     // Use weighted random selection
     const selectedType = getWeightedRandom(availableTypes, weights);
+    console.log('⚖️ DEBUG: Selected type after weighting:', selectedType);
+    
     return selectedType;
 }
 
 /**
- * Create an ally from JSON data
+ * Create an ally from JSON data - DEBUG VERSION
  */
 function createAllyFromData(region, allyType) {
-    const allyData = GAME_DATA.allies[region][allyType];
-    if (!allyData) {
-        console.error('Ally data not found:', region, allyType);
+    console.log('🏗️ DEBUG: createAllyFromData called');
+    console.log('🏗️ DEBUG: region:', region);
+    console.log('🏗️ DEBUG: allyType:', allyType);
+    
+    if (!GAME_DATA.allies || !GAME_DATA.allies[region] || !GAME_DATA.allies[region][allyType]) {
+        console.error('❌ DEBUG: Ally data not found:', region, allyType);
         return null;
     }
     
+    const allyData = GAME_DATA.allies[region][allyType];
+    console.log('🏗️ DEBUG: Raw ally data:', allyData);
+    
     // Generate unique ID and procedural name
     const allyId = `${allyType}-${Date.now()}`;
+    console.log('🏗️ DEBUG: Generated ally ID:', allyId);
+    
     const allyName = generateAllyName(allyData);
+    console.log('🏗️ DEBUG: Generated ally name:', allyName);
     
     // Create ally object with JSON stats
     const ally = {
@@ -1485,28 +1522,9 @@ function createAllyFromData(region, allyType) {
         description: allyData.description || "A mysterious ally"
     };
     
-    console.log(`🤝 Created ally: ${allyName} (${allyType})`, ally);
+    console.log('🏗️ DEBUG: Final ally object:', ally);
     return ally;
 }
-
-/**
- * Get cards for an ally from JSON data
- */
-function getAllyCardsFromData(region, allyType, allyId) {
-    const allyData = GAME_DATA.allies[region][allyType];
-    if (!allyData || !allyData.cards) {
-        return [];
-    }
-    
-    // Create cards with unique IDs for this ally
-    return allyData.cards.map(cardTemplate => ({
-        id: `${cardTemplate.id}-${allyId}`,
-        name: cardTemplate.name,
-        type: cardTemplate.type,
-        description: cardTemplate.description || "An ally's special ability"
-    }));
-}
-
 
 // ================================================================
 // TECHNIQUE CARD HELPER FUNCTIONS
@@ -1660,25 +1678,42 @@ export function resolvePendingTechnique() {
 }
 
 // ================================================================
-// UPDATED: RECRUIT ALLY FUNCTION WITH ABANDONED CAMP SYSTEM
-// Find the recruitRandomAlly() function and replace the party size check section
+// DEBUGGING VERSION OF recruitRandomAlly() FUNCTION
+// Replace the existing function in state.js with this version
 // ================================================================
 
 /**
- * Recruit a random ally to join the party - UPDATED with abandoned camp system
+ * Recruit a random ally to join the party - DEBUG VERSION WITH EXTENSIVE LOGGING
  */
 export function recruitRandomAlly() {
+    console.log('🤝 DEBUG: recruitRandomAlly() called');
+    console.log('🤝 DEBUG: G.gridLevel:', G.gridLevel);
+    console.log('🤝 DEBUG: GAME_DATA exists:', !!GAME_DATA);
+    console.log('🤝 DEBUG: GAME_DATA.allies exists:', !!GAME_DATA.allies);
+    
     // Check if allies data is available
     if (!GAME_DATA.allies) {
-        console.log('⚠️ No allies data available, using fallback recruitment');
+        console.log('⚠️ DEBUG: No allies data available, using fallback recruitment');
         return recruitFallbackAlly(); // Keep old system as fallback
     }
     
+    console.log('✅ DEBUG: Allies data found!');
+    console.log('🤝 DEBUG: Available ally regions:', Object.keys(GAME_DATA.allies));
+    
     // Get current region and check for available allies
     const currentRegion = getRegionForGrid(G.gridLevel);
+    console.log('🗺️ DEBUG: Current region for grid', G.gridLevel, ':', currentRegion);
+    console.log('🗺️ DEBUG: Region data exists:', !!GAME_DATA.allies[currentRegion]);
+    
+    if (GAME_DATA.allies[currentRegion]) {
+        console.log('🗺️ DEBUG: Available ally types in', currentRegion, ':', Object.keys(GAME_DATA.allies[currentRegion]));
+    }
+    
     const selectedAllyType = getWeightedAllyTypes(currentRegion, G.gridLevel);
+    console.log('🎯 DEBUG: Selected ally type:', selectedAllyType);
     
     if (!selectedAllyType) {
+        console.log('❌ DEBUG: No ally type selected');
         addLogEntry('🤝 No allies are available in this area.');
         consumeCurrentTile();
         return false;
@@ -1686,13 +1721,17 @@ export function recruitRandomAlly() {
     
     // NEW: Check party size limit - offer abandoned camp techniques if full
     if (G.party.length >= 4) {
-        console.log('🏕️ Party full - discovering abandoned camp instead');
+        console.log('🏕️ DEBUG: Party full - discovering abandoned camp instead');
         return discoverAbandonedCamp();
     }
     
     // Create ally from JSON data
+    console.log('🏗️ DEBUG: Creating ally from data...');
     const ally = createAllyFromData(currentRegion, selectedAllyType);
+    console.log('🤝 DEBUG: Created ally:', ally);
+    
     if (!ally) {
+        console.log('❌ DEBUG: Failed to create ally');
         addLogEntry('🤝 An ally approaches but seems confused and wanders off...');
         consumeCurrentTile();
         return false;
@@ -1700,11 +1739,19 @@ export function recruitRandomAlly() {
     
     // Get ally's cards from JSON data
     const allyCards = getAllyCardsFromData(currentRegion, selectedAllyType, ally.id);
+    console.log('🃏 DEBUG: Ally cards:', allyCards);
     
     // Check if adding ally cards would cause overflow
     const totalNewCards = allyCards.length;
     const currentHandSize = G.hand.length;
     const wouldOverflow = currentHandSize + totalNewCards > getMaxHandSize();
+    
+    console.log('🃏 DEBUG: Hand size check:', {
+        currentHandSize,
+        newCards: totalNewCards,
+        maxSize: getMaxHandSize(),
+        wouldOverflow
+    });
     
     if (wouldOverflow) {
         // Handle card overflow - same logic as before
@@ -1720,11 +1767,10 @@ export function recruitRandomAlly() {
         return { overflow: true, ally: ally, cards: allyCards };
     } else {
         // No overflow - add ally and cards directly
+        console.log('✅ DEBUG: No overflow, completing recruitment...');
         return completeAllyRecruitment(ally, allyCards);
     }
 }
-
-
 /**
  * Fallback ally recruitment using old hardcoded system
  */
