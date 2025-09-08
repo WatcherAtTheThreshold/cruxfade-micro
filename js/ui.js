@@ -1632,38 +1632,44 @@ export function bindEventHandlers(updateGameCallback) {
     }
     break;  
                 case 'learn-technique':
-    console.log('📚 Learning technique directly...');
+         console.log('📚 Learning technique directly...');
     
     // Get the technique index from the clicked element
     const techniqueIndex = parseInt(e.target.closest('[data-technique-index]').dataset.techniqueIndex);
+    console.log('🔍 DEBUG: Technique index:', techniqueIndex);
+    console.log('🔍 DEBUG: Pending techniques:', G._pendingTechniques);
+    console.log('🔍 DEBUG: Selected technique:', G._pendingTechniques?.[techniqueIndex]);
     
     if (G._pendingTechniques && G._pendingTechniques[techniqueIndex]) {
         const selectedTechnique = G._pendingTechniques[techniqueIndex];
         console.log('📚 Selected technique:', selectedTechnique.name);
         
-        // Import and use the learnTechnique function
+        // DEBUG: Test if import works
         import('./state.js').then(({ learnTechnique }) => {
-            const result = learnTechnique(selectedTechnique);
+            console.log('✅ DEBUG: Successfully imported learnTechnique:', typeof learnTechnique);
             
-            if (result && result.overflow) {
-                // Handle overflow with existing system
-                showCardOverflowSelection(result.card, (resolved) => {
-                    if (resolved) {
-                        import('./state.js').then(({ resolvePendingTechnique }) => {
-                            resolvePendingTechnique();
-                            _updateGameCallback();
-                        }).catch(console.error);
-                    }
-                });
+            if (typeof learnTechnique === 'function') {
+                console.log('🎯 DEBUG: Calling learnTechnique...');
+                const result = learnTechnique(selectedTechnique);
+                console.log('🔍 DEBUG: learnTechnique result:', result);
+                
+                if (result && result.overflow) {
+                    console.log('⚠️ DEBUG: Overflow detected');
+                    // Handle overflow later
+                } else {
+                    console.log('✅ DEBUG: Normal learning, calling updateGame...');
+                    _updateGameCallback();
+                }
             } else {
-                // Normal technique learning completed
-                _updateGameCallback();
+                console.error('❌ DEBUG: learnTechnique is not a function!');
             }
-        }).catch(console.error);
+        }).catch(error => {
+            console.error('❌ DEBUG: Import failed:', error);
+        });
     } else {
-        console.error('Invalid technique index:', techniqueIndex);
+        console.error('❌ DEBUG: Invalid technique index or no pending techniques');
     }
-    break;    
+        break;
                 case 'take-key':
                     console.log('🗝️ Taking key...');
                     foundKey();
