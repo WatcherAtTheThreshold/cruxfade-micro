@@ -1507,6 +1507,158 @@ function getAllyCardsFromData(region, allyType, allyId) {
     }));
 }
 
+
+// ================================================================
+// TECHNIQUE CARD HELPER FUNCTIONS
+// Add these functions to state.js after the existing ally helper functions
+// ================================================================
+
+/**
+ * Get available technique cards for the current region
+ */
+function getRegionalTechniques(region) {
+    if (!GAME_DATA.allies || !GAME_DATA.allies[region] || !GAME_DATA.allies[region].techniques) {
+        return [];
+    }
+    
+    return GAME_DATA.allies[region].techniques;
+}
+
+/**
+ * Select random technique cards with weighted selection
+ */
+function selectRandomTechniques(region, count = 3) {
+    const availableTechniques = getRegionalTechniques(region);
+    
+    if (availableTechniques.length === 0) {
+        return [];
+    }
+    
+    const selectedTechniques = [];
+    const availablePool = [...availableTechniques]; // Copy array so we don't modify original
+    
+    // Select up to 'count' techniques without duplicates
+    for (let i = 0; i < count && availablePool.length > 0; i++) {
+        const weights = availablePool.map(tech => tech.weight || 1);
+        const selectedIndex = getWeightedRandomIndex(weights);
+        const selectedTech = availablePool[selectedIndex];
+        
+        // Create unique card with timestamp ID
+        const techniqueCard = {
+            id: `${selectedTech.id}-${Date.now()}-${i}`,
+            name: selectedTech.name,
+            type: selectedTech.type,
+            description: selectedTech.description
+        };
+        
+        selectedTechniques.push(techniqueCard);
+        
+        // Remove from pool to avoid duplicates
+        availablePool.splice(selectedIndex, 1);
+    }
+    
+    return selectedTechniques;
+}
+
+/**
+ * Helper function for weighted random selection by index
+ */
+function getWeightedRandomIndex(weights) {
+    const totalWeight = weights.reduce((sum, weight) => sum + weight, 0);
+    let randomValue = random() * totalWeight;
+    
+    for (let i = 0; i < weights.length; i++) {
+        if (randomValue < weights[i]) {
+            return i;
+        }
+        randomValue -= weights[i];
+    }
+    
+    return weights.length - 1; // fallback to last item
+}
+
+/**
+ * Handle abandoned camp encounter when party is full
+ */
+export function discoverAbandonedCamp() {
+    const currentRegion = getRegionForGrid(G.gridLevel);
+    const availableTechniques = selectRandomTechniques(currentRegion, 3);
+    
+    if (availableTechniques.length === 0) {
+        addLogEntry('🏕️ You find an abandoned camp, but nothing useful remains.');
+        consumeCurrentTile();
+        return false;
+    }
+    
+    // Store techniques for selection
+    G._pendingTechniques = availableTechniques;
+    
+    addLogEntry(`🏕️ You discover an abandoned ${currentRegion.replace('-region', '')} camp!`);
+    addLogEntry(`📜 The former occupants left behind some useful techniques...`);
+    addLogEntry(`🎯 Choose one technique to learn: ${availableTechniques.map(tech => tech.name).join(', ')}`);
+    
+    consumeCurrentTile();
+    return { techniques: availableTechniques };
+}
+
+/**
+ * Learn a selected technique from abandoned camp
+ */
+export function learnTechnique(techniqueCard) {
+    if (!techniqueCard) {
+        console.error('No technique card provided');
+        return false;
+    }
+    
+    // Check if hand is full
+    if (G.hand.length >= getMaxHandSize()) {
+        addLogEntry(`📚 You want to learn ${techniqueCard.name}, but your hand is full!`);
+        
+        // Use existing overflow system
+        G._pendingTechniqueCard = techniqueCard;
+        return { overflow: true, card: techniqueCard };
+    } else {
+        // Add directly to hand
+        const result = addCardToHand(techniqueCard);
+        if (result.success) {
+            addLogEntry(`📚 You learned ${techniqueCard.name}!`);
+            addLogEntry(`✨ New technique: ${techniqueCard.description}`);
+            
+            // Clear pending techniques
+            G._pendingTechniques = null;
+            return { success: true };
+        } else {
+            console.error('Failed to add technique card to hand');
+            return false;
+        }
+    }
+}
+
+/**
+ * Resolve pending technique after overflow handled
+ */
+export function resolvePendingTechnique() {
+    if (!G._pendingTechniqueCard) {
+        console.error('No pending technique to resolve');
+        return false;
+    }
+    
+    const techniqueCard = G._pendingTechniqueCard;
+    G._pendingTechniqueCard = null;
+    G._pendingTechniques = null;
+    
+    // Try to add the technique again (should work now after overflow resolution)
+    const result = addCardToHand(techniqueCard);
+    if (result.success) {
+        addLogEntry(`📚 You learned ${techniqueCard.name}!`);
+        addLogEntry(`✨ New technique: ${techniqueCard.description}`);
+        return { success: true };
+    } else {
+        console.error('Still failed to add technique after overflow resolution');
+        return false;
+    }
+}
+
 // ================================================================
 // UPDATED: DATA-DRIVEN ALLY RECRUITMENT FUNCTION
 // Replace the existing recruitRandomAlly() function with this version
