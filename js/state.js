@@ -1536,6 +1536,45 @@ function createAllyFromData(region, allyType) {
 }
 
 // ================================================================
+// ADD THIS MISSING FUNCTION TO state.js
+// Place it right after the createAllyFromData() function
+// ================================================================
+
+/**
+ * Get cards for an ally from JSON data
+ */
+function getAllyCardsFromData(region, allyType, allyId) {
+    console.log('🃏 DEBUG: getAllyCardsFromData called');
+    console.log('🃏 DEBUG: region:', region, 'allyType:', allyType, 'allyId:', allyId);
+    
+    if (!GAME_DATA.allies || !GAME_DATA.allies[region] || !GAME_DATA.allies[region][allyType]) {
+        console.log('❌ DEBUG: No ally data found for cards');
+        return [];
+    }
+    
+    const allyData = GAME_DATA.allies[region][allyType];
+    console.log('🃏 DEBUG: Ally data for cards:', allyData);
+    
+    if (!allyData.cards) {
+        console.log('❌ DEBUG: No cards defined for this ally type');
+        return [];
+    }
+    
+    console.log('🃏 DEBUG: Raw card templates:', allyData.cards);
+    
+    // Create cards with unique IDs for this ally
+    const cards = allyData.cards.map(cardTemplate => ({
+        id: `${cardTemplate.id}-${allyId}`,
+        name: cardTemplate.name,
+        type: cardTemplate.type,
+        description: cardTemplate.description || "An ally's special ability"
+    }));
+    
+    console.log('🃏 DEBUG: Generated cards with unique IDs:', cards);
+    return cards;
+}
+
+// ================================================================
 // TECHNIQUE CARD HELPER FUNCTIONS
 // Add these functions to state.js after the existing ally helper functions
 // ================================================================
