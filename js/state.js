@@ -1660,12 +1660,12 @@ export function resolvePendingTechnique() {
 }
 
 // ================================================================
-// UPDATED: DATA-DRIVEN ALLY RECRUITMENT FUNCTION
-// Replace the existing recruitRandomAlly() function with this version
+// UPDATED: RECRUIT ALLY FUNCTION WITH ABANDONED CAMP SYSTEM
+// Find the recruitRandomAlly() function and replace the party size check section
 // ================================================================
 
 /**
- * Recruit a random ally to join the party - NOW DATA-DRIVEN!
+ * Recruit a random ally to join the party - UPDATED with abandoned camp system
  */
 export function recruitRandomAlly() {
     // Check if allies data is available
@@ -1684,11 +1684,10 @@ export function recruitRandomAlly() {
         return false;
     }
     
-    // Check party size limit
+    // NEW: Check party size limit - offer abandoned camp techniques if full
     if (G.party.length >= 4) {
-        addLogEntry(`🤝 A ${selectedAllyType} wants to join, but your party is full!`);
-        consumeCurrentTile();
-        return false;
+        console.log('🏕️ Party full - discovering abandoned camp instead');
+        return discoverAbandonedCamp();
     }
     
     // Create ally from JSON data
@@ -1724,6 +1723,7 @@ export function recruitRandomAlly() {
         return completeAllyRecruitment(ally, allyCards);
     }
 }
+
 
 /**
  * Fallback ally recruitment using old hardcoded system
