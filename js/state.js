@@ -2342,7 +2342,7 @@ const MAX_HAND_SIZE = 5;
 /**
  * Add a card to the hand, handling overflow
  * Returns: { success: boolean, overflow: Card|null }
- */
+ 
 export function addCardToHand(card) {
     if (G.hand.length < MAX_HAND_SIZE) {
         // Room in hand - add normally
@@ -2354,7 +2354,7 @@ export function addCardToHand(card) {
         addLogEntry(`⚠️ Hand full! Must discard a card to add ${card.name}`);
         return { success: false, overflow: card };
     }
-}
+}*/
 
 /**
  * Force add a card to hand, discarding oldest if needed
