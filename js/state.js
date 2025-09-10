@@ -2973,8 +2973,8 @@ export function getAvailableEquipmentForSlot(slot) {
 }
 
 // ================================================================
-// CHARACTER SELECTION FUNCTIONS
-// ADD all of these functions to the END of your state.js file
+// CHARACTER SELECTION FUNCTIONS - FIXED VERSION
+// REPLACE your existing character selection functions with these
 // ================================================================
 
 /**
@@ -2989,12 +2989,17 @@ function showCharacterSelection() {
             
             // Generate and populate character cards
             const characterCards = generateCharacterCards();
-            populateCharacterSelectionModal(characterCards);
+            if (characterCards.length > 0) {
+                populateCharacterSelectionModal(characterCards);
+            } else {
+                console.warn('No character cards generated, using default character');
+                startWithDefaultCharacter();
+            }
         } else {
             console.error('Character selection modal not found!');
             startWithDefaultCharacter();
         }
-    }, 100);
+    }, 200); // Increased timeout to ensure GAME_DATA is ready
 }
 
 /**
@@ -3004,13 +3009,13 @@ function generateCharacterCards() {
     const cards = [];
     const classes = ['warrior', 'ranger', 'herbalist', 'rogue', 'paladin'];
     
-    // Check if GAME_DATA exists
-    if (!window.GAME_DATA || !window.GAME_DATA.allies || !window.GAME_DATA.allies['forest-region']) {
+    // Check if GAME_DATA exists (using local GAME_DATA variable, not window.GAME_DATA)
+    if (!GAME_DATA || !GAME_DATA.allies || !GAME_DATA.allies['forest-region']) {
         console.warn('GAME_DATA not ready, using default character');
         return [];
     }
     
-    const regionData = window.GAME_DATA.allies['forest-region'];
+    const regionData = GAME_DATA.allies['forest-region'];
     
     for (const className of classes) {
         const classData = regionData[className];
@@ -3143,7 +3148,13 @@ function startGameWithCharacter(leader, characterData) {
  * Add starting cards based on character class
  */
 function addStartingCardsForCharacter(characterData) {
-    const regionData = window.GAME_DATA.allies['forest-region'];
+    // Use local GAME_DATA variable instead of window.GAME_DATA
+    if (!GAME_DATA || !GAME_DATA.allies) {
+        console.warn('GAME_DATA not available for starting cards');
+        return;
+    }
+    
+    const regionData = GAME_DATA.allies['forest-region'];
     const classData = regionData[characterData.className];
     
     if (classData && classData.cards) {
