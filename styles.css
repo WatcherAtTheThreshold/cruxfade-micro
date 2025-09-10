@@ -2198,7 +2198,7 @@ section {
     max-height: 90vh;
     padding: 1.5rem;
     text-align: center;
-    background-image: url('./images/sections/hand-bg.png');
+    background-image: url('./images/sections/log-bg.png');
     background-size: 100% 100%;
     background-position: center;
     /*background: linear-gradient(135deg, #2a1810 0%, #3d2a1f 100%);*/
@@ -2232,7 +2232,11 @@ section {
 }
 
 .character-card {
-    background: linear-gradient(135deg, #3a2817 0%, #4a3326 100%);
+   background-image: url('./images/cards/monster-card-bg.png');
+    background-size: 100% 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+    /*background: linear-gradient(135deg, #3a2817 0%, #4a3326 100%);*/
     border: 2px solid #6b5d47;
     border-radius: 8px;
     padding: 1rem;
