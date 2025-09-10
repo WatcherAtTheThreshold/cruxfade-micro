@@ -1783,12 +1783,12 @@ function selectCharacter(characterData) {
     }
     
     // Initialize the game with the selected character
-    initializeGameWithCharacter(
-        characterData.className, 
-        characterData.name, 
-        characterData.stats, 
-        characterData.tags
-    );
+ initializeGameWithSelectedCharacter(
+    characterData.className, 
+    characterData.name, 
+    characterData.stats, 
+    characterData.tags
+);
 }
 
 /**
@@ -1816,7 +1816,7 @@ function initializeGameWithCharacter(className, characterName, stats, tags = [])
 /**
  * Modified game initialization that accepts a custom leader
  */
-function initializeGameWithCustomLeader(customLeader) {
+function initializeGameWithSelectedCharacter(customLeader) {
     console.log('🎮 DEBUG: initializeGameWithCustomLeader called with:', customLeader);
     
     // Reset game state
