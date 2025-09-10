@@ -7,6 +7,9 @@
 // Import seeded RNG functions
 import { random, randomInt, pickRandom } from './rng.js';
 
+// ADD THIS LINE:
+import { renderAll } from './ui.js';
+
 // ================================================================
 // GAME DATA STORAGE
 // ================================================================
@@ -181,7 +184,7 @@ export function initializeGame() {
     // Reset game state
     resetGameState();
     
-    // Show character selection modal
+    // Show character selection modal (we'll add this function in the next step)
     showCharacterSelection();
 }
 
@@ -234,6 +237,8 @@ function resetGameState() {
     G._pendingTechniques = null;
     G._pendingTechniqueCard = null;
 }
+
+
 
 // ================================================================
 // UPDATED: BOSS GRID GENERATION - ADD COMBAT ENGAGEMENT TRACKING
