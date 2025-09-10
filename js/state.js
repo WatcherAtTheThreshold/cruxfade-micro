@@ -169,11 +169,6 @@ function generateGrid() {
     ensureKeyAndDoor();
 }
 
-// ================================================================
-// REPLACE YOUR EXISTING initializeGame() FUNCTION WITH THIS
-// Delete your old initializeGame() and replace with this new one
-// ================================================================
-
 /**
  * Initialize the game - now shows character selection first
  * REPLACE existing initializeGame() function with this
@@ -181,36 +176,21 @@ function generateGrid() {
 export function initializeGame() {
     console.log('🎮 Initializing game...');
     
-    // Reset game state
-    resetGameState();
+    // ONLY reset basic state - don't do any UI rendering yet
+    resetGameStateMinimal();
     
-    // Show character selection modal (we'll add this function in the next step)
-    showCharacterSelection();
+    // Show character selection IMMEDIATELY (no timeout, no other UI calls)
+    showCharacterSelectionImmediate();
 }
 
-// ================================================================
-// ADD THIS NEW FUNCTION (don't replace anything, just add it)
-// ================================================================
-
 /**
- * Reset game state to clean slate
- * ADD this new function
+ * Reset only essential game state - no UI rendering
  */
-function resetGameState() {
+function resetGameStateMinimal() {
     G.victory = false;
     G.over = false;
     G.party = [];
     G.hand = [];
-    G.discardPile = [];
-    G.equipment = [];
-    G.actionHistory = [];
-    G.logEntries = [];
-    G.currentTile = null;
-    G.currentEnemy = null;
-    G.combatActive = false;
-    G.enemyDefeated = false;
-    
-    // Reset core values
     G.gridLevel = 1;
     G.keyFound = false;
     G.log = [];
@@ -225,20 +205,44 @@ function resetGameState() {
         enemyIndex: 0
     };
     
-    // Initialize player position to left edge start (1,0)
-    G.board.player = { r: 1, c: 0 };
-    
-    // CLEAR fog of war state - start with empty seen set
-    G.board.seen = new Set();
-    
-    // Clear any pending data
-    G._pendingAlly = null;
-    G._pendingCards = null;
-    G._pendingTechniques = null;
-    G._pendingTechniqueCard = null;
+    console.log('🔄 Minimal game state reset complete');
 }
 
-
+/**
+ * Show character selection without any delays or other UI calls
+ */
+function showCharacterSelectionImmediate() {
+    console.log('🔍 DEBUG: showCharacterSelectionImmediate called');
+    
+    // Find modal immediately - no timeout
+    const modal = document.getElementById('character-selection-modal');
+    
+    console.log('🔍 DEBUG: Modal search result:', modal);
+    console.log('🔍 DEBUG: Modal in DOM tree:', document.contains(modal));
+    
+    if (modal) {
+        console.log('✅ Modal found! Showing character selection...');
+        modal.style.display = 'flex';
+        
+        // Generate and populate character cards
+        const characterCards = generateCharacterCards();
+        console.log('🔍 DEBUG: Generated character cards:', characterCards);
+        
+        if (characterCards.length > 0) {
+            populateCharacterSelectionModal(characterCards);
+        } else {
+            console.warn('No character cards generated, using default character');
+            startWithDefaultCharacter();
+        }
+    } else {
+        console.error('❌ Character selection modal not found! Using default character');
+        console.log('🔍 DEBUG: Available elements with "modal" in class or id:');
+        document.querySelectorAll('[class*="modal"], [id*="modal"]').forEach(el => {
+            console.log('  Found:', el.tagName, el.id, el.className);
+        });
+        startWithDefaultCharacter();
+    }
+}
 
 // ================================================================
 // UPDATED: BOSS GRID GENERATION - ADD COMBAT ENGAGEMENT TRACKING
@@ -2977,46 +2981,7 @@ export function getAvailableEquipmentForSlot(slot) {
 // REPLACE your existing character selection functions with these
 // ================================================================
 
-/**
- * Show character selection modal - DEBUG VERSION
- */
-function showCharacterSelection() {
-    console.log('🔍 DEBUG: showCharacterSelection called');
-    
-    // Wait for GAME_DATA to be ready, then show modal
-    setTimeout(() => {
-        console.log('🔍 DEBUG: setTimeout triggered');
-        
-        // Debug: Check if modal exists in different ways
-        const modal1 = document.getElementById('character-selection-modal');
-        const modal2 = document.querySelector('#character-selection-modal');
-        const modal3 = document.querySelector('.character-selection-modal');
-        
-        console.log('🔍 DEBUG: getElementById result:', modal1);
-        console.log('🔍 DEBUG: querySelector #id result:', modal2);
-        console.log('🔍 DEBUG: querySelector .class result:', modal3);
-        console.log('🔍 DEBUG: document.readyState:', document.readyState);
-        
-        if (modal1) {
-            console.log('✅ Modal found! Showing character selection...');
-            modal1.style.display = 'flex';
-            
-            // Generate and populate character cards
-            const characterCards = generateCharacterCards();
-            console.log('🔍 DEBUG: Generated character cards:', characterCards);
-            
-            if (characterCards.length > 0) {
-                populateCharacterSelectionModal(characterCards);
-            } else {
-                console.warn('No character cards generated, using default character');
-                startWithDefaultCharacter();
-            }
-        } else {
-            console.error('❌ Character selection modal not found! Using default character');
-            startWithDefaultCharacter();
-        }
-    }, 500); // Increased timeout for debugging
-}
+
 
 /**
  * Generate character cards from allies data
