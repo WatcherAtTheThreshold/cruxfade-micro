@@ -1575,6 +1575,267 @@ function getAllyCardsFromData(region, allyType, allyId) {
 }
 
 // ================================================================
+// CHARACTER SELECTION SYSTEM - Add these functions to state.js
+// Place these functions after the existing ally helper functions
+// ================================================================
+
+/**
+ * Show character selection modal at game start
+ */
+export function showCharacterSelection() {
+    console.log('🎭 DEBUG: showCharacterSelection() called');
+    
+    if (!GAME_DATA.allies || !GAME_DATA.allies['forest-region']) {
+        console.error('❌ DEBUG: No allies data available for character selection');
+        // Fall back to default leader if no data
+        return initializeGameWithCharacter('warrior', 'Leader', { hp: 15, maxHp: 15, atk: 3, mag: 1 });
+    }
+    
+    // Get character classes from forest-region (our starting classes)
+    const characterClasses = ['warrior', 'ranger', 'herbalist', 'rogue', 'paladin'];
+    const characterCards = generateCharacterCards(characterClasses);
+    
+    // Populate the modal with character cards
+    populateCharacterSelectionModal(characterCards);
+    
+    // Show the modal
+    const modal = document.getElementById('character-selection-modal');
+    if (modal) {
+        modal.style.display = 'block';
+        console.log('✅ DEBUG: Character selection modal shown');
+    }
+}
+
+/**
+ * Generate character card data from allies.json
+ */
+function generateCharacterCards(characterClasses) {
+    console.log('🎭 DEBUG: generateCharacterCards called with:', characterClasses);
+    
+    const cards = [];
+    const regionData = GAME_DATA.allies['forest-region'];
+    
+    for (const className of characterClasses) {
+        if (regionData[className]) {
+            const classData = regionData[className];
+            
+            // Generate a procedural name for this character
+            const proceduralName = generateAllyName(classData);
+            
+            // Create character card data
+            const characterCard = {
+                className: className,
+                name: proceduralName,
+                displayClass: className.charAt(0).toUpperCase() + className.slice(1),
+                stats: classData.baseStats,
+                description: classData.description,
+                startingCard: classData.cards && classData.cards.length > 0 ? classData.cards[0] : null,
+                tags: classData.tags
+            };
+            
+            cards.push(characterCard);
+            console.log(`✅ DEBUG: Generated card for ${className}:`, characterCard);
+        } else {
+            console.warn(`⚠️ DEBUG: No data found for class: ${className}`);
+        }
+    }
+    
+    return cards;
+}
+
+/**
+ * Populate the character selection modal with cards
+ */
+function populateCharacterSelectionModal(characterCards) {
+    console.log('🎭 DEBUG: populateCharacterSelectionModal called');
+    
+    const container = document.querySelector('.character-cards-container');
+    if (!container) {
+        console.error('❌ DEBUG: Character cards container not found');
+        return;
+    }
+    
+    // Clear existing content
+    container.innerHTML = '';
+    
+    // Create card elements
+    characterCards.forEach((card, index) => {
+        const cardElement = createCharacterCardElement(card, index);
+        container.appendChild(cardElement);
+    });
+    
+    console.log(`✅ DEBUG: Populated ${characterCards.length} character cards`);
+}
+
+/**
+ * Create HTML element for a character card
+ */
+function createCharacterCardElement(card, index) {
+    const cardDiv = document.createElement('div');
+    cardDiv.className = 'character-card';
+    cardDiv.dataset.className = card.className;
+    cardDiv.dataset.index = index;
+    
+    // Build the card HTML
+    cardDiv.innerHTML = `
+        <div class="character-name">${card.name}</div>
+        <div class="character-class">${card.displayClass}</div>
+        <div class="character-stats">
+            <div class="character-stat">
+                <div class="character-stat-label">HP</div>
+                <div class="character-stat-value">${card.stats.hp}</div>
+            </div>
+            <div class="character-stat">
+                <div class="character-stat-label">ATK</div>
+                <div class="character-stat-value">${card.stats.atk}</div>
+            </div>
+            <div class="character-stat">
+                <div class="character-stat-label">MAG</div>
+                <div class="character-stat-value">${card.stats.mag}</div>
+            </div>
+        </div>
+        <div class="character-description">${card.description}</div>
+        ${card.startingCard ? `<div class="character-starting-card">Starts with: ${card.startingCard.name}</div>` : ''}
+    `;
+    
+    // Add click handler
+    cardDiv.addEventListener('click', () => {
+        selectCharacter(card);
+    });
+    
+    return cardDiv;
+}
+
+/**
+ * Handle character selection
+ */
+function selectCharacter(characterData) {
+    console.log('🎭 DEBUG: selectCharacter called with:', characterData);
+    
+    // Hide the character selection modal
+    const modal = document.getElementById('character-selection-modal');
+    if (modal) {
+        modal.style.display = 'none';
+    }
+    
+    // Initialize the game with the selected character
+    initializeGameWithCharacter(
+        characterData.className, 
+        characterData.name, 
+        characterData.stats, 
+        characterData.tags
+    );
+}
+
+/**
+ * Initialize game with selected character data
+ */
+function initializeGameWithCharacter(className, characterName, stats, tags = []) {
+    console.log('🎭 DEBUG: initializeGameWithCharacter called');
+    console.log('🎭 DEBUG: Class:', className, 'Name:', characterName, 'Stats:', stats);
+    
+    // Create the leader character with selected data
+    const leader = {
+        id: `${className}-leader`,
+        name: characterName,
+        hp: stats.hp,
+        maxHp: stats.maxHp,
+        atk: stats.atk,
+        mag: stats.mag,
+        tags: tags || [className]
+    };
+    
+    // Initialize game state with custom leader
+    initializeGameWithCustomLeader(leader);
+}
+
+/**
+ * Modified game initialization that accepts a custom leader
+ */
+function initializeGameWithCustomLeader(customLeader) {
+    console.log('🎮 DEBUG: initializeGameWithCustomLeader called with:', customLeader);
+    
+    // Reset game state
+    G.victory = false;
+    G.over = false;
+    G.gridLevel = 1;
+    G.totalLevels = 15;
+    G.currentRegion = "forest";
+    G.turn = 1;
+    
+    // Set custom leader as party leader
+    G.party = [customLeader];
+    G.partyLeaderIndex = 0;
+    
+    // Initialize other game systems
+    G.hand = [];
+    G.discardPile = [];
+    G.equipment = [];
+    G.actionHistory = [];
+    G.logEntries = [];
+    
+    // Add starting cards based on character class
+    addStartingCardsForClass(customLeader);
+    
+    // Generate grid and start game
+    generateGrid();
+    updateUI();
+    
+    console.log('✅ DEBUG: Game initialized with custom character:', customLeader.name);
+    addLogEntry(`🎭 ${customLeader.name} begins their journey through the Cruxfade!`);
+}
+
+/**
+ * Add starting cards based on character class
+ */
+function addStartingCardsForClass(character) {
+    console.log('🃏 DEBUG: addStartingCardsForClass called for:', character.name);
+    
+    // Get starting cards from allies data
+    if (GAME_DATA.allies && GAME_DATA.allies['forest-region']) {
+        const classData = GAME_DATA.allies['forest-region'][character.tags[0]];
+        if (classData && classData.cards) {
+            // Add the class-specific cards
+            classData.cards.forEach(cardTemplate => {
+                const card = {
+                    id: `${cardTemplate.id}-${character.id}`,
+                    name: cardTemplate.name,
+                    type: cardTemplate.type,
+                    description: cardTemplate.description
+                };
+                
+                const result = addCardToHand(card);
+                if (result.success) {
+                    console.log(`✅ DEBUG: Added starting card: ${card.name}`);
+                } else {
+                    console.warn(`⚠️ DEBUG: Failed to add starting card: ${card.name}`);
+                }
+            });
+        }
+    }
+    
+    // Add basic starting cards that everyone gets
+    const basicCards = [
+        { id: 'basic-attack', name: 'Strike', type: 'attack', description: 'Deal basic damage to an enemy' },
+        { id: 'basic-defend', name: 'Guard', type: 'defense', description: 'Reduce incoming damage' }
+    ];
+    
+    basicCards.forEach(cardTemplate => {
+        const card = {
+            id: `${cardTemplate.id}-${character.id}`,
+            name: cardTemplate.name,
+            type: cardTemplate.type,
+            description: cardTemplate.description
+        };
+        
+        const result = addCardToHand(card);
+        if (result.success) {
+            console.log(`✅ DEBUG: Added basic card: ${card.name}`);
+        }
+    });
+}
+
+// ================================================================
 // TECHNIQUE CARD HELPER FUNCTIONS
 // Add these functions to state.js after the existing ally helper functions
 // ================================================================
