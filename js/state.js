@@ -2314,10 +2314,10 @@ export function removeAlly(allyId) {
 
 /**
  * Get maximum hand size
- */
+ 
 export function getMaxHandSize() {
     return 5; // MAX_HAND_SIZE constant
-}
+}*/
 
 /**
  * Manually discard a card by ID to make room
