@@ -79,6 +79,43 @@ function getRegionForGrid(gridLevel) {
     return "void-region";
 }
 
+// 5. DEBUGGING: Add this test function to verify everything works
+/**
+ * Test function to verify character selection system
+ * Call this in console: testCharacterSelection()
+ */
+function testCharacterSelection() {
+    console.log('🧪 DEBUG: Testing character selection system...');
+    
+    // Test if GAME_DATA exists
+    console.log('🧪 GAME_DATA exists:', !!GAME_DATA);
+    console.log('🧪 GAME_DATA.allies exists:', !!GAME_DATA?.allies);
+    
+    if (GAME_DATA?.allies?.['forest-region']) {
+        const classes = ['warrior', 'ranger', 'herbalist', 'rogue', 'paladin'];
+        console.log('🧪 Available classes:');
+        classes.forEach(className => {
+            const exists = !!GAME_DATA.allies['forest-region'][className];
+            console.log(`  ${className}: ${exists ? '✅' : '❌'}`);
+        });
+    }
+    
+    // Test character selection modal
+    const modal = document.getElementById('character-selection-modal');
+    console.log('🧪 Character selection modal exists:', !!modal);
+    
+    // Test if functions exist
+    const functions = ['showCharacterSelection', 'generateCharacterCards', 'selectCharacter'];
+    console.log('🧪 Required functions:');
+    functions.forEach(funcName => {
+        const exists = typeof window[funcName] === 'function';
+        console.log(`  ${funcName}: ${exists ? '✅' : '❌'}`);
+    });
+}
+
+// Make test function globally accessible
+window.testCharacterSelection = testCharacterSelection;
+
 // ================================================================
 // MODULE VARIABLES
 // ================================================================
