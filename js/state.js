@@ -3341,6 +3341,6 @@ function addCardToHand(card) {
 /**
  * Ensure getMaxHandSize function exists
  */
-function getMaxHandSize() {
+export function getMaxHandSize() {
     return 5; // Standard hand size limit
 }
