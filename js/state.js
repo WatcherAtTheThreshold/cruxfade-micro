@@ -7,6 +7,8 @@
 // Import seeded RNG functions
 import { random, randomInt, pickRandom } from './rng.js';
 
+import { updateUI } from './ui.js';
+
 // ================================================================
 // GAME DATA STORAGE
 // ================================================================
@@ -3343,4 +3345,28 @@ function addCardToHand(card) {
  */
 export function getMaxHandSize() {
     return 5; // Standard hand size limit
+}
+
+// ================================================================
+// FIX MISSING FUNCTIONS - Add these to your state.js file
+// ================================================================
+
+/**
+ * Add missing initializeGameWithoutData function to state.js
+ */
+export function initializeGameWithoutData() {
+    console.log('⚠️ DEBUG: initializeGameWithoutData - using fallback');
+    
+    // Create a basic default leader
+    const defaultLeader = {
+        id: 'default-leader',
+        name: 'Artorius', // Your preferred default name
+        hp: 15,
+        maxHp: 15,
+        atk: 3,
+        mag: 1,
+        tags: ['human', 'warrior']
+    };
+    
+    initializeGameWithCustomLeader(defaultLeader);
 }
