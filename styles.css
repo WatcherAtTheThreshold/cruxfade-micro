@@ -2232,7 +2232,7 @@ section {
 }
 
 .character-card {
-   background-image: url('./images/cards/card-background-bg.png');
+   background-image: url('./images/cards/card-background.png');
     background-size: 100% 100%;
     background-position: center;
     background-repeat: no-repeat;
