@@ -1477,7 +1477,7 @@ function getRegionForGrid(gridLevel) {
 
 /**
  * Generate a procedural name from ally data - DEBUG VERSION
- */
+ 
 function generateAllyName(allyData) {
     console.log('📛 DEBUG: generateAllyName called with:', allyData);
     
@@ -1489,7 +1489,7 @@ function generateAllyName(allyData) {
     
     const name = pickRandom(names);
     const title = pickRandom(titles);
-    
+   
     console.log('📛 DEBUG: Picked name:', name);
     console.log('📛 DEBUG: Picked title:', title);
     
@@ -1497,7 +1497,7 @@ function generateAllyName(allyData) {
     console.log('📛 DEBUG: Generated full name:', fullName);
     
     return fullName;
-}
+} */
 
 /**
  * Get available ally types for the current region with rarity weighting - DEBUG VERSION
