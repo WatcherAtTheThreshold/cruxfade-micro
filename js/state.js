@@ -166,49 +166,113 @@ function generateGrid() {
     ensureKeyAndDoor();
 }
 
+// ================================================================
+// MODIFIED GAME INITIALIZATION - Replace your existing initializeGame() function
+// This should be in state.js where your current initializeGame() function is located
+// ================================================================
+
 /**
- * Initialize/reset the game to starting state - UPDATED for fog of war
+ * Initialize the game - now shows character selection first
  */
 export function initializeGame() {
-    // Reset core values
-    G.gridLevel = 1;
-    G.keyFound = false;
-    G.over = false;
-    G.victory = false;
-    G.log = [];
+    console.log('🎮 Initializing game...');
     
-    // Reset boss state
-    G.boss = {
-        active: false,
-        bossId: null,
-        currentPhase: 0,
-        phaseComplete: false,
-        defeated: false,
-        enemyIndex: 0
-    };
+    // Reset any existing game state
+    resetGameState();
     
-    // Initialize player position to left edge start (1,0)
-    G.board.player = { r: 1, c: 0 };
-    
-    // CLEAR fog of war state - start with empty seen set
-    G.board.seen = new Set();
-    
-    // Generate initial 4x4 grid with fog of war
-    generateGrid();
-    
-    // Initialize starting deck
-    initializeStartingDeck();
-    
-    // Reset party to starting state
-    resetPartyToStart();
-    
-    // Initialize equipment system
-    initializeEquipment();
-    
-    console.log('🔄 Game state initialized with fog of war');
+    // Show character selection modal instead of directly starting
+    showCharacterSelection();
 }
 
+/**
+ * Reset game state to clean slate
+ */
+function resetGameState() {
+    console.log('🔄 DEBUG: resetGameState called');
+    
+    // Clear existing state
+    G.victory = false;
+    G.over = false;
+    G.party = [];
+    G.hand = [];
+    G.discardPile = [];
+    G.equipment = [];
+    G.actionHistory = [];
+    G.logEntries = [];
+    G.currentTile = null;
+    G.currentEnemy = null;
+    G.combatActive = false;
+    G.enemyDefeated = false;
+    
+    // Clear any pending data
+    G._pendingAlly = null;
+    G._pendingCards = null;
+    G._pendingTechniques = null;
+    G._pendingTechniqueCard = null;
+    
+    console.log('✅ DEBUG: Game state reset');
+}
 
+// ================================================================
+// BACKUP: Keep your old initializeGame() logic as fallback
+// This function contains your original game initialization logic
+// but without the hardcoded "Leader" character
+// ================================================================
+
+/**
+ * Original game initialization logic - now called after character selection
+ * This is the renamed version of your original initializeGame() function
+ */
+function initializeGameCore() {
+    console.log('🎮 DEBUG: initializeGameCore called');
+    
+    // Initialize game level and region settings
+    G.gridLevel = 1;
+    G.totalLevels = 15;
+    G.currentRegion = "forest";
+    G.turn = 1;
+    
+    // Generate the initial grid
+    generateGrid();
+    
+    // Update UI to show the game
+    updateUI();
+    
+    // Add welcome message
+    addLogEntry('🌲 You enter the mysterious Cruxfade forest...');
+    addLogEntry('🎯 Find allies, gather resources, and prepare for the challenges ahead.');
+    
+    console.log('✅ DEBUG: Game core initialization complete');
+}
+
+// ================================================================
+// UPDATED: Use the core initialization in the character selection flow
+// Modify the initializeGameWithCustomLeader function to use this
+// ================================================================
+
+/**
+ * Modified game initialization that accepts a custom leader - UPDATED VERSION
+ * Replace the previous version with this one
+ */
+function initializeGameWithCustomLeader(customLeader) {
+    console.log('🎮 DEBUG: initializeGameWithCustomLeader called with:', customLeader);
+    
+    // Set custom leader as party leader
+    G.party = [customLeader];
+    G.partyLeaderIndex = 0;
+    
+    // Initialize other game systems using the core logic
+    initializeGameCore();
+    
+    // Add starting cards based on character class
+    addStartingCardsForClass(customLeader);
+    
+    // Update UI to show the selected character
+    updateUI();
+    
+    console.log('✅ DEBUG: Game initialized with custom character:', customLeader.name);
+    addLogEntry(`🎭 ${customLeader.name} begins their journey through the Cruxfade!`);
+}
 
 // ================================================================
 // UPDATED: BOSS GRID GENERATION - ADD COMBAT ENGAGEMENT TRACKING
