@@ -3266,3 +3266,81 @@ export function getAvailableEquipmentForSlot(slot) {
     // Limit to 3 items for now to keep UI manageable
     return available.slice(0, 3);
 }
+
+// 2. ADD TO STATE.JS: Fallback initialization if data fails to load
+function initializeGameWithoutData() {
+    console.log('⚠️ DEBUG: initializeGameWithoutData - using fallback');
+    
+    // Create a basic default leader
+    const defaultLeader = {
+        id: 'default-leader',
+        name: 'Artorius', // Your preferred default name
+        hp: 15,
+        maxHp: 15,
+        atk: 3,
+        mag: 1,
+        tags: ['human', 'warrior']
+    };
+    
+    initializeGameWithCustomLeader(defaultLeader);
+}
+
+// 3. ADD TO STATE.JS: Helper function to handle missing functions gracefully
+// Make sure these helper functions exist and handle edge cases
+
+/**
+ * Generate ally name with fallback for missing data
+ */
+function generateAllyName(allyData) {
+    console.log('📛 DEBUG: generateAllyName called with:', allyData);
+    
+    if (!allyData) {
+        console.warn('⚠️ DEBUG: No ally data provided, using fallback name');
+        return 'Artorius the Brave';
+    }
+    
+    const names = allyData.names || ["Artorius", "Leader", "Hero"];
+    const titles = allyData.titles || ["the Brave", "the Bold", "the Ready"];
+    
+    console.log('📛 DEBUG: Available names:', names);
+    console.log('📛 DEBUG: Available titles:', titles);
+    
+    const name = pickRandom(names);
+    const title = pickRandom(titles);
+    
+    console.log('📛 DEBUG: Picked name:', name);
+    console.log('📛 DEBUG: Picked title:', title);
+    
+    const fullName = `${name} ${title}`;
+    console.log('📛 DEBUG: Generated full name:', fullName);
+    
+    return fullName;
+}
+
+/**
+ * Ensure addCardToHand function exists and handles the new system
+ */
+function addCardToHand(card) {
+    if (!card) {
+        return { success: false, error: 'No card provided' };
+    }
+    
+    // Check hand size limit
+    const maxHandSize = getMaxHandSize();
+    if (G.hand.length >= maxHandSize) {
+        return { success: false, error: 'Hand is full' };
+    }
+    
+    // Add card to hand
+    G.hand.push(card);
+    console.log(`✅ DEBUG: Added card to hand: ${card.name}`);
+    
+    return { success: true };
+}
+
+/**
+ * Ensure getMaxHandSize function exists
+ */
+function getMaxHandSize() {
+    return 5; // Standard hand size limit
+}
