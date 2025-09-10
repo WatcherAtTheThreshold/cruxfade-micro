@@ -3024,18 +3024,27 @@ function generateCharacterCards() {
 }
 
 /**
- * Populate character selection modal with cards
+ * Populate character selection modal with cards - DEBUG VERSION
  */
 function populateCharacterSelectionModal(characterCards) {
     const container = document.querySelector('.character-cards-container');
-    if (!container) return;
+    console.log('🔍 DEBUG: Container found:', container);
+    console.log('🔍 DEBUG: Cards to populate:', characterCards.length);
+    
+    if (!container) {
+        console.error('❌ character-cards-container not found!');
+        return;
+    }
     
     container.innerHTML = '';
     
     characterCards.forEach((card, index) => {
+        console.log('🔍 DEBUG: Creating card:', card.name);
         const cardElement = createCharacterCardElement(card, index);
+        console.log('🔍 DEBUG: Card element created:', cardElement);
         container.appendChild(cardElement);
     });
+    console.log('🔍 DEBUG: Cards added to container. Container HTML:', container.innerHTML.length, 'characters');
 }
 
 /**
