@@ -182,6 +182,39 @@
     "regions": ["forest-region", "mountain-region", "void-region"]
   }
 },
+    "paladin": {
+  "rarity": "uncommon",
+  "weight": 2,
+  "names": ["Gareth", "Lyanna", "Thaddeus", "Seraphina", "Roland", "Celestine", "Aldric", "Grace"],
+  "titles": ["the Righteous", "the Holy", "the Light-Bearer", "the Protector", "the Divine Champion", "the Sacred Shield"],
+  "baseStats": { 
+    "hp": 11, 
+    "maxHp": 11, 
+    "atk": 3, 
+    "mag": 2 
+  },
+  "tags": ["human", "paladin", "healer"],
+  "description": "A holy warrior dedicated to protection and healing",
+  "cards": [
+    { 
+      "id": "divine-strike", 
+      "name": "Divine Strike", 
+      "type": "attack",
+      "description": "Deal magic damage infused with holy power"
+    },
+    { 
+      "id": "blessing", 
+      "name": "Blessing", 
+      "type": "utility",
+      "description": "Heal and protect an ally with divine grace"
+    }
+  ],
+  "joinConditions": {
+    "minGridLevel": 2,
+    "maxPartySize": 4,
+    "regions": ["forest-region", "mountain-region"]
+  }
+},
 
     "techniques": [
       {
