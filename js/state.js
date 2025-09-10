@@ -7,7 +7,7 @@
 // Import seeded RNG functions
 import { random, randomInt, pickRandom } from './rng.js';
 
-import { updateUI } from './ui.js';
+import { renderAll as updateUI } from './ui.js';
 
 // ================================================================
 // GAME DATA STORAGE
