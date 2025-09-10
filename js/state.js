@@ -3269,23 +3269,7 @@ export function getAvailableEquipmentForSlot(slot) {
     return available.slice(0, 3);
 }
 
-// 2. ADD TO STATE.JS: Fallback initialization if data fails to load
-function initializeGameWithoutData() {
-    console.log('⚠️ DEBUG: initializeGameWithoutData - using fallback');
-    
-    // Create a basic default leader
-    const defaultLeader = {
-        id: 'default-leader',
-        name: 'Artorius', // Your preferred default name
-        hp: 15,
-        maxHp: 15,
-        atk: 3,
-        mag: 1,
-        tags: ['human', 'warrior']
-    };
-    
-    initializeGameWithCustomLeader(defaultLeader);
-}
+
 
 // 3. ADD TO STATE.JS: Helper function to handle missing functions gracefully
 // Make sure these helper functions exist and handle edge cases
