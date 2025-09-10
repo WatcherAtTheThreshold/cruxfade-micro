@@ -652,7 +652,7 @@ section {
   transition: transform 0.7s ease; 
 }
 .party-member:first-child:hover { 
-  background-image: url('./images/cards/member-bg.png');
+   url('./images/cards/member-bg.png');
   background-size: 100% 100%;
   background-position: center;
   /*background: var(--surface);
@@ -2198,7 +2198,9 @@ section {
     max-height: 90vh;
     padding: 1.5rem;
     text-align: center;
-    background-image: url('./images/cards/member-bg.png');
+    background-image: url('./images/sections/hand-bg.png');
+    background-size: 100% 100%;
+    background-position: center;
     /*background: linear-gradient(135deg, #2a1810 0%, #3d2a1f 100%);*/
     border: 2px solid #8b7355;
     border-radius: 12px;
