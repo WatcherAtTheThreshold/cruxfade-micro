@@ -7,8 +7,6 @@
 // Import seeded RNG functions
 import { random, randomInt, pickRandom } from './rng.js';
 
-import { renderAll as updateUI } from './ui.js';
-
 // ================================================================
 // GAME DATA STORAGE
 // ================================================================
@@ -168,113 +166,49 @@ function generateGrid() {
     ensureKeyAndDoor();
 }
 
-// ================================================================
-// MODIFIED GAME INITIALIZATION - Replace your existing initializeGame() function
-// This should be in state.js where your current initializeGame() function is located
-// ================================================================
-
 /**
- * Initialize the game - now shows character selection first
+ * Initialize/reset the game to starting state - UPDATED for fog of war
  */
 export function initializeGame() {
-    console.log('🎮 Initializing game...');
-    
-    // Reset any existing game state
-    resetGameState();
-    
-    // Show character selection modal instead of directly starting
-    showCharacterSelection();
-}
-
-/**
- * Reset game state to clean slate
- */
-function resetGameState() {
-    console.log('🔄 DEBUG: resetGameState called');
-    
-    // Clear existing state
-    G.victory = false;
-    G.over = false;
-    G.party = [];
-    G.hand = [];
-    G.discardPile = [];
-    G.equipment = [];
-    G.actionHistory = [];
-    G.logEntries = [];
-    G.currentTile = null;
-    G.currentEnemy = null;
-    G.combatActive = false;
-    G.enemyDefeated = false;
-    
-    // Clear any pending data
-    G._pendingAlly = null;
-    G._pendingCards = null;
-    G._pendingTechniques = null;
-    G._pendingTechniqueCard = null;
-    
-    console.log('✅ DEBUG: Game state reset');
-}
-
-// ================================================================
-// BACKUP: Keep your old initializeGame() logic as fallback
-// This function contains your original game initialization logic
-// but without the hardcoded "Leader" character
-// ================================================================
-
-/**
- * Original game initialization logic - now called after character selection
- * This is the renamed version of your original initializeGame() function
- */
-function initializeGameCore() {
-    console.log('🎮 DEBUG: initializeGameCore called');
-    
-    // Initialize game level and region settings
+    // Reset core values
     G.gridLevel = 1;
-    G.totalLevels = 15;
-    G.currentRegion = "forest";
-    G.turn = 1;
+    G.keyFound = false;
+    G.over = false;
+    G.victory = false;
+    G.log = [];
     
-    // Generate the initial grid
+    // Reset boss state
+    G.boss = {
+        active: false,
+        bossId: null,
+        currentPhase: 0,
+        phaseComplete: false,
+        defeated: false,
+        enemyIndex: 0
+    };
+    
+    // Initialize player position to left edge start (1,0)
+    G.board.player = { r: 1, c: 0 };
+    
+    // CLEAR fog of war state - start with empty seen set
+    G.board.seen = new Set();
+    
+    // Generate initial 4x4 grid with fog of war
     generateGrid();
     
-    // Update UI to show the game
-    updateUI();
+    // Initialize starting deck
+    initializeStartingDeck();
     
-    // Add welcome message
-    addLogEntry('🌲 You enter the mysterious Cruxfade forest...');
-    addLogEntry('🎯 Find allies, gather resources, and prepare for the challenges ahead.');
+    // Reset party to starting state
+    resetPartyToStart();
     
-    console.log('✅ DEBUG: Game core initialization complete');
+    // Initialize equipment system
+    initializeEquipment();
+    
+    console.log('🔄 Game state initialized with fog of war');
 }
 
-// ================================================================
-// UPDATED: Use the core initialization in the character selection flow
-// Modify the initializeGameWithCustomLeader function to use this
-// ================================================================
 
-/**
- * Modified game initialization that accepts a custom leader - UPDATED VERSION
- * Replace the previous version with this one
- */
-function initializeGameWithCustomLeader(customLeader) {
-    console.log('🎮 DEBUG: initializeGameWithCustomLeader called with:', customLeader);
-    
-    // Set custom leader as party leader
-    G.party = [customLeader];
-    G.partyLeaderIndex = 0;
-    
-    // Initialize other game systems using the core logic
-    initializeGameCore();
-    
-    // Add starting cards based on character class
-    addStartingCardsForClass(customLeader);
-    
-    // Update UI to show the selected character
-    updateUI();
-    
-    console.log('✅ DEBUG: Game initialized with custom character:', customLeader.name);
-    addLogEntry(`🎭 ${customLeader.name} begins their journey through the Cruxfade!`);
-}
 
 // ================================================================
 // UPDATED: BOSS GRID GENERATION - ADD COMBAT ENGAGEMENT TRACKING
@@ -1479,7 +1413,7 @@ function getRegionForGrid(gridLevel) {
 
 /**
  * Generate a procedural name from ally data - DEBUG VERSION
- 
+ */
 function generateAllyName(allyData) {
     console.log('📛 DEBUG: generateAllyName called with:', allyData);
     
@@ -1491,7 +1425,7 @@ function generateAllyName(allyData) {
     
     const name = pickRandom(names);
     const title = pickRandom(titles);
-   
+    
     console.log('📛 DEBUG: Picked name:', name);
     console.log('📛 DEBUG: Picked title:', title);
     
@@ -1499,7 +1433,7 @@ function generateAllyName(allyData) {
     console.log('📛 DEBUG: Generated full name:', fullName);
     
     return fullName;
-} */
+}
 
 /**
  * Get available ally types for the current region with rarity weighting - DEBUG VERSION
@@ -1638,267 +1572,6 @@ function getAllyCardsFromData(region, allyType, allyId) {
     
     console.log('🃏 DEBUG: Generated cards with unique IDs:', cards);
     return cards;
-}
-
-// ================================================================
-// CHARACTER SELECTION SYSTEM - Add these functions to state.js
-// Place these functions after the existing ally helper functions
-// ================================================================
-
-/**
- * Show character selection modal at game start
- */
-export function showCharacterSelection() {
-    console.log('🎭 DEBUG: showCharacterSelection() called');
-    
-    if (!GAME_DATA.allies || !GAME_DATA.allies['forest-region']) {
-        console.error('❌ DEBUG: No allies data available for character selection');
-        // Fall back to default leader if no data
-        return initializeGameWithCharacter('warrior', 'Leader', { hp: 15, maxHp: 15, atk: 3, mag: 1 });
-    }
-    
-    // Get character classes from forest-region (our starting classes)
-    const characterClasses = ['warrior', 'ranger', 'herbalist', 'rogue', 'paladin'];
-    const characterCards = generateCharacterCards(characterClasses);
-    
-    // Populate the modal with character cards
-    populateCharacterSelectionModal(characterCards);
-    
-    // Show the modal
-    const modal = document.getElementById('character-selection-modal');
-    if (modal) {
-        modal.style.display = 'block';
-        console.log('✅ DEBUG: Character selection modal shown');
-    }
-}
-
-/**
- * Generate character card data from allies.json
- */
-function generateCharacterCards(characterClasses) {
-    console.log('🎭 DEBUG: generateCharacterCards called with:', characterClasses);
-    
-    const cards = [];
-    const regionData = GAME_DATA.allies['forest-region'];
-    
-    for (const className of characterClasses) {
-        if (regionData[className]) {
-            const classData = regionData[className];
-            
-            // Generate a procedural name for this character
-            const proceduralName = generateAllyName(classData);
-            
-            // Create character card data
-            const characterCard = {
-                className: className,
-                name: proceduralName,
-                displayClass: className.charAt(0).toUpperCase() + className.slice(1),
-                stats: classData.baseStats,
-                description: classData.description,
-                startingCard: classData.cards && classData.cards.length > 0 ? classData.cards[0] : null,
-                tags: classData.tags
-            };
-            
-            cards.push(characterCard);
-            console.log(`✅ DEBUG: Generated card for ${className}:`, characterCard);
-        } else {
-            console.warn(`⚠️ DEBUG: No data found for class: ${className}`);
-        }
-    }
-    
-    return cards;
-}
-
-/**
- * Populate the character selection modal with cards
- */
-function populateCharacterSelectionModal(characterCards) {
-    console.log('🎭 DEBUG: populateCharacterSelectionModal called');
-    
-    const container = document.querySelector('.character-cards-container');
-    if (!container) {
-        console.error('❌ DEBUG: Character cards container not found');
-        return;
-    }
-    
-    // Clear existing content
-    container.innerHTML = '';
-    
-    // Create card elements
-    characterCards.forEach((card, index) => {
-        const cardElement = createCharacterCardElement(card, index);
-        container.appendChild(cardElement);
-    });
-    
-    console.log(`✅ DEBUG: Populated ${characterCards.length} character cards`);
-}
-
-/**
- * Create HTML element for a character card
- */
-function createCharacterCardElement(card, index) {
-    const cardDiv = document.createElement('div');
-    cardDiv.className = 'character-card';
-    cardDiv.dataset.className = card.className;
-    cardDiv.dataset.index = index;
-    
-    // Build the card HTML
-    cardDiv.innerHTML = `
-        <div class="character-name">${card.name}</div>
-        <div class="character-class">${card.displayClass}</div>
-        <div class="character-stats">
-            <div class="character-stat">
-                <div class="character-stat-label">HP</div>
-                <div class="character-stat-value">${card.stats.hp}</div>
-            </div>
-            <div class="character-stat">
-                <div class="character-stat-label">ATK</div>
-                <div class="character-stat-value">${card.stats.atk}</div>
-            </div>
-            <div class="character-stat">
-                <div class="character-stat-label">MAG</div>
-                <div class="character-stat-value">${card.stats.mag}</div>
-            </div>
-        </div>
-        <div class="character-description">${card.description}</div>
-        ${card.startingCard ? `<div class="character-starting-card">Starts with: ${card.startingCard.name}</div>` : ''}
-    `;
-    
-    // Add click handler
-    cardDiv.addEventListener('click', () => {
-        selectCharacter(card);
-    });
-    
-    return cardDiv;
-}
-
-/**
- * Handle character selection
- */
-function selectCharacter(characterData) {
-    console.log('🎭 DEBUG: selectCharacter called with:', characterData);
-    
-    // Hide the character selection modal
-    const modal = document.getElementById('character-selection-modal');
-    if (modal) {
-        modal.style.display = 'none';
-    }
-    
-    // Initialize the game with the selected character
- initializeGameWithSelectedCharacter(
-    characterData.className, 
-    characterData.name, 
-    characterData.stats, 
-    characterData.tags
-);
-}
-
-/**
- * Initialize game with selected character data
- */
-function initializeGameWithCharacter(className, characterName, stats, tags = []) {
-    console.log('🎭 DEBUG: initializeGameWithCharacter called');
-    console.log('🎭 DEBUG: Class:', className, 'Name:', characterName, 'Stats:', stats);
-    
-    // Create the leader character with selected data
-    const leader = {
-        id: `${className}-leader`,
-        name: characterName,
-        hp: stats.hp,
-        maxHp: stats.maxHp,
-        atk: stats.atk,
-        mag: stats.mag,
-        tags: tags || [className]
-    };
-    
-    // Initialize game state with custom leader
-    initializeGameWithCustomLeader(leader);
-}
-
-/**
- * Modified game initialization that accepts a custom leader
- */
-function initializeGameWithSelectedCharacter(customLeader) {
-    console.log('🎮 DEBUG: initializeGameWithCustomLeader called with:', customLeader);
-    
-    // Reset game state
-    G.victory = false;
-    G.over = false;
-    G.gridLevel = 1;
-    G.totalLevels = 15;
-    G.currentRegion = "forest";
-    G.turn = 1;
-    
-    // Set custom leader as party leader
-    G.party = [customLeader];
-    G.partyLeaderIndex = 0;
-    
-    // Initialize other game systems
-    G.hand = [];
-    G.discardPile = [];
-    G.equipment = [];
-    G.actionHistory = [];
-    G.logEntries = [];
-    
-    // Add starting cards based on character class
-    addStartingCardsForClass(customLeader);
-    
-    // Generate grid and start game
-    generateGrid();
-    updateUI();
-    
-    console.log('✅ DEBUG: Game initialized with custom character:', customLeader.name);
-    addLogEntry(`🎭 ${customLeader.name} begins their journey through the Cruxfade!`);
-}
-
-/**
- * Add starting cards based on character class
- */
-function addStartingCardsForClass(character) {
-    console.log('🃏 DEBUG: addStartingCardsForClass called for:', character.name);
-    
-    // Get starting cards from allies data
-    if (GAME_DATA.allies && GAME_DATA.allies['forest-region']) {
-        const classData = GAME_DATA.allies['forest-region'][character.tags[0]];
-        if (classData && classData.cards) {
-            // Add the class-specific cards
-            classData.cards.forEach(cardTemplate => {
-                const card = {
-                    id: `${cardTemplate.id}-${character.id}`,
-                    name: cardTemplate.name,
-                    type: cardTemplate.type,
-                    description: cardTemplate.description
-                };
-                
-                const result = addCardToHand(card);
-                if (result.success) {
-                    console.log(`✅ DEBUG: Added starting card: ${card.name}`);
-                } else {
-                    console.warn(`⚠️ DEBUG: Failed to add starting card: ${card.name}`);
-                }
-            });
-        }
-    }
-    
-    // Add basic starting cards that everyone gets
-    const basicCards = [
-        { id: 'basic-attack', name: 'Strike', type: 'attack', description: 'Deal basic damage to an enemy' },
-        { id: 'basic-defend', name: 'Guard', type: 'defense', description: 'Reduce incoming damage' }
-    ];
-    
-    basicCards.forEach(cardTemplate => {
-        const card = {
-            id: `${cardTemplate.id}-${character.id}`,
-            name: cardTemplate.name,
-            type: cardTemplate.type,
-            description: cardTemplate.description
-        };
-        
-        const result = addCardToHand(card);
-        if (result.success) {
-            console.log(`✅ DEBUG: Added basic card: ${card.name}`);
-        }
-    });
 }
 
 // ================================================================
@@ -2316,10 +1989,10 @@ export function removeAlly(allyId) {
 
 /**
  * Get maximum hand size
- 
+ */
 export function getMaxHandSize() {
     return 5; // MAX_HAND_SIZE constant
-}*/
+}
 
 /**
  * Manually discard a card by ID to make room
@@ -2344,7 +2017,7 @@ const MAX_HAND_SIZE = 5;
 /**
  * Add a card to the hand, handling overflow
  * Returns: { success: boolean, overflow: Card|null }
- 
+ */
 export function addCardToHand(card) {
     if (G.hand.length < MAX_HAND_SIZE) {
         // Room in hand - add normally
@@ -2356,7 +2029,7 @@ export function addCardToHand(card) {
         addLogEntry(`⚠️ Hand full! Must discard a card to add ${card.name}`);
         return { success: false, overflow: card };
     }
-}*/
+}
 
 /**
  * Force add a card to hand, discarding oldest if needed
@@ -3267,90 +2940,4 @@ export function getAvailableEquipmentForSlot(slot) {
     
     // Limit to 3 items for now to keep UI manageable
     return available.slice(0, 3);
-}
-
-
-
-// 3. ADD TO STATE.JS: Helper function to handle missing functions gracefully
-// Make sure these helper functions exist and handle edge cases
-
-/**
- * Generate ally name with fallback for missing data
- */
-function generateAllyName(allyData) {
-    console.log('📛 DEBUG: generateAllyName called with:', allyData);
-    
-    if (!allyData) {
-        console.warn('⚠️ DEBUG: No ally data provided, using fallback name');
-        return 'Artorius the Brave';
-    }
-    
-    const names = allyData.names || ["Artorius", "Leader", "Hero"];
-    const titles = allyData.titles || ["the Brave", "the Bold", "the Ready"];
-    
-    console.log('📛 DEBUG: Available names:', names);
-    console.log('📛 DEBUG: Available titles:', titles);
-    
-    const name = pickRandom(names);
-    const title = pickRandom(titles);
-    
-    console.log('📛 DEBUG: Picked name:', name);
-    console.log('📛 DEBUG: Picked title:', title);
-    
-    const fullName = `${name} ${title}`;
-    console.log('📛 DEBUG: Generated full name:', fullName);
-    
-    return fullName;
-}
-
-/**
- * Ensure addCardToHand function exists and handles the new system
- */
-function addCardToHand(card) {
-    if (!card) {
-        return { success: false, error: 'No card provided' };
-    }
-    
-    // Check hand size limit
-    const maxHandSize = getMaxHandSize();
-    if (G.hand.length >= maxHandSize) {
-        return { success: false, error: 'Hand is full' };
-    }
-    
-    // Add card to hand
-    G.hand.push(card);
-    console.log(`✅ DEBUG: Added card to hand: ${card.name}`);
-    
-    return { success: true };
-}
-
-/**
- * Ensure getMaxHandSize function exists
- */
-export function getMaxHandSize() {
-    return 5; // Standard hand size limit
-}
-
-// ================================================================
-// FIX MISSING FUNCTIONS - Add these to your state.js file
-// ================================================================
-
-/**
- * Add missing initializeGameWithoutData function to state.js
- */
-export function initializeGameWithoutData() {
-    console.log('⚠️ DEBUG: initializeGameWithoutData - using fallback');
-    
-    // Create a basic default leader
-    const defaultLeader = {
-        id: 'default-leader',
-        name: 'Artorius', // Your preferred default name
-        hp: 15,
-        maxHp: 15,
-        atk: 3,
-        mag: 1,
-        tags: ['human', 'warrior']
-    };
-    
-    initializeGameWithCustomLeader(defaultLeader);
 }
