@@ -166,15 +166,50 @@ function generateGrid() {
     ensureKeyAndDoor();
 }
 
+// ================================================================
+// REPLACE YOUR EXISTING initializeGame() FUNCTION WITH THIS
+// Delete your old initializeGame() and replace with this new one
+// ================================================================
+
 /**
- * Initialize/reset the game to starting state - UPDATED for fog of war
+ * Initialize the game - now shows character selection first
+ * REPLACE existing initializeGame() function with this
  */
 export function initializeGame() {
+    console.log('🎮 Initializing game...');
+    
+    // Reset game state
+    resetGameState();
+    
+    // Show character selection modal
+    showCharacterSelection();
+}
+
+// ================================================================
+// ADD THIS NEW FUNCTION (don't replace anything, just add it)
+// ================================================================
+
+/**
+ * Reset game state to clean slate
+ * ADD this new function
+ */
+function resetGameState() {
+    G.victory = false;
+    G.over = false;
+    G.party = [];
+    G.hand = [];
+    G.discardPile = [];
+    G.equipment = [];
+    G.actionHistory = [];
+    G.logEntries = [];
+    G.currentTile = null;
+    G.currentEnemy = null;
+    G.combatActive = false;
+    G.enemyDefeated = false;
+    
     // Reset core values
     G.gridLevel = 1;
     G.keyFound = false;
-    G.over = false;
-    G.victory = false;
     G.log = [];
     
     // Reset boss state
@@ -193,22 +228,12 @@ export function initializeGame() {
     // CLEAR fog of war state - start with empty seen set
     G.board.seen = new Set();
     
-    // Generate initial 4x4 grid with fog of war
-    generateGrid();
-    
-    // Initialize starting deck
-    initializeStartingDeck();
-    
-    // Reset party to starting state
-    resetPartyToStart();
-    
-    // Initialize equipment system
-    initializeEquipment();
-    
-    console.log('🔄 Game state initialized with fog of war');
+    // Clear any pending data
+    G._pendingAlly = null;
+    G._pendingCards = null;
+    G._pendingTechniques = null;
+    G._pendingTechniqueCard = null;
 }
-
-
 
 // ================================================================
 // UPDATED: BOSS GRID GENERATION - ADD COMBAT ENGAGEMENT TRACKING
