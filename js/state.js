@@ -2978,17 +2978,33 @@ export function getAvailableEquipmentForSlot(slot) {
 // ================================================================
 
 /**
- * Show character selection modal
+ * Show character selection modal - DEBUG VERSION
  */
 function showCharacterSelection() {
+    console.log('🔍 DEBUG: showCharacterSelection called');
+    
     // Wait for GAME_DATA to be ready, then show modal
     setTimeout(() => {
-        const modal = document.getElementById('character-selection-modal');
-        if (modal) {
-            modal.style.display = 'flex';
+        console.log('🔍 DEBUG: setTimeout triggered');
+        
+        // Debug: Check if modal exists in different ways
+        const modal1 = document.getElementById('character-selection-modal');
+        const modal2 = document.querySelector('#character-selection-modal');
+        const modal3 = document.querySelector('.character-selection-modal');
+        
+        console.log('🔍 DEBUG: getElementById result:', modal1);
+        console.log('🔍 DEBUG: querySelector #id result:', modal2);
+        console.log('🔍 DEBUG: querySelector .class result:', modal3);
+        console.log('🔍 DEBUG: document.readyState:', document.readyState);
+        
+        if (modal1) {
+            console.log('✅ Modal found! Showing character selection...');
+            modal1.style.display = 'flex';
             
             // Generate and populate character cards
             const characterCards = generateCharacterCards();
+            console.log('🔍 DEBUG: Generated character cards:', characterCards);
+            
             if (characterCards.length > 0) {
                 populateCharacterSelectionModal(characterCards);
             } else {
@@ -2996,10 +3012,10 @@ function showCharacterSelection() {
                 startWithDefaultCharacter();
             }
         } else {
-            console.error('Character selection modal not found!');
+            console.error('❌ Character selection modal not found! Using default character');
             startWithDefaultCharacter();
         }
-    }, 200); // Increased timeout to ensure GAME_DATA is ready
+    }, 500); // Increased timeout for debugging
 }
 
 /**
