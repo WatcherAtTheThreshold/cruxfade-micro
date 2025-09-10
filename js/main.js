@@ -286,25 +286,23 @@ export function debugVictory() {
 // DOM READY & ERROR HANDLING
 // ================================================================
 
-// 1. ADD TO MAIN.JS: Ensure character selection is available when game data loads
-// Find your existing DOMContentLoaded event listener and modify it like this:
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+} else {
+    init();
+}
 
-document.addEventListener('DOMContentLoaded', function() {
-    console.log('🎮 DOM Content Loaded');
-    
-    // Load game data first
-    loadGameData().then(() => {
-        console.log('📊 Game data loaded successfully');
-        
-        // Initialize the game (which will now show character selection)
-        initializeGame();
-        
-        // Bind other event handlers
-        bindEventHandlers();
-        
-    }).catch(error => {
-        console.error('❌ Failed to load game data:', error);
-        // Fallback to basic game initialization
-        initializeGameWithoutData();
-    });
+// Make functions available globally
+window.CruxfadeMicro = {
+    getState: getGameState,
+    newGame: newGame,
+    restartWithSeed: restartWithSeed,
+    update: updateGame,
+    debugBoss: debugBoss,
+    debugVictory: debugVictory
+};
+
+// Simplified error handler (no updateGame calls)
+window.addEventListener('error', (event) => {
+    console.error('🚨 Game Error:', event.error);
 });
