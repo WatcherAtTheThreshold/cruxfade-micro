@@ -2232,7 +2232,7 @@ section {
 }
 
 .character-card {
-   background-image: url('./images/cards/monster-card-bg.png');
+   background-image: url('./images/cards/card-background-bg.png');
     background-size: 100% 100%;
     background-position: center;
     background-repeat: no-repeat;
@@ -2252,7 +2252,11 @@ section {
     border-color: #8b7355;
     transform: translateY(-4px);
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
-    background: linear-gradient(135deg, #4a3326 0%, #5a4235 100%);
+   background-image: url('./images/cards/member-bg.png');
+    background-size: 100% 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+    /*background: linear-gradient(135deg, #4a3326 0%, #5a4235 100%);*/
 }
 
 .character-name {
