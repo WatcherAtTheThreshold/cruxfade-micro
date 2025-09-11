@@ -895,7 +895,7 @@ function createPlayerEncounterCard(player, hp, isActiveTurn = false) {
                      onerror="this.onerror=null; this.src='./images/icons/${getIconFileName(player)}'; this.onload=function(){this.style.display='inline'}; this.onerror=function(){this.style.display='none'; this.nextElementSibling.style.display='inline'}">
                 <span class="portrait-fallback" style="font-size: 1.5rem;">${getCharacterIcon(player)}</span>
             </div>
-            <div class="encounter-card-name">${player.name}</div>
+            <div class="encounter-card-name">${getShortName(player.name)}</div>
             <div class="encounter-card-hp ${healthClass}">❤️ ${hp}/${player.maxHp}</div>
             <div class="encounter-card-stats">
                 <span>⚔️ ${player.atk}</span>
