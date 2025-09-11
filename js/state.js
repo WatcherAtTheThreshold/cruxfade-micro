@@ -3058,6 +3058,11 @@ function createCharacterCardElement(card, index) {
     cardDiv.innerHTML = `
         <div class="character-name">${card.name}</div>
         <div class="character-class">${card.displayClass}</div>
+        <div class="character-portrait">
+          <img src="./images/portraits/class-${card.className}.png" alt="${card.className}"
+             onerror="this.style.display='none'; this.nextElementSibling.style.display='inline'">
+          <span class="character-portrait-fallback">${getClassIcon(card.className)}</span>
+        </div>
         <div class="character-stats">
             <div class="character-stat">
                 <div class="character-stat-label">HP</div>
@@ -3169,6 +3174,20 @@ function addStartingCardsForCharacter(characterData) {
     basicCards.forEach(card => {
         G.hand.push(card);
     });
+}
+
+/**
+ * Get icon for character class (fallback when portrait image fails)
+ */
+function getClassIcon(className) {
+    const classIcons = {
+        'warrior': '⚔️',
+        'ranger': '🏹',
+        'herbalist': '🌿',
+        'rogue': '🗡️',
+        'paladin': '🛡️'
+    };
+    return classIcons[className] || '👤';
 }
 
 /**
