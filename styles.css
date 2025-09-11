@@ -652,7 +652,7 @@ section {
   transition: transform 0.7s ease; 
 }
 .party-member:first-child:hover { 
-   url('./images/cards/member-bg.png');
+  background-image: url('./images/cards/member-bg.png');
   background-size: 100% 100%;
   background-position: center;
   /*background: var(--surface);
