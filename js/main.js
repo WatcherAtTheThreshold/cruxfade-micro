@@ -205,7 +205,7 @@ async function init() {
         
         initializeGame();
         bindEventHandlers(updateGame); // Now updateGame is defined
-        renderAll();
+        //renderAll(); // COMMENTED OUT - will be called after character selection
         
         addLogEntry('Welcome to the grid. Find the key to proceed...');
         

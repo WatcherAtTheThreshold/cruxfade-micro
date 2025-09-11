@@ -1417,24 +1417,31 @@ function renderHeaderInfo() {
         DOM.runSeed.style.cursor = 'pointer';
         DOM.runSeed.title = 'Click to enter a custom seed';
         
-        // Remove any existing click handlers to prevent duplicates
-        DOM.runSeed.replaceWith(DOM.runSeed.cloneNode(true));
-        DOM.runSeed = document.getElementById('run-seed'); // Re-cache after replace
-        
-        DOM.runSeed.addEventListener('click', () => {
-            const newSeed = prompt('Enter seed (number):', G.seed);
-            if (newSeed !== null && !isNaN(newSeed) && newSeed.trim() !== '') {
-                const seedNum = parseInt(newSeed);
-                console.log('🎲 Starting new game with seed:', seedNum);
-                window.CruxfadeMicro.newGame(seedNum);
-            }
-        });
+       // SAFE DOM.runSeed HANDLING - REPLACE the existing runSeed block
+// Safely handle runSeed element
+const runSeedElement = document.getElementById('run-seed');
+if (runSeedElement) {
+    // Remove any existing click handlers to prevent duplicates
+    runSeedElement.replaceWith(runSeedElement.cloneNode(true));
+    DOM.runSeed = document.getElementById('run-seed'); // Re-cache after replace
+    
+    DOM.runSeed.addEventListener('click', () => {
+        const newSeed = prompt('Enter seed (number):', G.seed);
+        if (newSeed !== null && !isNaN(newSeed) && newSeed.trim() !== '') {
+            const seedNum = parseInt(newSeed);
+            console.log('🎲 Starting new game with seed:', seedNum);
+            window.CruxfadeMicro.newGame(seedNum);
+        }
+    });
+} else {
+    console.warn('⚠️ run-seed element not found, skipping seed click handler');
+}
+
     }
     
     if (DOM.deckCount) DOM.deckCount.textContent = G.deck.length;
     if (DOM.handCount) DOM.handCount.textContent = G.hand.length;
 }
-
 // ================================================================
 // GAME LOG RENDERING
 // ================================================================

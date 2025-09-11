@@ -7,6 +7,9 @@
 // Import seeded RNG functions
 import { random, randomInt, pickRandom } from './rng.js';
 
+// ADD THIS LINE:
+import { renderAll } from './ui.js';
+
 // ================================================================
 // GAME DATA STORAGE
 // ================================================================
@@ -167,14 +170,29 @@ function generateGrid() {
 }
 
 /**
- * Initialize/reset the game to starting state - UPDATED for fog of war
+ * Initialize the game - now shows character selection first
+ * REPLACE existing initializeGame() function with this
  */
 export function initializeGame() {
-    // Reset core values
+    console.log('🎮 Initializing game...');
+    
+    // ONLY reset basic state - don't do any UI rendering yet
+    resetGameStateMinimal();
+    
+    // Show character selection IMMEDIATELY (no timeout, no other UI calls)
+    showCharacterSelectionImmediate();
+}
+
+/**
+ * Reset only essential game state - no UI rendering
+ */
+function resetGameStateMinimal() {
+    G.victory = false;
+    G.over = false;
+    G.party = [];
+    G.hand = [];
     G.gridLevel = 1;
     G.keyFound = false;
-    G.over = false;
-    G.victory = false;
     G.log = [];
     
     // Reset boss state
@@ -187,28 +205,44 @@ export function initializeGame() {
         enemyIndex: 0
     };
     
-    // Initialize player position to left edge start (1,0)
-    G.board.player = { r: 1, c: 0 };
-    
-    // CLEAR fog of war state - start with empty seen set
-    G.board.seen = new Set();
-    
-    // Generate initial 4x4 grid with fog of war
-    generateGrid();
-    
-    // Initialize starting deck
-    initializeStartingDeck();
-    
-    // Reset party to starting state
-    resetPartyToStart();
-    
-    // Initialize equipment system
-    initializeEquipment();
-    
-    console.log('🔄 Game state initialized with fog of war');
+    console.log('🔄 Minimal game state reset complete');
 }
 
-
+/**
+ * Show character selection without any delays or other UI calls
+ */
+function showCharacterSelectionImmediate() {
+    console.log('🔍 DEBUG: showCharacterSelectionImmediate called');
+    
+    // Find modal immediately - no timeout
+    const modal = document.getElementById('character-selection-modal');
+    
+    console.log('🔍 DEBUG: Modal search result:', modal);
+    console.log('🔍 DEBUG: Modal in DOM tree:', document.contains(modal));
+    
+    if (modal) {
+        console.log('✅ Modal found! Showing character selection...');
+        modal.style.display = 'flex';
+        
+        // Generate and populate character cards
+        const characterCards = generateCharacterCards();
+        console.log('🔍 DEBUG: Generated character cards:', characterCards);
+        
+        if (characterCards.length > 0) {
+            populateCharacterSelectionModal(characterCards);
+        } else {
+            console.warn('No character cards generated, using default character');
+            startWithDefaultCharacter();
+        }
+    } else {
+        console.error('❌ Character selection modal not found! Using default character');
+        console.log('🔍 DEBUG: Available elements with "modal" in class or id:');
+        document.querySelectorAll('[class*="modal"], [id*="modal"]').forEach(el => {
+            console.log('  Found:', el.tagName, el.id, el.className);
+        });
+        startWithDefaultCharacter();
+    }
+}
 
 // ================================================================
 // UPDATED: BOSS GRID GENERATION - ADD COMBAT ENGAGEMENT TRACKING
@@ -2940,4 +2974,223 @@ export function getAvailableEquipmentForSlot(slot) {
     
     // Limit to 3 items for now to keep UI manageable
     return available.slice(0, 3);
+}
+
+// ================================================================
+// CHARACTER SELECTION FUNCTIONS - FIXED VERSION
+// REPLACE your existing character selection functions with these
+// ================================================================
+
+
+
+/**
+ * Generate character cards from allies data
+ */
+function generateCharacterCards() {
+    const cards = [];
+    const classes = ['warrior', 'ranger', 'herbalist', 'rogue', 'paladin'];
+    
+    // Check if GAME_DATA exists (using local GAME_DATA variable, not window.GAME_DATA)
+    if (!GAME_DATA || !GAME_DATA.allies || !GAME_DATA.allies['forest-region']) {
+        console.warn('GAME_DATA not ready, using default character');
+        return [];
+    }
+    
+    const regionData = GAME_DATA.allies['forest-region'];
+    
+    for (const className of classes) {
+        const classData = regionData[className];
+        if (classData) {
+            // Generate procedural name
+            const name = pickRandom(classData.names);
+            const title = pickRandom(classData.titles);
+            const fullName = `${name} ${title}`;
+            
+            const characterCard = {
+                className: className,
+                name: fullName,
+                displayClass: className.charAt(0).toUpperCase() + className.slice(1),
+                description: classData.description,
+                stats: classData.baseStats,
+                startingCard: classData.cards && classData.cards.length > 0 ? classData.cards[0] : null,
+                tags: classData.tags
+            };
+            
+            cards.push(characterCard);
+        }
+    }
+    
+    return cards;
+}
+
+/**
+ * Populate character selection modal with cards - DEBUG VERSION
+ */
+function populateCharacterSelectionModal(characterCards) {
+    const container = document.querySelector('.character-cards-container');
+    console.log('🔍 DEBUG: Container found:', container);
+    console.log('🔍 DEBUG: Cards to populate:', characterCards.length);
+    
+    if (!container) {
+        console.error('❌ character-cards-container not found!');
+        return;
+    }
+    
+    container.innerHTML = '';
+    
+    characterCards.forEach((card, index) => {
+        console.log('🔍 DEBUG: Creating card:', card.name);
+        const cardElement = createCharacterCardElement(card, index);
+        console.log('🔍 DEBUG: Card element created:', cardElement);
+        container.appendChild(cardElement);
+    });
+    console.log('🔍 DEBUG: Cards added to container. Container HTML:', container.innerHTML.length, 'characters');
+}
+
+/**
+ * Create HTML element for a character card
+ */
+function createCharacterCardElement(card, index) {
+    const cardDiv = document.createElement('div');
+    cardDiv.className = 'character-card';
+    cardDiv.dataset.className = card.className;
+    
+    cardDiv.innerHTML = `
+        <div class="character-name">${card.name}</div>
+        <div class="character-class">${card.displayClass}</div>
+        <div class="character-stats">
+            <div class="character-stat">
+                <div class="character-stat-label">HP</div>
+                <div class="character-stat-value">${card.stats.hp}</div>
+            </div>
+            <div class="character-stat">
+                <div class="character-stat-label">ATK</div>
+                <div class="character-stat-value">${card.stats.atk}</div>
+            </div>
+            <div class="character-stat">
+                <div class="character-stat-label">MAG</div>
+                <div class="character-stat-value">${card.stats.mag}</div>
+            </div>
+        </div>
+        <div class="character-description">${card.description}</div>
+        ${card.startingCard ? `<div class="character-starting-card">Starts with: ${card.startingCard.name}</div>` : ''}
+    `;
+    
+    cardDiv.addEventListener('click', () => {
+        selectCharacter(card);
+    });
+    
+    return cardDiv;
+}
+
+/**
+ * Handle character selection
+ */
+function selectCharacter(characterData) {
+    console.log('Selected character:', characterData.name);
+    
+    // Hide modal
+    const modal = document.getElementById('character-selection-modal');
+    if (modal) {
+        modal.style.display = 'none';
+    }
+    
+    // Create leader character
+    const leader = {
+        id: `${characterData.className}-leader`,
+        name: characterData.name,
+        hp: characterData.stats.hp,
+        maxHp: characterData.stats.maxHp,
+        atk: characterData.stats.atk,
+        mag: characterData.stats.mag,
+        tags: characterData.tags || [characterData.className]
+    };
+    
+    // Start game with selected character
+    startGameWithCharacter(leader, characterData);
+}
+
+/**
+ * Start game with selected character
+ */
+function startGameWithCharacter(leader, characterData) {
+    // Set up party
+    G.party = [leader];
+    G.partyLeaderIndex = 0;
+    
+    // Initialize game level and region
+    G.gridLevel = 1;
+    G.totalLevels = 15;
+    G.currentRegion = "forest";
+    G.turn = 1;
+    
+    // Add starting cards for this character class
+    addStartingCardsForCharacter(characterData);
+    
+    // Generate grid and start game
+    generateGrid();
+    renderAll(); // Use your UI render function
+    
+    addLogEntry(`${leader.name} begins their journey through the Cruxfade!`);
+}
+
+/**
+ * Add starting cards based on character class
+ */
+function addStartingCardsForCharacter(characterData) {
+    // Use local GAME_DATA variable instead of window.GAME_DATA
+    if (!GAME_DATA || !GAME_DATA.allies) {
+        console.warn('GAME_DATA not available for starting cards');
+        return;
+    }
+    
+    const regionData = GAME_DATA.allies['forest-region'];
+    const classData = regionData[characterData.className];
+    
+    if (classData && classData.cards) {
+        // Add class-specific cards
+        classData.cards.forEach(cardTemplate => {
+            const card = {
+                id: `${cardTemplate.id}-leader`,
+                name: cardTemplate.name,
+                type: cardTemplate.type,
+                description: cardTemplate.description
+            };
+            G.hand.push(card);
+        });
+    }
+    
+    // Add basic starting cards
+    const basicCards = [
+        { id: 'basic-attack-leader', name: 'Strike', type: 'attack', description: 'Deal basic damage to an enemy' },
+        { id: 'basic-defend-leader', name: 'Guard', type: 'defense', description: 'Reduce incoming damage' }
+    ];
+    
+    basicCards.forEach(card => {
+        G.hand.push(card);
+    });
+}
+
+/**
+ * Fallback for when allies data isn't available
+ */
+function startWithDefaultCharacter() {
+    const defaultLeader = {
+        id: 'default-leader',
+        name: 'Artorius the Brave',
+        hp: 15,
+        maxHp: 15,
+        atk: 3,
+        mag: 1,
+        tags: ['human', 'warrior']
+    };
+    
+    const defaultCharacterData = {
+        className: 'warrior',
+        name: 'Artorius the Brave',
+        stats: { hp: 15, maxHp: 15, atk: 3, mag: 1 },
+        tags: ['human', 'warrior']
+    };
+    
+    startGameWithCharacter(defaultLeader, defaultCharacterData);
 }
