@@ -17,7 +17,7 @@
     "warrior": {
       "rarity": "common",
       "weight": 3,
-      "names": ["Marcus", "Elena", "Thorin", "Lyra", "Gareth", "Vera", "Finn", "Sage"],
+      "names": ["Marcus", "Elder", "Thorin", "Link", "Gareth", "Kim", "Finn", "Sage" , "Luke"],
       "titles": ["the Brave", "the Stalwart", "the Forest Guardian", "the Shield-Bearer", "the Woodland Protector"],
       "baseStats": { 
         "hp": 12, 
@@ -51,7 +51,7 @@
     "ranger": {
       "rarity": "common", 
       "weight": 3,
-      "names": ["Robin", "Willow", "Ash", "Rowan", "Glen", "Fern", "Brook", "Vale"],
+      "names": ["Robin", "Willow", "Ash", "Ruthy", "Glendria", "Fern", "Shoresy", "Vale"],
       "titles": ["the Scout", "the Tracker", "the Pathfinder", "the Swift", "the Eagle-Eyed"],
       "baseStats": { 
         "hp": 10, 
@@ -185,7 +185,7 @@
     "paladin": {
   "rarity": "uncommon",
   "weight": 2,
-  "names": ["Gareth", "Lyanna", "Thaddeus", "Seraphina", "Roland", "Celestine", "Aldric", "Grace"],
+  "names": ["Gareth", "Lion", "Thaddeus", "Seraphin", "Roland", "Celestine", "Aldric", "Artorius"],
   "titles": ["the Righteous", "the Holy", "the Light-Bearer", "the Protector", "the Divine Champion", "the Sacred Shield"],
   "baseStats": { 
     "hp": 11, 
