@@ -3177,6 +3177,20 @@ function addStartingCardsForCharacter(characterData) {
 }
 
 /**
+ * Get icon for character class (fallback when portrait image fails)
+ */
+function getClassIcon(className) {
+    const classIcons = {
+        'warrior': '⚔️',
+        'ranger': '🏹',
+        'herbalist': '🌿',
+        'rogue': '🗡️',
+        'paladin': '🛡️'
+    };
+    return classIcons[className] || '👤';
+}
+
+/**
  * Fallback for when allies data isn't available
  */
 function startWithDefaultCharacter() {
