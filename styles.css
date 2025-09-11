@@ -2241,7 +2241,7 @@ section {
     border-radius: 8px;
     padding: 1rem;
     width: 200px;
-    min-height: 220px;
+    min-height: 280px;
     cursor: pointer;
     transition: all 0.3s ease;
     position: relative;
@@ -2331,7 +2331,7 @@ section {
     
     .character-card {
         width: 180px;
-        min-height: 200px;
+        min-height: 260px;
         padding: 0.875rem;
     }
     
