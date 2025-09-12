@@ -2263,10 +2263,18 @@ function executeCardEffect(card) {
     let effectType = card.id;
     
     // Handle ally-specific cards (remove the ally ID suffix)
-    if (card.id.includes('-warrior-') || card.id.includes('-mage-') || 
+    if (card.id.includes('-warrior-') || card.id.includes('-mage-') || card.id.includes('-paladin-') ||
         card.id.includes('-rogue-') || card.id.includes('-scout-')) {
         effectType = card.id.split('-').slice(0, -2).join('-');
     }
+
+    // ADD THIS: Handle leader/starting cards (remove -leader suffix)
+    if (card.id.endsWith('-leader')) {
+        effectType = card.id.replace('-leader', '');
+    }
+    
+    // ADD THIS DEBUG: Show what we're looking for
+    console.log("🔍 DEBUG: Looking for effect:", effectType);
     
     // Find the effect function
     const effectFunction = CARD_EFFECTS[effectType];
