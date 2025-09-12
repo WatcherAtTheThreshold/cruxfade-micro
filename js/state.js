@@ -2258,23 +2258,29 @@ const CARD_EFFECTS = {
  * Execute a card's effect
  */
 function executeCardEffect(card) {
-    console.log("🃏 DEBUG: Card ID being checked:", card.id, "Card name:", card.name); // ADD THIS LINE
+    console.log("🃏 DEBUG: Card ID being checked:", card.id, "Card name:", card.name);
+    
     // Get the base effect type from the card ID
     let effectType = card.id;
     
     // Handle ally-specific cards (remove the ally ID suffix)
-    if (card.id.includes('-warrior-') || card.id.includes('-mage-') || card.id.includes('-paladin-') ||
+    if (card.id.includes('-warrior-') || card.id.includes('-mage-') || 
         card.id.includes('-rogue-') || card.id.includes('-scout-')) {
         effectType = card.id.split('-').slice(0, -2).join('-');
     }
-
-    // ADD THIS: Handle leader/starting cards (remove -leader suffix)
+    
+    // Handle leader/starting cards (remove -leader suffix)
     if (card.id.endsWith('-leader')) {
         effectType = card.id.replace('-leader', '');
     }
     
-    // ADD THIS DEBUG: Show what we're looking for
+    // Handle basic- prefix (strip it off)
+    if (effectType.startsWith('basic-')) {
+        effectType = effectType.replace('basic-', '');
+    }
+    
     console.log("🔍 DEBUG: Looking for effect:", effectType);
+    // ... rest of function
     
     // Find the effect function
     const effectFunction = CARD_EFFECTS[effectType];
