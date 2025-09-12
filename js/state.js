@@ -3099,7 +3099,7 @@ function startGameWithCharacter(leader, characterData) {
 }
 
 /**
- * Add starting cards based on character class - UPDATED for JSON cards
+ * Add starting cards based on character class
  */
 function addStartingCardsForCharacter(characterData) {
     // Try class-specific cards from allies data first (keep existing system)
@@ -3108,7 +3108,7 @@ function addStartingCardsForCharacter(characterData) {
         const classData = regionData && regionData[characterData.className];
         
         if (classData && classData.cards) {
-            // Add class-specific cards (keep this for now)
+            // Add class-specific cards
             classData.cards.forEach(cardTemplate => {
                 const card = {
                     id: `${cardTemplate.id}-leader`,
@@ -3121,14 +3121,15 @@ function addStartingCardsForCharacter(characterData) {
         }
     }
     
-    // UPDATED: Add basic starting cards from JSON data
-    const startingCards = createCardsFromData(startingCardKeys, '-leader');
+    // TEMP: Keep basic cards for now until we fix everything else
+    const basicCards = [
+        { id: 'basic-attack-leader', name: 'Strike', type: 'attack', description: 'Deal basic damage to an enemy' },
+        { id: 'basic-defend-leader', name: 'Guard', type: 'defense', description: 'Reduce incoming damage' }
+    ];
     
-    startingCards.forEach(card => {
+    basicCards.forEach(card => {
         G.hand.push(card);
     });
-    
-    console.log(`🃏 Added ${startingCards.length} starting cards from JSON data`);
 }
 
 /**
