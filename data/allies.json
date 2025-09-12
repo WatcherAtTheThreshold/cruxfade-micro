@@ -27,13 +27,7 @@
       },
       "tags": ["human", "warrior"],
       "description": "A stalwart fighter trained in forest combat",
-      "cards": [
-        { 
-          "id": "shield-bash", 
-          "name": "Shield Bash", 
-          "type": "attack",
-          "description": "+2 damage and stun enemy for 1 turn"
-        },
+   "cards": ["shield-bash-forest"],
         { 
           "id": "defensive-stance", 
           "name": "Defensive Stance", 
