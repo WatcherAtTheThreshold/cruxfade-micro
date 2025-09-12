@@ -3122,7 +3122,7 @@ function addStartingCardsForCharacter(characterData) {
     }
     
     // TEMP: Keep basic cards for now until we fix everything else
-    const basicCards = [
+    /*const basicCards = [
         { id: 'basic-attack-leader', name: 'Strike', type: 'attack', description: 'Deal basic damage to an enemy' },
         { id: 'basic-defend-leader', name: 'Guard', type: 'defense', description: 'Reduce incoming damage' }
     ];
@@ -3130,7 +3130,7 @@ function addStartingCardsForCharacter(characterData) {
     basicCards.forEach(card => {
         G.hand.push(card);
     });
-}
+}*/
 
 /**
  * Get icon for character class (fallback when portrait image fails)
