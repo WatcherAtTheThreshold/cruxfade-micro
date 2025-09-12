@@ -3098,40 +3098,37 @@ function startGameWithCharacter(leader, characterData) {
 }
 
 /**
- * Add starting cards based on character class
+ * Add starting cards based on character class - UPDATED for JSON cards
  */
 function addStartingCardsForCharacter(characterData) {
-    // Use local GAME_DATA variable instead of window.GAME_DATA
-    if (!GAME_DATA || !GAME_DATA.allies) {
-        console.warn('GAME_DATA not available for starting cards');
-        return;
+    // Try class-specific cards from allies data first (keep existing system)
+    if (GAME_DATA && GAME_DATA.allies) {
+        const regionData = GAME_DATA.allies['forest-region'];
+        const classData = regionData && regionData[characterData.className];
+        
+        if (classData && classData.cards) {
+            // Add class-specific cards (keep this for now)
+            classData.cards.forEach(cardTemplate => {
+                const card = {
+                    id: `${cardTemplate.id}-leader`,
+                    name: cardTemplate.name,
+                    type: cardTemplate.type,
+                    description: cardTemplate.description
+                };
+                G.hand.push(card);
+            });
+        }
     }
     
-    const regionData = GAME_DATA.allies['forest-region'];
-    const classData = regionData[characterData.className];
+    // UPDATED: Add basic starting cards from JSON data
+    const startingCardKeys = ['basic-strike', 'defend'];
+    const startingCards = createCardsFromData(startingCardKeys, '-leader');
     
-    if (classData && classData.cards) {
-        // Add class-specific cards
-        classData.cards.forEach(cardTemplate => {
-            const card = {
-                id: `${cardTemplate.id}-leader`,
-                name: cardTemplate.name,
-                type: cardTemplate.type,
-                description: cardTemplate.description
-            };
-            G.hand.push(card);
-        });
-    }
-    
-    // Add basic starting cards
-    const basicCards = [
-        { id: 'basic-attack-leader', name: 'Strike', type: 'attack', description: 'Deal basic damage to an enemy' },
-        { id: 'basic-defend-leader', name: 'Guard', type: 'defense', description: 'Reduce incoming damage' }
-    ];
-    
-    basicCards.forEach(card => {
+    startingCards.forEach(card => {
         G.hand.push(card);
     });
+    
+    console.log(`🃏 Added ${startingCards.length} starting cards from JSON data`);
 }
 
 /**
