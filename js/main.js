@@ -85,11 +85,6 @@ function checkGameEndConditions() {
 // DATA LOADING SYSTEM
 // ================================================================
 
-// ================================================================
-// UPDATE TO MAIN.JS - ADD ALLIES.JSON LOADING
-// Find the loadGameData() function and update it to include allies
-// ================================================================
-
 /**
  * Load all game data from JSON files - UPDATED to include allies
  */
