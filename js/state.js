@@ -21,7 +21,8 @@ let GAME_DATA = {
     enemies: {},
     encounters: null,
     items: null,
-    bosses: null  // NEW: Boss encounter data
+    bosses: null,
+    cards: {}
 };
 
 /**
