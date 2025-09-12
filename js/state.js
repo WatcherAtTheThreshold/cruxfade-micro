@@ -2313,11 +2313,11 @@ function executeCardEffect(card) {
     // Get the base effect type from the card ID
     let effectType = card.id;
     
- // Handle ally-specific cards (remove the ally ID suffix) - CLEANED UP
-if (card.id.includes('-warrior-') || card.id.includes('-ranger-') || card.id.includes('-herbalist-') || 
-    card.id.includes('-rogue-') || card.id.includes('-paladin-')) {
-    effectType = card.id.split('-').slice(0, -2).join('-');
-}
+    // Handle ally-specific cards (remove the ally ID suffix) - CLEANED UP
+    if (card.id.includes('-warrior-') || card.id.includes('-ranger-') || card.id.includes('-herbalist-') || 
+        card.id.includes('-rogue-') || card.id.includes('-paladin-')) {
+        effectType = card.id.split('-').slice(0, -2).join('-');
+    }
     
     // Handle leader/starting cards (remove -leader suffix)
     if (card.id.endsWith('-leader')) {
@@ -2329,8 +2329,13 @@ if (card.id.includes('-warrior-') || card.id.includes('-ranger-') || card.id.inc
         effectType = effectType.replace('basic-', '');
     }
     
-    console.log("🔍 DEBUG: Looking for effect:", effectType);
-    // ... rest of function
+    // NEW: Try to get effect from JSON card data first
+    if (GAME_DATA.cards && GAME_DATA.cards[effectType]) {
+        effectType = GAME_DATA.cards[effectType].effect;
+        console.log("🔍 DEBUG: Using JSON effect:", effectType);
+    } else {
+        console.log("🔍 DEBUG: Using direct effect lookup:", effectType);
+    }
     
     // Find the effect function
     const effectFunction = CARD_EFFECTS[effectType];
