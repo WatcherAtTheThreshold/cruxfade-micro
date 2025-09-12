@@ -1511,7 +1511,7 @@ function createAllyFromData(region, allyType) {
 // ================================================================
 
 /**
- * Get cards for an ally from JSON data
+ * Get cards for an ally from JSON data - UPDATED for string references
  */
 function getAllyCardsFromData(region, allyType, allyId) {
     
@@ -1525,14 +1525,9 @@ function getAllyCardsFromData(region, allyType, allyId) {
         return [];
     }
     
-    
-    // Create cards with unique IDs for this ally
-    const cards = allyData.cards.map(cardTemplate => ({
-        id: `${cardTemplate.id}-${allyId}`,
-        name: cardTemplate.name,
-        type: cardTemplate.type,
-        description: cardTemplate.description || "An ally's special ability"
-    }));
+    // NEW: allyData.cards is now an array of strings (card IDs)
+    // Use createCardsFromData to look them up in cards.json
+    const cards = createCardsFromData(allyData.cards, `-${allyId}`);
     
     return cards;
 }
