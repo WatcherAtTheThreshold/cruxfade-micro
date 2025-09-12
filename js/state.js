@@ -2064,6 +2064,9 @@ export function switchPartyLeader(memberId) {
  * @returns {Object} Card object ready for game use
  */
 function createCardFromData(cardKey, suffix = '') {
+    console.log("🔍 DEBUG: Looking for card:", cardKey);
+    console.log("🔍 DEBUG: Available cards:", Object.keys(GAME_DATA.cards || {}));
+    console.log("🔍 DEBUG: Card exists?", !!GAME_DATA.cards?.[cardKey]);
     // Check if cards data is loaded
     if (!GAME_DATA.cards || !GAME_DATA.cards[cardKey]) {
         console.warn(`⚠️ Card '${cardKey}' not found in JSON data`);
