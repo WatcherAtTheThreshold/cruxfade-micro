@@ -212,21 +212,16 @@ function resetGameStateMinimal() {
  * Show character selection without any delays or other UI calls
  */
 function showCharacterSelectionImmediate() {
-    console.log('🔍 DEBUG: showCharacterSelectionImmediate called');
     
     // Find modal immediately - no timeout
     const modal = document.getElementById('character-selection-modal');
     
-    console.log('🔍 DEBUG: Modal search result:', modal);
-    console.log('🔍 DEBUG: Modal in DOM tree:', document.contains(modal));
     
     if (modal) {
-        console.log('✅ Modal found! Showing character selection...');
         modal.style.display = 'flex';
         
         // Generate and populate character cards
         const characterCards = generateCharacterCards();
-        console.log('🔍 DEBUG: Generated character cards:', characterCards);
         
         if (characterCards.length > 0) {
             populateCharacterSelectionModal(characterCards);
@@ -236,9 +231,7 @@ function showCharacterSelectionImmediate() {
         }
     } else {
         console.error('❌ Character selection modal not found! Using default character');
-        console.log('🔍 DEBUG: Available elements with "modal" in class or id:');
         document.querySelectorAll('[class*="modal"], [id*="modal"]').forEach(el => {
-            console.log('  Found:', el.tagName, el.id, el.className);
         });
         startWithDefaultCharacter();
     }
@@ -385,25 +378,18 @@ function shouldTriggerBoss() {
  * Check if current grid level should trigger a boss encounter
 */
 function shouldTriggerBoss() {
-    console.log('shouldTriggerBoss called for grid level:', G.gridLevel);
-    console.log('GAME_DATA:', !!GAME_DATA);
-    console.log('GAME_DATA.bosses:', !!GAME_DATA?.bosses);
     
     if (!GAME_DATA || !GAME_DATA.bosses) {
-        console.log('No boss data available');
         return false;
     }
     
     // Check if current grid level matches any boss unlock level
     for (const [bossId, bossData] of Object.entries(GAME_DATA.bosses)) {
         if (bossId === 'boss-enemies') continue;
-        console.log(`Checking ${bossId}: unlock level ${bossData.unlockLevel} vs current ${G.gridLevel}`);
         if (bossData.unlockLevel === G.gridLevel) {
-            console.log(`BOSS MATCH! ${bossId} should trigger for grid ${G.gridLevel}`);
             return true;
         }
     }
-    console.log('No boss matches found for grid level', G.gridLevel);
     return false;
 }
 
@@ -501,7 +487,6 @@ function startBossPhaseFight(phase) {  // ← Add the parameter here!
     }
     
     // Use regular combat but with boss phase flag
-    console.log('🛠 DEBUG: Starting boss phase minion fight with enemy:', enemyType);
     return startCombat(enemyType, phase);
 }
 
@@ -572,12 +557,10 @@ export function completeBossPhase() {
     
     // Check if boss is fully defeated
     if (G.boss.currentPhase >= bossData.phases.length) {
-        console.log('🛠️ DEBUG: All phases complete, calling defeatBoss...');
         defeatBoss();
     } else {
         addLogEntry('📈 Phase complete. Preparing for next challenge...');
         // DON'T consume tile - keep boss encounter active
-        console.log('🛠️ DEBUG: Boss phase complete, NOT consuming tile');
     }
 }
 /**
@@ -604,7 +587,6 @@ function defeatBoss() {
         G.victory = true;
         G.over = true;
         addLogEntry('🏆 CAMPAIGN COMPLETE! You have saved all of existence!');
-        console.log('🏆 Final boss defeated! Game complete!');
     } else {
         // CAMPAIGN CONTINUES - Reset boss state but don't end game
         console.log('⭐ Boss defeated but campaign continues...');
@@ -632,14 +614,10 @@ function defeatBoss() {
         
         // CRITICAL FIX: Find the actual boss encounter tile, not player's current tile
         const bossTile = G.board.tiles.find(tile => tile.type === 'boss-encounter');
-        console.log('🛠️ DEBUG: Converting boss tile:', bossTile);
-        console.log('🛠️ DEBUG: Boss tile type before conversion:', bossTile?.type);
         
         if (bossTile && bossTile.type === 'boss-encounter') {
-            console.log('🛠️ DEBUG: Boss tile found, converting to door...');
             bossTile.type = 'door';
             bossTile.consumed = false; // Make sure it's usable
-            console.log('🛠️ DEBUG: Boss tile type after conversion:', bossTile.type);
             addLogEntry('🚪 A path to the deeper realms opens before you...');
             
             // Set key found so door can be used immediately
@@ -654,7 +632,6 @@ function defeatBoss() {
             }
         } else {
             console.error('🚨 ERROR: Could not find boss encounter tile to convert to door!');
-            console.log('🛠️ DEBUG: Available tiles:', G.board.tiles.map(t => `${t.type}(${t.row},${t.col})`));
         }
         
         // Reset boss encounter state AFTER tile conversion
@@ -727,7 +704,6 @@ function startBossCombat(bossEnemyData, phase) {
     const player = getPartyLeader();
     if (!player) return false;
     
-    console.log('🐛 DEBUG: startBossCombat called with enemy:', bossEnemyData.name, 'phase:', phase?.name);
     
     G.combat.active = true;
     G.combat.enemy = { ...bossEnemyData };
@@ -739,7 +715,6 @@ function startBossCombat(bossEnemyData, phase) {
     // Store phase data for special handling
     G.combat.bossPhase = phase;
     
-    console.log('🐛 DEBUG: Boss combat initialized - bossPhase set to:', !!G.combat.bossPhase);
     
     addLogEntry(`💀 Final battle with ${bossEnemyData.name}!`);
     addLogEntry(`📊 Boss HP: ${bossEnemyData.hp} | Your HP: ${player.hp}`);
@@ -825,10 +800,8 @@ export function nextGrid() {
  * End combat with victory or defeat (fixed for boss handling)
  */
 export function endCombat(victory) {
-    console.log('🐛 DEBUG: endCombat called with victory:', victory, 'combat active:', G.combat.active);
     
     if (!G.combat.active) {
-        console.log('🐛 DEBUG: Combat not active, returning early');
         return;
     }
     
@@ -838,7 +811,6 @@ export function endCombat(victory) {
             
             // Check if this was a boss fight
             if (G.combat.bossPhase) {
-                console.log('🐛 DEBUG: Boss fight victory detected');
                 
                 const phase = getCurrentBossPhase();
                 
@@ -859,7 +831,6 @@ export function endCombat(victory) {
                     }
                 } else {
                     // Single enemy fight or final boss - complete phase
-                    console.log('🐛 DEBUG: Final boss or single fight, completing phase...');
                     completeBossPhase();
                     // DON'T consume current tile - let defeatBoss() handle boss tile conversion
                 }
@@ -890,7 +861,6 @@ export function endCombat(victory) {
         G.combat.lastRoll = null;
         G.combat.bossPhase = null;
         
-        console.log('🐛 DEBUG: Combat state reset complete');
         
     } catch (error) {
         console.error('🚨 ERROR in endCombat:', error);
@@ -1449,22 +1419,16 @@ function getRegionForGrid(gridLevel) {
  * Generate a procedural name from ally data - DEBUG VERSION
  */
 function generateAllyName(allyData) {
-    console.log('📛 DEBUG: generateAllyName called with:', allyData);
     
     const names = allyData.names || ["Unknown"];
     const titles = allyData.titles || ["the Wanderer"];
     
-    console.log('📛 DEBUG: Available names:', names);
-    console.log('📛 DEBUG: Available titles:', titles);
     
     const name = pickRandom(names);
     const title = pickRandom(titles);
     
-    console.log('📛 DEBUG: Picked name:', name);
-    console.log('📛 DEBUG: Picked title:', title);
     
     const fullName = `${name} ${title}`;
-    console.log('📛 DEBUG: Generated full name:', fullName);
     
     return fullName;
 }
@@ -1473,19 +1437,12 @@ function generateAllyName(allyData) {
  * Get available ally types for the current region with rarity weighting - DEBUG VERSION
  */
 function getWeightedAllyTypes(region, gridLevel) {
-    console.log('⚖️ DEBUG: getWeightedAllyTypes called');
-    console.log('⚖️ DEBUG: region:', region);
-    console.log('⚖️ DEBUG: gridLevel:', gridLevel);
-    console.log('⚖️ DEBUG: GAME_DATA.allies exists:', !!GAME_DATA.allies);
     
     if (!GAME_DATA.allies || !GAME_DATA.allies[region]) {
-        console.log('❌ DEBUG: No allies data for region:', region);
         return null; // No allies data available
     }
     
     const regionAllies = GAME_DATA.allies[region];
-    console.log('⚖️ DEBUG: Region allies data:', regionAllies);
-    console.log('⚖️ DEBUG: Available ally types in region:', Object.keys(regionAllies).filter(key => key !== 'techniques'));
     
     const availableTypes = [];
     const weights = [];
@@ -1494,41 +1451,31 @@ function getWeightedAllyTypes(region, gridLevel) {
     for (const [allyType, allyData] of Object.entries(regionAllies)) {
         if (allyType === 'techniques') continue; // Skip techniques
         
-        console.log(`⚖️ DEBUG: Checking ally type: ${allyType}`);
-        console.log(`⚖️ DEBUG: Ally data:`, allyData);
         
         const conditions = allyData.joinConditions || {};
-        console.log(`⚖️ DEBUG: Join conditions:`, conditions);
         
         // Check minimum grid level
         if (conditions.minGridLevel && gridLevel < conditions.minGridLevel) {
-            console.log(`❌ DEBUG: ${allyType} requires grid level ${conditions.minGridLevel}, current: ${gridLevel}`);
             continue;
         }
         
         // Check party size limit
         if (conditions.maxPartySize && G.party.length >= conditions.maxPartySize) {
-            console.log(`❌ DEBUG: ${allyType} party size limit exceeded (${G.party.length}/${conditions.maxPartySize})`);
             continue;
         }
         
         // Add to available types with weight
         availableTypes.push(allyType);
         weights.push(allyData.weight || 1);
-        console.log(`✅ DEBUG: ${allyType} added to available types with weight ${allyData.weight || 1}`);
     }
     
-    console.log('⚖️ DEBUG: Final available types:', availableTypes);
-    console.log('⚖️ DEBUG: Final weights:', weights);
     
     if (availableTypes.length === 0) {
-        console.log('❌ DEBUG: No eligible allies found');
         return null; // No eligible allies
     }
     
     // Use weighted random selection
     const selectedType = getWeightedRandom(availableTypes, weights);
-    console.log('⚖️ DEBUG: Selected type after weighting:', selectedType);
     
     return selectedType;
 }
@@ -1537,9 +1484,6 @@ function getWeightedAllyTypes(region, gridLevel) {
  * Create an ally from JSON data - DEBUG VERSION
  */
 function createAllyFromData(region, allyType) {
-    console.log('🏗️ DEBUG: createAllyFromData called');
-    console.log('🏗️ DEBUG: region:', region);
-    console.log('🏗️ DEBUG: allyType:', allyType);
     
     if (!GAME_DATA.allies || !GAME_DATA.allies[region] || !GAME_DATA.allies[region][allyType]) {
         console.error('❌ DEBUG: Ally data not found:', region, allyType);
@@ -1547,14 +1491,11 @@ function createAllyFromData(region, allyType) {
     }
     
     const allyData = GAME_DATA.allies[region][allyType];
-    console.log('🏗️ DEBUG: Raw ally data:', allyData);
     
     // Generate unique ID and procedural name
     const allyId = `${allyType}-${Date.now()}`;
-    console.log('🏗️ DEBUG: Generated ally ID:', allyId);
     
     const allyName = generateAllyName(allyData);
-    console.log('🏗️ DEBUG: Generated ally name:', allyName);
     
     // Create ally object with JSON stats
     const ally = {
@@ -1565,7 +1506,6 @@ function createAllyFromData(region, allyType) {
         description: allyData.description || "A mysterious ally"
     };
     
-    console.log('🏗️ DEBUG: Final ally object:', ally);
     return ally;
 }
 
@@ -1578,23 +1518,17 @@ function createAllyFromData(region, allyType) {
  * Get cards for an ally from JSON data
  */
 function getAllyCardsFromData(region, allyType, allyId) {
-    console.log('🃏 DEBUG: getAllyCardsFromData called');
-    console.log('🃏 DEBUG: region:', region, 'allyType:', allyType, 'allyId:', allyId);
     
     if (!GAME_DATA.allies || !GAME_DATA.allies[region] || !GAME_DATA.allies[region][allyType]) {
-        console.log('❌ DEBUG: No ally data found for cards');
         return [];
     }
     
     const allyData = GAME_DATA.allies[region][allyType];
-    console.log('🃏 DEBUG: Ally data for cards:', allyData);
     
     if (!allyData.cards) {
-        console.log('❌ DEBUG: No cards defined for this ally type');
         return [];
     }
     
-    console.log('🃏 DEBUG: Raw card templates:', allyData.cards);
     
     // Create cards with unique IDs for this ally
     const cards = allyData.cards.map(cardTemplate => ({
@@ -1604,7 +1538,6 @@ function getAllyCardsFromData(region, allyType, allyId) {
         description: cardTemplate.description || "An ally's special ability"
     }));
     
-    console.log('🃏 DEBUG: Generated cards with unique IDs:', cards);
     return cards;
 }
 
@@ -1768,53 +1701,36 @@ export function resolvePendingTechnique() {
  * Recruit a random ally to join the party - FIXED party size logic
  */
 export function recruitRandomAlly() {
-    console.log('🤝 DEBUG: recruitRandomAlly() called');
-    console.log('🤝 DEBUG: G.gridLevel:', G.gridLevel);
-    console.log('🤝 DEBUG: GAME_DATA exists:', !!GAME_DATA);
-    console.log('🤝 DEBUG: GAME_DATA.allies exists:', !!GAME_DATA.allies);
     
     // Check if allies data is available
     if (!GAME_DATA.allies) {
-        console.log('⚠️ DEBUG: No allies data available, using fallback recruitment');
         return recruitFallbackAlly(); // Keep old system as fallback
     }
     
-    console.log('✅ DEBUG: Allies data found!');
-    console.log('🤝 DEBUG: Available ally regions:', Object.keys(GAME_DATA.allies));
     
     // MOVED UP: Check party size limit FIRST - offer abandoned camp techniques if full
-    console.log('👥 DEBUG: Current party size:', G.party.length);
     if (G.party.length >= 4) {
-        console.log('🏕️ DEBUG: Party full - discovering abandoned camp instead');
         return discoverAbandonedCamp();
     }
     
     // Get current region and check for available allies
     const currentRegion = getRegionForGrid(G.gridLevel);
-    console.log('🗺️ DEBUG: Current region for grid', G.gridLevel, ':', currentRegion);
-    console.log('🗺️ DEBUG: Region data exists:', !!GAME_DATA.allies[currentRegion]);
     
     if (GAME_DATA.allies[currentRegion]) {
-        console.log('🗺️ DEBUG: Available ally types in', currentRegion, ':', Object.keys(GAME_DATA.allies[currentRegion]));
     }
     
     const selectedAllyType = getWeightedAllyTypes(currentRegion, G.gridLevel);
-    console.log('🎯 DEBUG: Selected ally type:', selectedAllyType);
     
     if (!selectedAllyType) {
-        console.log('❌ DEBUG: No ally type selected');
         addLogEntry('🤝 No allies are available in this area.');
         consumeCurrentTile();
         return false;
     }
     
     // Create ally from JSON data
-    console.log('🏗️ DEBUG: Creating ally from data...');
     const ally = createAllyFromData(currentRegion, selectedAllyType);
-    console.log('🤝 DEBUG: Created ally:', ally);
     
     if (!ally) {
-        console.log('❌ DEBUG: Failed to create ally');
         addLogEntry('🤝 An ally approaches but seems confused and wanders off...');
         consumeCurrentTile();
         return false;
@@ -1822,7 +1738,6 @@ export function recruitRandomAlly() {
     
     // Get ally's cards from JSON data
     const allyCards = getAllyCardsFromData(currentRegion, selectedAllyType, ally.id);
-    console.log('🃏 DEBUG: Ally cards:', allyCards);
     
     // Check if adding ally cards would cause overflow
     const totalNewCards = allyCards.length;
@@ -1850,7 +1765,6 @@ export function recruitRandomAlly() {
         return { overflow: true, ally: ally, cards: allyCards };
     } else {
         // No overflow - add ally and cards directly
-        console.log('✅ DEBUG: No overflow, completing recruitment...');
         return completeAllyRecruitment(ally, allyCards);
     }
 }
@@ -2474,7 +2388,6 @@ export function startCombat(enemyType = 'goblin', bossPhase = null) {
         return false;
     }
     
-    console.log('🛠 DEBUG: startCombat called with enemy:', enemyType, 'bossPhase:', !!bossPhase);
     
     // SET COMBAT ENGAGEMENT FLAG - Player has now engaged with this fight tile
     const currentTile = getCurrentTile();
@@ -2491,7 +2404,6 @@ export function startCombat(enemyType = 'goblin', bossPhase = null) {
     G.combat.lastRoll = null;
     G.combat.bossPhase = bossPhase; // Set boss phase if provided
     
-    console.log('🛠 DEBUG: Combat initialized - bossPhase:', !!G.combat.bossPhase);
     
     addLogEntry(`⚔️ Combat started with ${enemyTemplate.name}!`);
     return true;
@@ -2575,10 +2487,8 @@ export function playerAttack() {
     G.combat.enemyHp = Math.max(0, G.combat.enemyHp - damage);
     addLogEntry(`⚔️ You attack for ${damage} damage! Enemy HP: ${G.combat.enemyHp}`);
     
-    console.log('🐛 DEBUG: Attack complete - enemyHp:', G.combat.enemyHp, 'should call endCombat:', G.combat.enemyHp <= 0);
     
     if (G.combat.enemyHp <= 0) {
-        console.log('🐛 DEBUG: Calling endCombat(true)');
         endCombat(true);
         return true;
     }
@@ -2660,18 +2570,13 @@ export function enemyAttack() {
                 addLogEntry(`💔 ${currentLeader.name} has fallen! ${newLeader.name} continues the fight!`);
                 
                 // AUTO-REMOVE the fallen party member after brief delay
-                console.log('🔍 DEBUG: Scheduling auto-removal for fallen member:', currentLeader.name);
                 setTimeout(() => {
-                    console.log('🔍 DEBUG: Auto-removal timer triggered for:', currentLeader.name);
                     // Double-check the member is still in party and still dead
                     const fallenMember = G.party.find(m => m.id === currentLeader.id);
                     if (fallenMember && fallenMember.hp <= 0) {
-                        console.log('🔍 DEBUG: Calling removeAlly for:', currentLeader.id);
                         removeAlly(currentLeader.id);
                         addLogEntry(`⚰️ ${currentLeader.name}'s body fades away...`);
-                        console.log('🔍 DEBUG: Auto-removal complete');
                     } else {
-                        console.log('🔍 DEBUG: Auto-removal skipped - member not found or not dead');
                     }
                 }, 2000); // 2 second delay for dramatic effect
             }
@@ -3028,8 +2933,6 @@ function generateCharacterCards() {
  */
 function populateCharacterSelectionModal(characterCards) {
     const container = document.querySelector('.character-cards-container');
-    console.log('🔍 DEBUG: Container found:', container);
-    console.log('🔍 DEBUG: Cards to populate:', characterCards.length);
     
     if (!container) {
         console.error('❌ character-cards-container not found!');
@@ -3039,12 +2942,9 @@ function populateCharacterSelectionModal(characterCards) {
     container.innerHTML = '';
     
     characterCards.forEach((card, index) => {
-        console.log('🔍 DEBUG: Creating card:', card.name);
         const cardElement = createCharacterCardElement(card, index);
-        console.log('🔍 DEBUG: Card element created:', cardElement);
         container.appendChild(cardElement);
     });
-    console.log('🔍 DEBUG: Cards added to container. Container HTML:', container.innerHTML.length, 'characters');
 }
 
 /**
