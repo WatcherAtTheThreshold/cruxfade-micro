@@ -3169,3 +3169,4 @@ function startWithDefaultCharacter() {
     
     startGameWithCharacter(defaultLeader, defaultCharacterData);
 }
+}
