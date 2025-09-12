@@ -7,7 +7,6 @@
 // Import seeded RNG functions
 import { random, randomInt, pickRandom } from './rng.js';
 
-// ADD THIS LINE:
 import { renderAll } from './ui.js';
 
 // ================================================================
