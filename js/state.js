@@ -3110,16 +3110,11 @@ function addStartingCardsForCharacter(characterData) {
         const classData = regionData && regionData[characterData.className];
         
         if (classData && classData.cards) {
-            // Add class-specific cards
-            classData.cards.forEach(cardTemplate => {
-                const card = {
-                    id: `${cardTemplate.id}-leader`,
-                    name: cardTemplate.name,
-                    type: cardTemplate.type,
-                    description: cardTemplate.description
-                };
-                G.hand.push(card);
-            });
+         // NEW: Use createCardsFromData since allies.json now uses string references
+const classCards = createCardsFromData(classData.cards, '-leader');
+classCards.forEach(card => {
+    G.hand.push(card);
+});
         }
     }
     
