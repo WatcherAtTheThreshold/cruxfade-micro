@@ -204,20 +204,7 @@
       },
       "tags": ["dwarf", "warrior"],
       "description": "A tough mountain warrior with incredible endurance",
-      "cards": [
-        { 
-          "id": "shield-bash", 
-          "name": "Mountain Slam", 
-          "type": "attack",
-          "description": "Devastating dwarven combat technique"
-        },
-        { 
-          "id": "taunt", 
-          "name": "Stone Stance", 
-          "type": "defense",
-          "description": "Unmovable as the mountains"
-        }
-      ],
+     "cards": ["shield-bash-mountain", "defensive-stance"],
       "joinConditions": {
         "minGridLevel": 7,
         "maxPartySize": 4,
@@ -238,20 +225,7 @@
       },
       "tags": ["human", "mage", "crystal"],
       "description": "A mage who channels power through mountain crystals",
-      "cards": [
-        { 
-          "id": "magic-bolt", 
-          "name": "Crystal Lance", 
-          "type": "attack",
-          "description": "Pure crystalline energy pierces all defenses"
-        },
-        { 
-          "id": "heal", 
-          "name": "Crystal Harmony", 
-          "type": "utility",
-          "description": "Crystals resonate with life energy"
-        }
-      ],
+      "cards": ["magic-bolt-crystal", "track-cave"],
       "joinConditions": {
         "minGridLevel": 8,
         "maxPartySize": 4,
@@ -380,20 +354,7 @@
       },
       "tags": ["human", "warrior", "corrupted"],
       "description": "A once-great hero, scarred by the void's touch",
-      "cards": [
-        { 
-          "id": "sneak-attack", 
-          "name": "Desperate Strike", 
-          "type": "attack",
-          "description": "Fighting with nothing left to lose"
-        },
-        { 
-          "id": "dodge", 
-          "name": "Void Step", 
-          "type": "defense",
-          "description": "Phase partially through reality"
-        }
-      ],
+     "cards": ["shield-bash-void", "sneak-attack-desperate"],
       "joinConditions": {
         "minGridLevel": 12,
         "maxPartySize": 4,
@@ -415,19 +376,7 @@
       "tags": ["human", "mage", "void"],
       "description": "A mage who embraces the void's dark power",
       "cards": [
-        { 
-          "id": "magic-bolt", 
-          "name": "Void Bolt", 
-          "type": "attack",
-          "description": "Pure nothingness tears through enemies"
-        },
-        { 
-          "id": "heal", 
-          "name": "Void Drain", 
-          "type": "utility",
-          "description": "Steal life force from the void"
-        }
-      ],
+       "cards": ["magic-bolt-void", "first-aid-field"],
       "joinConditions": {
         "minGridLevel": 13,
         "maxPartySize": 4,
@@ -448,20 +397,7 @@
       },
       "tags": ["human", "scout", "survivor"],
       "description": "Someone who has survived the void's horrors",
-      "cards": [
-        { 
-          "id": "first-aid", 
-          "name": "Field Medicine", 
-          "type": "utility",
-          "description": "Makeshift healing from scrounged supplies"
-        },
-        { 
-          "id": "track", 
-          "name": "Danger Sense", 
-          "type": "utility",
-          "description": "Instincts honed by constant peril"
-        }
-      ],
+      "cards": ["first-aid-field", "sneak-attack-desperate"],
       "joinConditions": {
         "minGridLevel": 12,
         "maxPartySize": 4,
@@ -482,20 +418,7 @@
       },
       "tags": ["human", "warrior", "void"],
       "description": "A knight who has embraced the void's power",
-      "cards": [
-        { 
-          "id": "shield-bash", 
-          "name": "Void Slam", 
-          "type": "attack",
-          "description": "Strike infused with entropic energy"
-        },
-        { 
-          "id": "taunt", 
-          "name": "Nihil Aura", 
-          "type": "defense",
-          "description": "Presence of nothingness weakens foes"
-        }
-      ],
+      "cards": ["shield-bash-void", "sneak-attack-desperate"],
       "joinConditions": {
         "minGridLevel": 14,
         "maxPartySize": 4,
