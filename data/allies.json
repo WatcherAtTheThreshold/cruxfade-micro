@@ -375,7 +375,6 @@
       },
       "tags": ["human", "mage", "void"],
       "description": "A mage who embraces the void's dark power",
-      "cards": [
        "cards": ["magic-bolt-void", "first-aid-field"],
       "joinConditions": {
         "minGridLevel": 13,
