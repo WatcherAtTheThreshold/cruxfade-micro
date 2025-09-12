@@ -47,7 +47,6 @@ import {
 
 // ================================================================
 // SHORT NAME HELPER FUNCTION
-// Add this helper function to ui.js (near the top, after the imports)
 // ================================================================
 
 /**
@@ -68,7 +67,6 @@ function getShortName(fullName) {
 
 // ================================================================
 // MISSING HELPER FUNCTION FOR UI.JS
-// Add this function NEAR THE TOP of ui.js (after the imports section)
 // ================================================================
 /**
  * Helper to get current region for UI display - LOCAL VERSION FOR UI.JS
