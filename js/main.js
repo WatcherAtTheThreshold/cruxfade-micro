@@ -135,6 +135,13 @@ async function loadGameData() {
         } catch (e) {
             console.log('⚠️ bosses.json not found (boss encounters disabled)');
         }
+                let cards = {};
+        try {
+            cards = await fetch('./data/cards.json').then(r => r.json());
+            console.log('🃏 Cards loaded:', Object.keys(cards).filter(key => !key.startsWith('_')).length);
+        } catch (e) {
+            console.log('⚠️ cards.json not found (hardcoded cards will be used)');
+        }
         
         // NEW: Load allies.json
         try {
@@ -153,7 +160,8 @@ async function loadGameData() {
             encounters: encounters,
             items: items,
             bosses: bosses,
-            allies: allies  // NEW: Add allies to game data
+            allies: allies,
+            cards: cards 
         };
         
         console.log('🎮 Game data loaded:', gameData);
