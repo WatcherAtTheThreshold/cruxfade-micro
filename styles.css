@@ -2250,6 +2250,7 @@ section {
 
 .character-card:hover {
     border-color: #8b7355;
+   transition: transform 0.3s ease;
     transform: translateY(-4px);
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
    background-image: url('./images/cards/member-bg.png');
