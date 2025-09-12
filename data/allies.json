@@ -55,13 +55,7 @@
       },
       "tags": ["human", "ranger", "scout"],
       "description": "A skilled woodsman with keen senses",
-      "cards": [
-        { 
-          "id": "track", 
-          "name": "Track", 
-          "type": "utility",
-          "description": "Reveal hidden encounters on the grid"
-        },
+      "cards": ["track-forest"],
         { 
           "id": "sneak-attack", 
           "name": "Sneak Attack", 
