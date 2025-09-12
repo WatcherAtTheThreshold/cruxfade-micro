@@ -171,7 +171,6 @@ function generateGrid() {
 
 /**
  * Initialize the game - now shows character selection first
- * REPLACE existing initializeGame() function with this
  */
 export function initializeGame() {
     console.log('🎮 Initializing game...');
@@ -1314,7 +1313,6 @@ export function resolveHazard() {
 
 // ================================================================
 // UPDATED: getAllyCards() FUNCTION
-// Replace the existing getAllyCards() function with this version
 // Now works with both JSON data and hardcoded fallback
 // ================================================================
 
@@ -1403,7 +1401,6 @@ function determineAllyTypeFromTags(ally) {
 
 // ================================================================
 // DEBUG VERSIONS OF ALLY HELPER FUNCTIONS
-// Replace the existing functions in state.js with these versions
 // ================================================================
 
 /**
@@ -1510,8 +1507,7 @@ function createAllyFromData(region, allyType) {
 }
 
 // ================================================================
-// ADD THIS MISSING FUNCTION TO state.js
-// Place it right after the createAllyFromData() function
+// GET ALLY CARDS FROM JSON DATA
 // ================================================================
 
 /**
@@ -1543,7 +1539,6 @@ function getAllyCardsFromData(region, allyType, allyId) {
 
 // ================================================================
 // TECHNIQUE CARD HELPER FUNCTIONS
-// Add these functions to state.js after the existing ally helper functions
 // ================================================================
 
 /**
@@ -1694,7 +1689,6 @@ export function resolvePendingTechnique() {
 
 // ================================================================
 // FIXED recruitRandomAlly() FUNCTION - PARTY SIZE CHECK MOVED UP
-// Replace your existing recruitRandomAlly() function with this version
 // ================================================================
 
 /**
@@ -2883,7 +2877,6 @@ export function getAvailableEquipmentForSlot(slot) {
 
 // ================================================================
 // CHARACTER SELECTION FUNCTIONS - FIXED VERSION
-// REPLACE your existing character selection functions with these
 // ================================================================
 
 
