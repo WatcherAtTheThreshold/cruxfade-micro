@@ -3129,8 +3129,8 @@ function addStartingCardsForCharacter(characterData) {
     
     basicCards.forEach(card => {
         G.hand.push(card);
-    });
-}*/
+    });*/
+}
 
 /**
  * Get icon for character class (fallback when portrait image fails)
@@ -3169,4 +3169,4 @@ function startWithDefaultCharacter() {
     
     startGameWithCharacter(defaultLeader, defaultCharacterData);
 }
-}
+
