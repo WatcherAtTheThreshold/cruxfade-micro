@@ -2258,6 +2258,7 @@ const CARD_EFFECTS = {
  * Execute a card's effect
  */
 function executeCardEffect(card) {
+    console.log("🃏 DEBUG: Card ID being checked:", card.id, "Card name:", card.name); // ADD THIS LINE
     // Get the base effect type from the card ID
     let effectType = card.id;
     
