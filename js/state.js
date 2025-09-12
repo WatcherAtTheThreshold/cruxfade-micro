@@ -2313,10 +2313,9 @@ function executeCardEffect(card) {
     // Get the base effect type from the card ID
     let effectType = card.id;
     
-    // Handle ally-specific cards (remove the ally ID suffix) 
-if (card.id.includes('-warrior-') || card.id.includes('-ranger-') || 
-    card.id.includes('-herbalist-') || card.id.includes('-rogue-') || 
-    card.id.includes('-paladin-')) {
+ // Handle ally-specific cards (remove the ally ID suffix) - CLEANED UP
+if (card.id.includes('-warrior-') || card.id.includes('-ranger-') || card.id.includes('-herbalist-') || 
+    card.id.includes('-rogue-') || card.id.includes('-paladin-')) {
     effectType = card.id.split('-').slice(0, -2).join('-');
 }
     
