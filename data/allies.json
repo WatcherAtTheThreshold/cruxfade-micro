@@ -27,14 +27,7 @@
       },
       "tags": ["human", "warrior"],
       "description": "A stalwart fighter trained in forest combat",
-   "cards": ["shield-bash-forest"],
-        { 
-          "id": "defensive-stance", 
-          "name": "Defensive Stance", 
-          "type": "defense",
-          "description": "Reduce incoming damage by half"
-        }
-      ],
+  "cards": ["shield-bash-forest", "defensive-stance"]
       "joinConditions": {
         "minGridLevel": 1,
         "maxPartySize": 4,
@@ -55,14 +48,7 @@
       },
       "tags": ["human", "ranger", "scout"],
       "description": "A skilled woodsman with keen senses",
-      "cards": ["track-forest"],
-        { 
-          "id": "sneak-attack", 
-          "name": "Sneak Attack", 
-          "type": "attack",
-          "description": "Deal double damage if enemy is unaware"
-        }
-      ],
+      "cards": ["track-forest", "sneak-attack-backstab"]
       "joinConditions": {
         "minGridLevel": 1,
         "maxPartySize": 4,
@@ -83,20 +69,7 @@
       },
       "tags": ["human", "mage", "healer"],
       "description": "A forest mystic who communes with nature",
-      "cards": [
-        { 
-          "id": "heal", 
-          "name": "Nature's Blessing", 
-          "type": "utility",
-          "description": "Restore HP to party leader"
-        },
-        { 
-          "id": "first-aid", 
-          "name": "Herbal Remedy", 
-          "type": "utility",
-          "description": "Heal minor wounds during exploration"
-        }
-      ],
+     "cards": ["heal-nature", "track-forest"]
       "joinConditions": {
         "minGridLevel": 2,
         "maxPartySize": 4,
@@ -150,20 +123,7 @@
   },
   "tags": ["human", "rogue"],
   "description": "A stealthy figure skilled in stealth and misdirection",
-  "cards": [
-    { 
-      "id": "sneak-attack", 
-      "name": "Backstab", 
-      "type": "attack",
-      "description": "Deal double damage when attacking from stealth"
-    },
-    { 
-      "id": "dodge", 
-      "name": "Shadow Step", 
-      "type": "defense",
-      "description": "Phase into shadows to avoid the next attack"
-    }
-  ],
+  "cards": ["sneak-attack-backstab", "defensive-stance"]
   "joinConditions": {
     "minGridLevel": 2,
     "maxPartySize": 4,
@@ -183,20 +143,7 @@
   },
   "tags": ["human", "paladin", "healer"],
   "description": "A holy warrior dedicated to protection and healing",
-  "cards": [
-    { 
-      "id": "divine-strike", 
-      "name": "Divine Strike", 
-      "type": "attack",
-      "description": "Deal magic damage infused with holy power"
-    },
-    { 
-      "id": "blessing", 
-      "name": "Blessing", 
-      "type": "utility",
-      "description": "Heal and protect an ally with divine grace"
-    }
-  ],
+ "cards": ["divine-strike", "heal-nature"]
   "joinConditions": {
     "minGridLevel": 2,
     "maxPartySize": 4,
