@@ -1,0 +1,145 @@
+{
+  "_meta": {
+    "version": "1.0",
+    "description": "Card database for Cruxfade-Micro",
+    "note": "effect field maps to CARD_EFFECTS functions in state.js"
+  },
+
+  "basic-strike": {
+    "name": "Strike",
+    "type": "attack",
+    "effect": "basic-strike",
+    "description": "Enhanced basic attack with +1 damage bonus",
+    "rarity": "common"
+  },
+  
+  "shield-bash": {
+    "name": "Shield Bash",
+    "type": "attack", 
+    "effect": "shield-bash",
+    "description": "Deal +2 damage and stun enemy for 1 turn",
+    "rarity": "common"
+  },
+  
+  "defend": {
+    "name": "Guard",
+    "type": "defense",
+    "effect": "defend", 
+    "description": "Defensive stance! Incoming damage halved",
+    "rarity": "common"
+  },
+  
+  "heal": {
+    "name": "Heal",
+    "type": "utility",
+    "effect": "heal",
+    "description": "Restore up to 4 HP",
+    "rarity": "common"
+  },
+  
+  "first-aid": {
+    "name": "First Aid", 
+    "type": "utility",
+    "effect": "first-aid",
+    "description": "Apply basic medical treatment for 2 HP",
+    "rarity": "common"
+  },
+  
+  "sneak-attack": {
+    "name": "Sneak Attack",
+    "type": "attack",
+    "effect": "sneak-attack", 
+    "description": "Double damage if used as first attack",
+    "rarity": "uncommon"
+  },
+  
+  "magic-bolt": {
+    "name": "Magic Bolt",
+    "type": "attack",
+    "effect": "magic-bolt",
+    "description": "Pure magic damage that bypasses armor", 
+    "rarity": "uncommon"
+  },
+  
+  "taunt": {
+    "name": "Taunt",
+    "type": "defense", 
+    "effect": "taunt",
+    "description": "Force enemy to attack you, reduce damage taken",
+    "rarity": "common"
+  },
+  
+  "dodge": {
+    "name": "Dodge",
+    "type": "defense",
+    "effect": "dodge",
+    "description": "Avoid the next enemy attack completely", 
+    "rarity": "common"
+  },
+  
+  "track": {
+    "name": "Track",
+    "type": "utility",
+    "effect": "track",
+    "description": "Reveal the types of nearby unexplored tiles",
+    "rarity": "uncommon"
+  },
+  
+  "move": {
+    "name": "Fleet Foot", 
+    "type": "utility",
+    "effect": "move",
+    "description": "Feel more agile and ready to move",
+    "rarity": "common"
+  },
+
+  "_comment": "Cards below map to existing effects until we add new ones",
+  
+  "forest-lore": {
+    "name": "Forest Lore",
+    "type": "utility", 
+    "effect": "track",
+    "description": "Use forest knowledge to reveal nearby areas",
+    "rarity": "uncommon"
+  },
+  
+  "defensive-stance": {
+    "name": "Defensive Stance",
+    "type": "defense",
+    "effect": "defend", 
+    "description": "Assume a defensive position to reduce damage",
+    "rarity": "common"
+  },
+  
+  "nature-bond": {
+    "name": "Nature Bond", 
+    "type": "utility",
+    "effect": "heal",
+    "description": "Draw healing energy from natural surroundings",
+    "rarity": "uncommon"
+  },
+  
+  "beast-speak": {
+    "name": "Beast Speak",
+    "type": "utility",
+    "effect": "track", 
+    "description": "Communicate with animals to learn about the area",
+    "rarity": "rare"
+  },
+  
+  "blessing": {
+    "name": "Blessing",
+    "type": "utility",
+    "effect": "heal",
+    "description": "Channel divine energy for healing", 
+    "rarity": "uncommon"
+  },
+  
+  "divine-strike": {
+    "name": "Divine Strike",
+    "type": "attack",
+    "effect": "basic-strike",
+    "description": "Attack blessed with holy power",
+    "rarity": "uncommon" 
+  }
+}
