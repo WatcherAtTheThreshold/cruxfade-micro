@@ -128,8 +128,6 @@ function cacheDOMElements() {
     
     // Cache all 16 tile elements for 4x4 grid
     DOM.tiles = Array.from(document.querySelectorAll('.tile'));
-    
-    console.log(`🎯 Cached ${DOM.tiles.length} tiles (expecting 16 for 4x4)`);
 }
 
 // ================================================================
@@ -152,7 +150,6 @@ export function renderAll() {
         showVictoryScreen();
     }
     
-    console.log('🎨 UI rendered');
 }
 
 
@@ -387,7 +384,6 @@ function createPartyMemberElement(member, isLeader = false) {
         const memberId = slot.dataset.memberId;
         const slotType = slot.dataset.slot;
 
-        console.log(`🎒 Managing ${slotType} for ${member.name}`);
         showEquipmentManagement(memberId, slotType, () => {
           _updateGameCallback();
         });
@@ -476,13 +472,11 @@ function renderPartyHand() {
 function handleCardClick(cardId, cardElement) {
     if (selectedCardId === cardId) {
         // Second click on same card - USE the card
-        console.log('🃏 Using card:', cardId);
         playCard(cardId);
         selectedCardId = null; // Reset selection
         _updateGameCallback();
     } else {
         // First click or different card - SELECT the card
-        console.log('🃏 Selecting card:', cardId);
         selectedCardId = cardId;
         
         // Visual feedback: re-render to show selected state
@@ -548,7 +542,6 @@ function handleClickAway(e) {
     // Check if click was outside party hand area
     if (!e.target.closest('.party-hand-section')) {
         if (selectedCardId !== null) {
-            console.log('🃏 Deselecting card due to click away');
             selectedCardId = null;
             renderPartyHand(); // Re-render to remove selected state
         }
@@ -579,8 +572,6 @@ function renderEncounterArea() {
         renderDefaultEncounter();
         return;
     }
-
-    console.log('🐛 DEBUG: Rendering encounter for tile:', tile.type, 'consumed:', tile.consumed, 'combat active:', G.combat.active);
 
     // If we're in active combat, always show combat UI regardless of tile type
     if (G.combat.active) {
@@ -658,8 +649,6 @@ function renderBossEncounter() {
     const boss = getCurrentBoss();
     const phase = getCurrentBossPhase();
     
-    console.log('🐛 DEBUG: Boss encounter render - boss:', boss?.name, 'phase:', phase?.name, 'enemyIndex:', G.boss.enemyIndex);
-    
     if (!boss || !phase) {
         renderBossIntro();
         return;
@@ -725,8 +714,6 @@ function renderBossPhaseFight(boss, phase) {
     const currentEnemy = G.boss.enemyIndex || 0;
     const totalEnemies = phase.enemies ? phase.enemies.length : 0;
     const isSequential = totalEnemies > 1;
-    
-    console.log('🐛 DEBUG: Rendering boss fight phase - currentEnemy:', currentEnemy, 'totalEnemies:', totalEnemies);
     
     if (isSequential && currentEnemy > 0 && currentEnemy < totalEnemies) {
         // Middle of sequential fight
@@ -1152,17 +1139,11 @@ function renderAllyEncounter() {
             G._pendingTechniques.forEach((tech, index) => {
                 const element = document.getElementById(`technique-${index}`);
                 if (element) {
-                    console.log(`🔧 DEBUG: Adding click listener to technique-${index}`);
                     element.addEventListener('click', (e) => {
-                        console.log(`🎯 DEBUG: Direct click on technique ${index}: ${tech.name}`);
-                        console.log(`🔧 DEBUG: Event target:`, e.target);
-                        console.log(`🔧 DEBUG: Data attributes:`, element.dataset);
                         
                         // Try the original logic here
                         import('./state.js').then(({ learnTechnique }) => {
-                            console.log('📚 DEBUG: About to call learnTechnique...');
                             const result = learnTechnique(tech);
-                            console.log('✅ DEBUG: learnTechnique result:', result);
                             _updateGameCallback();
                         }).catch(error => {
                             console.error('❌ DEBUG: Import/execution failed:', error);
@@ -1429,7 +1410,6 @@ if (runSeedElement) {
         const newSeed = prompt('Enter seed (number):', G.seed);
         if (newSeed !== null && !isNaN(newSeed) && newSeed.trim() !== '') {
             const seedNum = parseInt(newSeed);
-            console.log('🎲 Starting new game with seed:', seedNum);
             window.CruxfadeMicro.newGame(seedNum);
         }
     });
@@ -1526,25 +1506,21 @@ export function bindEventHandlers(updateGameCallback) {
             
             // Get the action from the data-action attribute
             const action = button.dataset.action;
-            console.log('🎮 Action triggered:', action);
             
             // Handle the action
             switch(action) {
                 // NEW: Boss system actions
                 case 'start-boss-sequence':
-                    console.log('💀 Starting boss sequence...');
                     startBossPhase();
                     _updateGameCallback();
                     break;
                     
                 case 'start-boss-phase':
-                    console.log('⚡ Starting boss phase...');
                     startBossPhase();
                     _updateGameCallback();
                     break;
                     
                 case 'complete-boss-phase':
-                    console.log('✅ Completing boss phase...');
                     completeBossPhase();
                     _updateGameCallback();
                     break;
@@ -1552,35 +1528,29 @@ export function bindEventHandlers(updateGameCallback) {
                 // Existing actions
 
                 case 'flee-encounter':
-    console.log('🏃 Attempting to flee...');
-    console.log('🔍 DEBUG: Combat active before flee:', G.combat.active);
     
     if (typeof attemptFlee !== 'function') {
         console.error('❌ attemptFlee is not imported properly:', typeof attemptFlee);
         addLogEntry('❌ Flee system error - check console');
     } else {
         const fleeResult = attemptFlee();
-        console.log('🔍 DEBUG: Flee result:', fleeResult);
     }
     
     _updateGameCallback();
     break;
                     
                 case 'start-combat':
-                    console.log('⚔️ Starting combat...');
                     const enemyType = getRandomEnemyType(); // Use random enemy type
                     startCombat(enemyType);
                     _updateGameCallback();
                     break;
                     
                 case 'player-attack':
-                    console.log('⚔️ Player attacks...');
                     playerAttack();
                     _updateGameCallback();
                     break;
                     
                 case 'enemy-turn':
-                    console.log('💥 Enemy turn...');
                     setTimeout(() => {
                         enemyAttack();
                         _updateGameCallback();
@@ -1598,24 +1568,20 @@ export function bindEventHandlers(updateGameCallback) {
                     break;
                     
                 case 'resolve-hazard':
-                console.log('⚡ Resolving hazard...');
                    resolveHazard();  // Call our new function!
                    _updateGameCallback();
                     break;
                     
                 case 'take-item':
-                    console.log('📦 Taking item...');
                     giveRandomItem();  // Call our new function!
                     _updateGameCallback();
                      break;
                     
                 case 'recruit-ally':
-    console.log('🤝 Recruiting ally...');
     const result = recruitRandomAlly();
     
     // Check if recruitment caused card overflow
     if (result && result.overflow) {
-        console.log('⚠️ Ally recruitment caused card overflow');
         
         // For now, show overflow with the first ally card as a test
         // We'll improve this to show all cards properly
@@ -1634,7 +1600,6 @@ export function bindEventHandlers(updateGameCallback) {
     }
     break;
                 case 'select-technique':
-    console.log('📜 Opening technique selection...');
     
     // Check if we have pending techniques
     if (G._pendingTechniques && G._pendingTechniques.length > 0) {
@@ -1667,32 +1632,22 @@ export function bindEventHandlers(updateGameCallback) {
     }
     break;  
                case 'learn-technique':
-    console.log('📚 Learning technique directly...');
     
     // Get the technique index from the clicked element
     const techniqueIndex = parseInt(e.target.closest('[data-technique-index]').dataset.techniqueIndex);
-    console.log('🔍 DEBUG: Technique index:', techniqueIndex);
-    console.log('🔍 DEBUG: Pending techniques:', G._pendingTechniques);
-    console.log('🔍 DEBUG: Selected technique:', G._pendingTechniques?.[techniqueIndex]);
     
     if (G._pendingTechniques && G._pendingTechniques[techniqueIndex]) {
         const selectedTechnique = G._pendingTechniques[techniqueIndex];
-        console.log('📚 Selected technique:', selectedTechnique.name);
         
         // DEBUG: Test if import works
         import('./state.js').then(({ learnTechnique }) => {
-            console.log('✅ DEBUG: Successfully imported learnTechnique:', typeof learnTechnique);
             
             if (typeof learnTechnique === 'function') {
-                console.log('🎯 DEBUG: Calling learnTechnique...');
                 const result = learnTechnique(selectedTechnique);
-                console.log('🔍 DEBUG: learnTechnique result:', result);
                 
                 if (result && result.overflow) {
-                    console.log('⚠️ DEBUG: Overflow detected');
                     // Handle overflow later
                 } else {
-                    console.log('✅ DEBUG: Normal learning, calling updateGame...');
                     _updateGameCallback();
                 }
             } else {
@@ -1706,13 +1661,11 @@ export function bindEventHandlers(updateGameCallback) {
     }
     break;
                 case 'take-key':
-                    console.log('🗝️ Taking key...');
                     foundKey();
                     _updateGameCallback();
                     break;
                     
                 case 'proceed-next-grid':
-                    console.log('🚪 Proceeding to next grid...');
                     nextGrid();
                     _updateGameCallback();
                     break;
@@ -1722,36 +1675,25 @@ export function bindEventHandlers(updateGameCallback) {
             }
         });
     }
-    
-    console.log('🎯 Event handlers bound with callback system');
 }
 
 /**
  * Handle tile click events
  */
 function handleTileClick(row, col) {
-    console.log(`🖱️ Tile clicked: (${row}, ${col})`);
-    console.log(`Current player position: (${G.board.player.r}, ${G.board.player.c})`);
-    console.log(`Is adjacent: ${isAdjacentToPlayer(row, col)}`);
-    console.log(`Game over: ${G.over}`);
-    
     if (G.over) return;
     
     // Check if it's an adjacent tile
     if (isAdjacentToPlayer(row, col)) {
-        console.log('🎯 Attempting to move player...');
         const success = movePlayer(row, col);
         if (success) {
-            console.log('✅ Move successful, updating game...');
             _updateGameCallback(); // Use callback instead of direct import
         } else {
-            console.log('❌ Move failed');
         }
     } else if (!isPlayerCurrentTile(row, col)) {
         addLogEntry('❌ Can only move to adjacent tiles');
         _updateGameCallback(); // Use callback instead of direct import
     } else {
-        console.log('🔍 Clicked current player tile');
     }
 }
 
