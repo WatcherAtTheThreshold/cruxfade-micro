@@ -2259,6 +2259,22 @@ section {
     /*background: linear-gradient(135deg, #4a3326 0%, #5a4235 100%);*/
 }
 
+.character-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-image: url('./images/cards/member-bg.png');
+    background-size: 100% 100%;
+    background-position: center;
+    opacity: 0;
+    transition: opacity 0.6s ease;
+    border-radius: inherit;
+}
+
+.character-card:hover::before {
+    opacity: 1;
+}
+
 .character-name {
     color: #f4e4bc;
     font-size: 1.1rem;
