@@ -2054,6 +2054,56 @@ export function switchPartyLeader(memberId) {
 }
 
 // ================================================================
+// JSON CARD GENERATION FUNCTIONS
+// ================================================================
+
+/**
+ * Create a card object from JSON data
+ * @param {string} cardKey - The key from cards.json (like 'heal', 'basic-strike')
+ * @param {string} suffix - Optional suffix for unique IDs (like '-leader', '-warrior-12345')
+ * @returns {Object} Card object ready for game use
+ */
+function createCardFromData(cardKey, suffix = '') {
+    // Check if cards data is loaded
+    if (!GAME_DATA.cards || !GAME_DATA.cards[cardKey]) {
+        console.warn(`⚠️ Card '${cardKey}' not found in JSON data`);
+        return null;
+    }
+    
+    const cardData = GAME_DATA.cards[cardKey];
+    
+    // Create the card object
+    const card = {
+        id: cardKey + suffix,
+        name: cardData.name,
+        type: cardData.type,
+        description: cardData.description,
+        effect: cardData.effect,
+        rarity: cardData.rarity || 'common'
+    };
+    
+    return card;
+}
+
+/**
+ * Get multiple cards from JSON data
+ * @param {Array} cardKeys - Array of card keys like ['heal', 'basic-strike']
+ * @param {string} suffix - Optional suffix for unique IDs
+ * @returns {Array} Array of card objects
+ */
+function createCardsFromData(cardKeys, suffix = '') {
+    const cards = [];
+    
+    for (const cardKey of cardKeys) {
+        const card = createCardFromData(cardKey, suffix);
+        if (card) {
+            cards.push(card);
+        }
+    }
+    
+    return cards;
+}
+// ================================================================
 // CARD EFFECTS SYSTEM
 // ================================================================
 
