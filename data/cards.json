@@ -141,5 +141,111 @@
     "effect": "basic-strike",
     "description": "Attack blessed with holy power",
     "rarity": "uncommon" 
+  },
+
+  "_comment_regional": "Regional themed card variants below - same effects, different flavor",
+
+  "shield-bash-forest": {
+    "name": "Shield Bash",
+    "type": "attack",
+    "effect": "shield-bash",
+    "description": "+2 damage and stun enemy for 1 turn",
+    "rarity": "common"
+  },
+
+  "shield-bash-mountain": {
+    "name": "Mountain Slam", 
+    "type": "attack",
+    "effect": "shield-bash",
+    "description": "Devastating dwarven combat technique",
+    "rarity": "common"
+  },
+
+  "shield-bash-crystal": {
+    "name": "Crystal Edge",
+    "type": "attack", 
+    "effect": "shield-bash",
+    "description": "Weapon enhanced with crystalline sharpness",
+    "rarity": "common"
+  },
+
+  "shield-bash-void": {
+    "name": "Void Slam",
+    "type": "attack",
+    "effect": "shield-bash", 
+    "description": "Strike infused with entropic energy",
+    "rarity": "common"
+  },
+
+  "magic-bolt-lightning": {
+    "name": "Lightning Strike",
+    "type": "attack",
+    "effect": "magic-bolt",
+    "description": "Deal magic damage, bypasses armor", 
+    "rarity": "uncommon"
+  },
+
+  "magic-bolt-crystal": {
+    "name": "Crystal Lance",
+    "type": "attack",
+    "effect": "magic-bolt",
+    "description": "Pure crystalline energy pierces all defenses",
+    "rarity": "uncommon"
+  },
+
+  "magic-bolt-void": {
+    "name": "Void Bolt", 
+    "type": "attack",
+    "effect": "magic-bolt",
+    "description": "Pure nothingness tears through enemies",
+    "rarity": "uncommon"
+  },
+
+  "track-forest": {
+    "name": "Track",
+    "type": "utility",
+    "effect": "track",
+    "description": "Reveal hidden encounters on the grid",
+    "rarity": "uncommon"
+  },
+
+  "track-cave": {
+    "name": "Cave Sense",
+    "type": "utility", 
+    "effect": "track",
+    "description": "Navigate underground passages with ease",
+    "rarity": "uncommon"
+  },
+
+  "heal-nature": {
+    "name": "Nature's Blessing",
+    "type": "utility",
+    "effect": "heal",
+    "description": "Restore HP to party leader",
+    "rarity": "common"
+  },
+
+  "sneak-attack-backstab": {
+    "name": "Backstab",
+    "type": "attack",
+    "effect": "sneak-attack", 
+    "description": "Deal double damage when attacking from stealth",
+    "rarity": "uncommon"
+  },
+
+  "sneak-attack-desperate": {
+    "name": "Desperate Strike",
+    "type": "attack",
+    "effect": "sneak-attack",
+    "description": "Fighting with nothing left to lose", 
+    "rarity": "uncommon"
+  },
+
+  "first-aid-field": {
+    "name": "Field Medicine",
+    "type": "utility",
+    "effect": "first-aid",
+    "description": "Makeshift healing from scrounged supplies",
+    "rarity": "common"
   }
 }
