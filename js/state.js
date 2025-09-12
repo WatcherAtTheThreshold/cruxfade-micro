@@ -2313,11 +2313,12 @@ function executeCardEffect(card) {
     // Get the base effect type from the card ID
     let effectType = card.id;
     
-    // Handle ally-specific cards (remove the ally ID suffix)
-    if (card.id.includes('-warrior-') || card.id.includes('-mage-') || card.id.includes('-ranger-') || card.id.includes('-paladin-') ||
-        card.id.includes('-rogue-')  || card.id.includes('-druid-') || card.id.includes('-healer-')   || card.id.includes('-scout-')) {
-        effectType = card.id.split('-').slice(0, -2).join('-');
-    }
+    // Handle ally-specific cards (remove the ally ID suffix) 
+if (card.id.includes('-warrior-') || card.id.includes('-ranger-') || 
+    card.id.includes('-herbalist-') || card.id.includes('-rogue-') || 
+    card.id.includes('-paladin-')) {
+    effectType = card.id.split('-').slice(0, -2).join('-');
+}
     
     // Handle leader/starting cards (remove -leader suffix)
     if (card.id.endsWith('-leader')) {
@@ -3121,7 +3122,6 @@ function addStartingCardsForCharacter(characterData) {
     }
     
     // UPDATED: Add basic starting cards from JSON data
-    const startingCardKeys = ['basic-strike', 'defend'];
     const startingCards = createCardsFromData(startingCardKeys, '-leader');
     
     startingCards.forEach(card => {
