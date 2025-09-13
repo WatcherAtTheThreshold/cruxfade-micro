@@ -1575,7 +1575,7 @@ function getRegionalTechniques(region) {
 }
 
 /**
- * Select random technique cards with weighted selection
+ * Select random technique cards - SIMPLE VERSION (no weights for now)
  */
 function selectRandomTechniques(region, count = 3) {
     const availableTechniques = getRegionalTechniques(region);
@@ -1585,15 +1585,14 @@ function selectRandomTechniques(region, count = 3) {
         return [];
     }
     
-    // Weighted random selection
+    // Simple random selection (no weights for now)
     const selectedTechniques = [];
     const techniquePool = [...availableTechniques]; // Copy array
     
     for (let i = 0; i < Math.min(count, techniquePool.length); i++) {
-        const weights = techniquePool.map(t => t.weight);
-        const selectedIndex = getWeightedRandomIndex(weights);
-        selectedTechniques.push(techniquePool[selectedIndex]);
-        techniquePool.splice(selectedIndex, 1); // Remove selected technique
+        const randomIndex = Math.floor(random() * techniquePool.length);
+        selectedTechniques.push(techniquePool[randomIndex]);
+        techniquePool.splice(randomIndex, 1); // Remove selected technique
     }
     
     console.log(`🎲 Selected ${selectedTechniques.length} techniques:`, selectedTechniques.map(t => t.name));
