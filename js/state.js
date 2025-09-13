@@ -1537,14 +1537,41 @@ function getAllyCardsFromData(region, allyType, allyId) {
 // ================================================================
 
 /**
- * Get available technique cards for the current region
+ * Get available technique cards for the current region from cards.json
  */
 function getRegionalTechniques(region) {
-    if (!GAME_DATA.allies || !GAME_DATA.allies[region] || !GAME_DATA.allies[region].techniques) {
+    if (!GAME_DATA.cards) {
+        console.log('⚠️ No cards data available for techniques');
         return [];
     }
     
-    return GAME_DATA.allies[region].techniques;
+    // Define which techniques belong to each region
+    const regionTechniqueIds = {
+        'forest-region': ['forest-lore', 'nature-bond', 'herb-mastery', 'beast-speech', 'ancient-wisdom'],
+        'mountain-region': ['stone-skin', 'crystal-focus', 'mountain-endurance', 'forge-mastery', 'gem-sight'],
+        'void-region': ['void-touch', 'desperation', 'survival-instinct', 'entropy-mastery', 'forbidden-knowledge']
+    };
+    
+    const techniqueIds = regionTechniqueIds[region] || [];
+    console.log(`🎯 Getting techniques for ${region}:`, techniqueIds);
+    
+    // Get technique data from cards.json
+    const techniques = techniqueIds.map(techId => {
+        const cardData = GAME_DATA.cards[techId];
+        if (cardData) {
+            return {
+                id: techId,  // Clean ID - no timestamps!
+                name: cardData.name,
+                type: cardData.type,
+                description: cardData.description,
+                weight: cardData.rarity === 'rare' ? 1 : cardData.rarity === 'uncommon' ? 2 : 3
+            };
+        }
+        return null;
+    }).filter(tech => tech !== null);
+    
+    console.log(`✅ Found ${techniques.length} techniques for ${region}:`, techniques);
+    return techniques;
 }
 
 /**
@@ -1554,50 +1581,68 @@ function selectRandomTechniques(region, count = 3) {
     const availableTechniques = getRegionalTechniques(region);
     
     if (availableTechniques.length === 0) {
+        console.log('⚠️ No techniques available for region:', region);
         return [];
     }
     
+    // Weighted random selection
     const selectedTechniques = [];
-    const availablePool = [...availableTechniques]; // Copy array so we don't modify original
+    const techniquePool = [...availableTechniques]; // Copy array
     
-    // Select up to 'count' techniques without duplicates
-    for (let i = 0; i < count && availablePool.length > 0; i++) {
-        const weights = availablePool.map(tech => tech.weight || 1);
-        const selectedIndex = getWeightedRandomIndex(weights);
-        const selectedTech = availablePool[selectedIndex];
-        
-        // Create unique card with timestamp ID
-        const techniqueCard = {
-            id: `${selectedTech.id}-${Date.now()}-${i}`,
-            name: selectedTech.name,
-            type: selectedTech.type,
-            description: selectedTech.description
-        };
-        
-        selectedTechniques.push(techniqueCard);
-        
-        // Remove from pool to avoid duplicates
-        availablePool.splice(selectedIndex, 1);
+    for (let i = 0; i < Math.min(count, techniquePool.length); i++) {
+        const weights = techniquePool.map(t => t.weight);
+        const selectedIndex = pickWeightedIndex(weights);
+        selectedTechniques.push(techniquePool[selectedIndex]);
+        techniquePool.splice(selectedIndex, 1); // Remove selected technique
     }
     
+    console.log(`🎲 Selected ${selectedTechniques.length} techniques:`, selectedTechniques.map(t => t.name));
     return selectedTechniques;
 }
 
 /**
- * Helper function for weighted random selection by index
+ * Create technique card from technique data - NO TIMESTAMPS
  */
-function getWeightedRandomIndex(weights) {
-    const totalWeight = weights.reduce((sum, weight) => sum + weight, 0);
-    let randomValue = random() * totalWeight;
+function createTechniqueCard(techniqueData) {
+    return {
+        id: techniqueData.id,  // Clean ID like "forest-lore"
+        name: techniqueData.name,
+        type: techniqueData.type,
+        description: techniqueData.description
+    };
+}
+
+/**
+ * Learn a technique card and add it to hand
+ */
+export function learnTechnique(techniqueData) {
+    console.log('📚 Learning technique:', techniqueData.name);
     
-    for (let i = 0; i < weights.length; i++) {
-        if (randomValue < weights[i]) {
-            return i;
+    // Create technique card with clean ID
+    const techniqueCard = createTechniqueCard(techniqueData);
+    console.log('🃏 Created technique card:', techniqueCard);
+    
+    // Check if hand is full (would cause overflow)
+    if (G.deck.hand.length >= 5) {
+        console.log('⚠️ Hand full, technique will cause overflow');
+        // Store for overflow handling
+        G._pendingTechniqueCard = techniqueCard;
+        return { overflow: true, card: techniqueCard };
+    } else {
+        // Add directly to hand
+        const result = addCardToHand(techniqueCard);
+        if (result.success) {
+            addLogEntry(`📚 You learned ${techniqueCard.name}!`);
+            addLogEntry(`✨ New technique: ${techniqueCard.description}`);
+            
+            // Clear pending techniques
+            G._pendingTechniques = null;
+            return { success: true };
+        } else {
+            console.error('Failed to add technique card to hand');
+            return { success: false };
         }
-        randomValue -= weights[i];
     }
-    
-    return weights.length - 1; // fallback to last item
 }
 
 /**
@@ -1624,38 +1669,7 @@ export function discoverAbandonedCamp() {
     return { techniques: availableTechniques };
 }
 
-/**
- * Learn a selected technique from abandoned camp
- */
-export function learnTechnique(techniqueCard) {
-    if (!techniqueCard) {
-        console.error('No technique card provided');
-        return false;
-    }
-    
-    // Check if hand is full
-    if (G.hand.length >= getMaxHandSize()) {
-        addLogEntry(`📚 You want to learn ${techniqueCard.name}, but your hand is full!`);
-        
-        // Use existing overflow system
-        G._pendingTechniqueCard = techniqueCard;
-        return { overflow: true, card: techniqueCard };
-    } else {
-        // Add directly to hand
-        const result = addCardToHand(techniqueCard);
-        if (result.success) {
-            addLogEntry(`📚 You learned ${techniqueCard.name}!`);
-            addLogEntry(`✨ New technique: ${techniqueCard.description}`);
-            
-            // Clear pending techniques
-            G._pendingTechniques = null;
-            return { success: true };
-        } else {
-            console.error('Failed to add technique card to hand');
-            return false;
-        }
-    }
-}
+
 
 /**
  * Resolve pending technique after overflow handled
