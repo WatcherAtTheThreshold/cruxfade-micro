@@ -270,18 +270,44 @@
     },
 
     "rogue": {
-  "rarity": "common", 
-  "weight": 3,
-  "names": ["Stealth", "Quick", "Shadow"],
-  "titles": ["the Cave-Stalker", "the Silent", "the Underground"],
-  "cards": ["sneak-attack-desperate", "defensive-stance"]
-},
-"paladin": {
   "rarity": "common",
-  "weight": 3, 
-  "names": ["Light", "Dawn", "Beacon"],
-  "titles": ["the Crystal-Bearer", "the Light-Bringer"],
-  "cards": ["divine-strike", "heal-nature"]
+  "weight": 3,
+  "names": ["Shadow", "Swift", "Whisper", "Thorn", "Gülnarə", "Shade", "Quick", "Silent"],
+  "titles": ["the Silent", "the Quick", "the Shadow", "the Nimble", "the Cutpurse", "the Swift-Fingered"],
+  "baseStats": { 
+    "hp": 9, 
+    "maxHp": 9, 
+    "atk": 3, 
+    "mag": 2 
+  },
+  "tags": ["human", "rogue"],
+  "description": "A stealthy figure skilled in stealth and misdirection",
+  "cards": ["sneak-attack-backstab", "defensive-stance"],
+  "joinConditions": {
+    "minGridLevel": 2,
+    "maxPartySize": 4,
+    "regions": ["forest-region"]
+  }
+},
+    "paladin": {
+  "rarity": "common",
+  "weight": 3,
+  "names": ["Gareth", "Lion", "Thaddeus", "Seraphin", "Roland", "Celestine", "Aldric", "Artorius"],
+  "titles": ["the Righteous", "the Holy", "the Light-Bearer", "the Protector", "the Divine Champion", "the Sacred Shield"],
+  "baseStats": { 
+    "hp": 11, 
+    "maxHp": 11, 
+    "atk": 3, 
+    "mag": 2 
+  },
+  "tags": ["human", "paladin", "healer"],
+  "description": "A holy warrior dedicated to protection and healing",
+ "cards": ["divine-strike", "heal-nature"],
+  "joinConditions": {
+    "minGridLevel": 2,
+    "maxPartySize": 4,
+    "regions": ["forest-region"]
+  }
 },
 
     "techniques": [
@@ -411,18 +437,43 @@
     "rogue": {
   "rarity": "common",
   "weight": 3,
-  "names": ["Shadow", "Whisper", "Fade"], 
-  "titles": ["the Void-Walker", "the Silent"],
-  "cards": ["sneak-attack-desperate", "first-aid-field"]
+  "names": ["Shadow", "Swift", "Whisper", "Thorn", "Gülnarə", "Shade", "Quick", "Silent"],
+  "titles": ["the Silent", "the Quick", "the Shadow", "the Nimble", "the Cutpurse", "the Swift-Fingered"],
+  "baseStats": { 
+    "hp": 9, 
+    "maxHp": 9, 
+    "atk": 3, 
+    "mag": 2 
+  },
+  "tags": ["human", "rogue"],
+  "description": "A stealthy figure skilled in stealth and misdirection",
+  "cards": ["sneak-attack-backstab", "defensive-stance"],
+  "joinConditions": {
+    "minGridLevel": 2,
+    "maxPartySize": 4,
+    "regions": ["forest-region"]
+  }
 },
-"paladin": {
-  "rarity": "common", 
+    "paladin": {
+  "rarity": "common",
   "weight": 3,
-  "names": ["Hope", "Faith", "Light"],
-  "titles": ["the Last Light", "the Hope-Bearer"], 
-  "cards": ["divine-strike", "first-aid-field"]
+  "names": ["Gareth", "Lion", "Thaddeus", "Seraphin", "Roland", "Celestine", "Aldric", "Artorius"],
+  "titles": ["the Righteous", "the Holy", "the Light-Bearer", "the Protector", "the Divine Champion", "the Sacred Shield"],
+  "baseStats": { 
+    "hp": 11, 
+    "maxHp": 11, 
+    "atk": 3, 
+    "mag": 2 
+  },
+  "tags": ["human", "paladin", "healer"],
+  "description": "A holy warrior dedicated to protection and healing",
+ "cards": ["divine-strike", "heal-nature"],
+  "joinConditions": {
+    "minGridLevel": 2,
+    "maxPartySize": 4,
+    "regions": ["forest-region"]
+  }
 },
-
     "techniques": [
       {
         "id": "void-touch",
