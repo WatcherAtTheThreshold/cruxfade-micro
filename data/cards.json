@@ -259,7 +259,7 @@
   "effect": "first-aid",
   "description": "Rare knowledge passed down through generations",
   "rarity": "rare"
-}
+},
   "stone-skin": {
   "name": "Stone Skin",
   "type": "defense",
@@ -293,6 +293,42 @@
   "type": "utility",
   "effect": "track",
   "description": "See the true nature of crystalline magic",
+  "rarity": "rare"
+},
+  
+  "void-touch": {
+  "name": "Void Touch",
+  "type": "attack",
+  "effect": "magic-bolt",
+  "description": "Channel the emptiness between worlds",
+  "rarity": "common"
+},
+"desperation": {
+  "name": "Desperation",
+  "type": "attack",
+  "effect": "sneak-attack",
+  "description": "Fighting with nothing left to lose",
+  "rarity": "uncommon"
+},
+"survival-instinct": {
+  "name": "Survival Instinct",
+  "type": "defense",
+  "effect": "defend",
+  "description": "Techniques learned from constant danger",
+  "rarity": "common"
+},
+"entropy-mastery": {
+  "name": "Entropy Mastery",
+  "type": "utility",
+  "effect": "magic-bolt",
+  "description": "Understanding of decay and dissolution",
+  "rarity": "uncommon"
+},
+"forbidden-knowledge": {
+  "name": "Forbidden Knowledge",
+  "type": "utility",
+  "effect": "track",
+  "description": "Dark secrets that should not be known",
   "rarity": "rare"
 }
 }
