@@ -15,8 +15,8 @@
 
   "forest-region": {
     "warrior": {
-      "rarity": "uncommon",
-      "weight": 2,
+      "rarity": "common",
+      "weight": 3,
       "names": ["Marcus", "Elder", "Thorin", "Link", "Gareth", "Ji-an", "Finn", "Sage" , "Luke"],
       "titles": ["the Brave", "the Stalwart", "the Forest Guardian", "the Shield-Bearer", "the Woodland Protector"],
       "baseStats": { 
@@ -36,8 +36,8 @@
     },
 
     "ranger": {
-      "rarity": "uncommon", 
-      "weight": 2,
+      "rarity": "common", 
+      "weight": 3,
       "names": ["Robin", "Willow", "Ash", "Ruthy", "Elžbieta", "Fern", "Elzė", "Vale"],
       "titles": ["the Scout", "the Tracker", "the Pathfinder", "the Swift", "the Eagle-Eyed"],
       "baseStats": { 
@@ -71,7 +71,7 @@
       "description": "A forest mystic who communes with nature",
      "cards": ["heal-nature", "track-forest"],
       "joinConditions": {
-        "minGridLevel": 2,
+        "minGridLevel": 1,
         "maxPartySize": 4,
         "regions": ["forest-region"]
       }
@@ -93,7 +93,7 @@
   "description": "A stealthy figure skilled in stealth and misdirection",
   "cards": ["sneak-attack-backstab", "defensive-stance"],
   "joinConditions": {
-    "minGridLevel": 2,
+    "minGridLevel": 1,
     "maxPartySize": 4,
     "regions": ["forest-region"]
   }
@@ -113,7 +113,7 @@
   "description": "A holy warrior dedicated to protection and healing",
  "cards": ["divine-strike", "heal-nature"],
   "joinConditions": {
-    "minGridLevel": 2,
+    "minGridLevel": 1,
     "maxPartySize": 4,
     "regions": ["forest-region"]
   }
