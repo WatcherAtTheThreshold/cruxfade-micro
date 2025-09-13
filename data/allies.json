@@ -278,7 +278,7 @@
         "atk": 5, 
         "mag": 3 
       },
-      "tags": ["human", "warrior", "crystal"],
+      "tags": ["human", "rogue", "crystal"],
       "description": "An elite warrior infused with crystal power",
       "cards": [
         { 
