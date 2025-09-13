@@ -58,7 +58,7 @@
 
     "herbalist": {
       "rarity": "common",
-      "weight": 2, 
+      "weight": 3, 
       "names": ["Celeste", "Sage", "Willow", "Moss", "Ivy", "Clover", "Basil", "Mint"],
       "titles": ["the Wise", "the Healer", "the Grove Keeper", "the Green Thumb", "the Life-Bringer"],
       "baseStats": { 
@@ -79,7 +79,7 @@
 
     "druid": {
       "rarity": "uncommon",
-      "weight": 1,
+      "weight": 3,
       "names": ["Oakenheart", "Stormcaller", "Moonwhisper", "Thornweaver", "Mistwalker"],
       "titles": ["the Ancient", "the Wild", "the Storm-Born", "the Earth-Speaker"],
       "baseStats": { 
@@ -112,7 +112,7 @@
     },
     "rogue": {
   "rarity": "common",
-  "weight": 2,
+  "weight": 3,
   "names": ["Shadow", "Swift", "Whisper", "Thorn", "Gülnarə", "Shade", "Quick", "Silent"],
   "titles": ["the Silent", "the Quick", "the Shadow", "the Nimble", "the Cutpurse", "the Swift-Fingered"],
   "baseStats": { 
@@ -132,7 +132,7 @@
 },
     "paladin": {
   "rarity": "common",
-  "weight": 2,
+  "weight": 3,
   "names": ["Gareth", "Lion", "Thaddeus", "Seraphin", "Roland", "Celestine", "Aldric", "Artorius"],
   "titles": ["the Righteous", "the Holy", "the Light-Bearer", "the Protector", "the Divine Champion", "the Sacred Shield"],
   "baseStats": { 
@@ -163,7 +163,7 @@
         "id": "nature-bond",
         "name": "Nature Bond", 
         "type": "defense",
-        "weight": 2,
+        "weight": 3,
         "description": "Call upon forest spirits for protection"
       },
       {
@@ -214,7 +214,7 @@
 
     "crystal-mage": {
       "rarity": "uncommon",
-      "weight": 2,
+      "weight": 3,
       "names": ["Prism", "Shard", "Gleam", "Facet", "Radiance", "Shimmer", "Glow", "Sparkle"],
       "titles": ["the Crystal-Touched", "the Gem-Speaker", "the Light-Bringer", "the Prism-Walker"],
       "baseStats": { 
@@ -269,7 +269,7 @@
 
     "gem-knight": {
       "rarity": "rare",
-      "weight": 1,
+      "weight": 3,
       "names": ["Diamond", "Ruby", "Sapphire", "Emerald", "Topaz", "Onyx", "Opal", "Garnet"],
       "titles": ["the Gem-Forged", "the Crystal Warrior", "the Jeweled", "the Precious"],
       "baseStats": { 
@@ -364,7 +364,7 @@
 
     "void-cultist": {
       "rarity": "rare",
-      "weight": 1,
+      "weight": 3,
       "names": ["Null", "Void", "Empty", "Nothing", "Zero", "Blank", "Absence", "Chaos"],
       "titles": ["the Devoted", "the Converted", "the Enlightened", "the Void-Speaker", "the Emptiness"],
       "baseStats": { 
@@ -406,7 +406,7 @@
 
     "void-knight": {
       "rarity": "rare", 
-      "weight": 1,
+      "weight": 3,
       "names": ["Abyss", "Darkness", "Entropy", "Nihil", "Oblivion", "Shadowbane", "Dread", "Terror"],
       "titles": ["the Void-Sworn", "the Dark Knight", "the Nihilistic", "the End-Bringer"],
       "baseStats": { 
