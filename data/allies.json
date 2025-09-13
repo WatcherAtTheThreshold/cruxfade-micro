@@ -78,7 +78,7 @@
     },
 
     "druid": {
-      "rarity": "uncommon",
+      "rarity": "common",
       "weight": 3,
       "names": ["Oakenheart", "Stormcaller", "Moonwhisper", "Thornweaver", "Mistwalker"],
       "titles": ["the Ancient", "the Wild", "the Storm-Born", "the Earth-Speaker"],
@@ -213,7 +213,7 @@
     },
 
     "crystal-mage": {
-      "rarity": "uncommon",
+      "rarity": "common",
       "weight": 3,
       "names": ["Prism", "Shard", "Gleam", "Facet", "Radiance", "Shimmer", "Glow", "Sparkle"],
       "titles": ["the Crystal-Touched", "the Gem-Speaker", "the Light-Bringer", "the Prism-Walker"],
@@ -268,7 +268,7 @@
     },
 
     "gem-knight": {
-      "rarity": "rare",
+      "rarity": "common",
       "weight": 3,
       "names": ["Diamond", "Ruby", "Sapphire", "Emerald", "Topaz", "Onyx", "Opal", "Garnet"],
       "titles": ["the Gem-Forged", "the Crystal Warrior", "the Jeweled", "the Precious"],
