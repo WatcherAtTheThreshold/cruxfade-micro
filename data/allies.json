@@ -109,7 +109,7 @@
     "atk": 3, 
     "mag": 2 
   },
-  "tags": ["human", "paladin", "healer"],
+  "tags": ["human", "paladin"],
   "description": "A holy warrior dedicated to protection and healing",
  "cards": ["divine-strike", "heal-nature"],
   "joinConditions": {
@@ -286,7 +286,7 @@
   "joinConditions": {
     "minGridLevel": 2,
     "maxPartySize": 4,
-    "regions": ["forest-region"]
+    "regions": ["mountain-region"]
   }
 },
     "paladin": {
@@ -306,7 +306,7 @@
   "joinConditions": {
     "minGridLevel": 2,
     "maxPartySize": 4,
-    "regions": ["forest-region"]
+    "regions": ["mountain-region"]
   }
 },
 
@@ -361,7 +361,7 @@
         "atk": 4, 
         "mag": 3 
       },
-      "tags": ["human", "warrior", "corrupted"],
+      "tags": ["human", "paladin", "corrupted"],
       "description": "A once-great hero, scarred by the void's touch",
      "cards": ["shield-bash-void", "sneak-attack-desperate"],
       "joinConditions": {
@@ -451,29 +451,10 @@
   "joinConditions": {
     "minGridLevel": 2,
     "maxPartySize": 4,
-    "regions": ["forest-region"]
+    "regions": ["void-region"]
   }
 },
-    "paladin": {
-  "rarity": "common",
-  "weight": 3,
-  "names": ["Gareth", "Lion", "Thaddeus", "Seraphin", "Roland", "Celestine", "Aldric", "Artorius"],
-  "titles": ["the Righteous", "the Holy", "the Light-Bearer", "the Protector", "the Divine Champion", "the Sacred Shield"],
-  "baseStats": { 
-    "hp": 11, 
-    "maxHp": 11, 
-    "atk": 3, 
-    "mag": 2 
-  },
-  "tags": ["human", "paladin", "healer"],
-  "description": "A holy warrior dedicated to protection and healing",
- "cards": ["divine-strike", "heal-nature"],
-  "joinConditions": {
-    "minGridLevel": 2,
-    "maxPartySize": 4,
-    "regions": ["forest-region"]
-  }
-},
+   
     "techniques": [
       {
         "id": "void-touch",
