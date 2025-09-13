@@ -3,36 +3,36 @@
     "health-potion": {
       "name": "Health Potion",
       "stat": "hp",
-      "boost": 3,
-      "maxBoost": 6,
+      "boost": 2,
+      "maxBoost": 3,
       "rarity": "common"
     },
     "healing-herbs": {
       "name": "Healing Herbs",
       "stat": "hp", 
-      "boost": 4,
-      "maxBoost": 8,
+      "boost": 2,
+      "maxBoost": 4,
       "rarity": "common"
     },
     "greater-healing-potion": {
       "name": "Greater Healing Potion",
       "stat": "hp",
-      "boost": 6,
-      "maxBoost": 12,
+      "boost": 3,
+      "maxBoost": 6,
       "rarity": "uncommon"
     },
     "strength-elixir": {
       "name": "Strength Elixir",
       "stat": "atk",
-      "boost": 3,
-      "maxBoost": 6,
+      "boost": 1,
+      "maxBoost": 3,
       "rarity": "common"
     },
     "super-strength-elixir": {
       "name": "Super Strength Elixir",
       "stat": "atk",
-      "boost": 4,
-      "maxBoost": 8,
+      "boost": 2,
+      "maxBoost": 4,
       "rarity": "common"
     },
     "magic-crystal": {
@@ -46,78 +46,78 @@
     "iron-sword": {
       "name": "Iron Sword",
       "slot": "weapon",
-      "statBonus": { "atk": 6 },
+      "statBonus": { "atk": 3 },
       "description": "A sturdy iron blade that increases attack power",
       "rarity": "common"
     },
     "enchanted-blade": {
       "name": "Enchanted Blade",
       "slot": "weapon", 
-      "statBonus": { "atk": 5, "mag": 11, "hp": 10 },
+      "statBonus": { "atk": 3, "mag": 6, "hp": 5 },
       "description": "A magical sword that enhances both physical and magical abilities",
       "rarity": "rare"
     },
     "war-hammer": {
       "name": "War Hammer",
       "slot": "weapon",
-      "statBonus": { "atk": 6 },
+      "statBonus": { "atk": 4 },
       "description": "A heavy two-handed weapon that deals massive damage",
       "rarity": "uncommon"
     },
     "leather-armor": {
       "name": "Leather Armor",
       "slot": "armor",
-      "statBonus": { "hp": 8 },
+      "statBonus": { "hp": 5 },
       "description": "Basic protection that increases maximum health",
       "rarity": "common"
     },
     "chain-mail": {
       "name": "Chain Mail",
       "slot": "armor",
-      "statBonus": { "hp": 8, "atk": 6 },
+      "statBonus": { "hp": 6, "atk": 3 },
       "description": "Heavy armor that provides excellent protection but limits mobility",
       "rarity": "uncommon"
     },
     "mage-robes": {
       "name": "Mage Robes",
       "slot": "armor",
-      "statBonus": { "mag": 6, "hp": 6 },
+      "statBonus": { "mag": 3, "hp": 3 },
       "description": "Enchanted robes that enhance magical abilities",
       "rarity": "rare"
     },
     "power-crystal": {
       "name": "Power Crystal",
       "slot": "accessory",
-      "statBonus": { "mag": 6 },
+      "statBonus": { "mag": 3 },
       "description": "A glowing crystal that amplifies magical energy",
       "rarity": "rare"
     },
     "berserker-ring": {
       "name": "Berserker Ring",
       "slot": "accessory",
-      "statBonus": { "atk": 5, "hp": 5 },
+      "statBonus": { "atk": 3, "hp": 3 },
       "description": "Increases attack power at the cost of health",
       "rarity": "rare"
     },
     "health-amulet": {
       "name": "Health Amulet",
       "slot": "accessory",
-      "statBonus": { "hp": 6 },
+      "statBonus": { "hp": 4 },
       "description": "A protective charm that significantly boosts health",
       "rarity": "uncommon"
     },
     "arcane-focus": {
       "name": "Arcane Focus",
       "slot": "accessory",
-      "statBonus": { "mag": 6, "hp": 5 },
+      "statBonus": { "mag": 3, "hp": 3 },
       "description": "A rare magical item that greatly enhances spellcasting",
       "rarity": "rare"
     }
   },
   "lootTables": {
     "basic": {
-      "consumables": 0.6,
-      "equipment": 0.4
+      "consumables": 0.7,
+      "equipment": 0.3
     },
     "treasure": {
       "consumables": 0.3,
@@ -128,16 +128,16 @@
       "equipment": 0.3
     },
     "grid-2": {
-      "consumables": 0.5,
-      "equipment": 0.5
+      "consumables": 0.7,
+      "equipment": 0.3
     },
     "grid-3": {
-      "consumables": 0.4,
-      "equipment": 0.6
+      "consumables": 0.6,
+      "equipment": 0.4
     },
     "grid-4": {
-      "consumables": 0.4,
-      "equipment": 0.6
+      "consumables": 0.5,
+      "equipment": 0.5
     },
     "grid-5": {
       "consumables": 0.4,

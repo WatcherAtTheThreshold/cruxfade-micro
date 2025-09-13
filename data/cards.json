@@ -95,13 +95,6 @@
 
   "_comment": "Cards below map to existing effects until we add new ones",
   
-  "forest-lore": {
-    "name": "Forest Lore",
-    "type": "utility", 
-    "effect": "track",
-    "description": "Use forest knowledge to reveal nearby areas",
-    "rarity": "uncommon"
-  },
   
   "defensive-stance": {
     "name": "Defensive Stance",
@@ -109,22 +102,6 @@
     "effect": "defend", 
     "description": "Assume a defensive position to reduce damage",
     "rarity": "common"
-  },
-  
-  "nature-bond": {
-    "name": "Nature Bond", 
-    "type": "utility",
-    "effect": "heal",
-    "description": "Draw healing energy from natural surroundings",
-    "rarity": "uncommon"
-  },
-  
-  "beast-speak": {
-    "name": "Beast Speak",
-    "type": "utility",
-    "effect": "track", 
-    "description": "Communicate with animals to learn about the area",
-    "rarity": "rare"
   },
   
   "blessing": {
@@ -247,5 +224,111 @@
     "effect": "first-aid",
     "description": "Makeshift healing from scrounged supplies",
     "rarity": "common"
-  }
+},
+"forest-lore": {
+  "name": "Forest Lore",
+  "type": "utility",
+  "effect": "track",
+  "description": "Deep knowledge of woodland secrets reveals hidden paths",
+  "rarity": "common"
+},
+"nature-bond": {
+  "name": "Nature Bond", 
+  "type": "defense",
+  "effect": "defend",
+  "description": "Call upon forest spirits for protection",
+  "rarity": "common"
+},
+"herb-mastery": {
+  "name": "Herb Mastery",
+  "type": "utility",
+  "effect": "heal",
+  "description": "Advanced knowledge of healing plants",
+  "rarity": "common"
+},
+"beast-speech": {
+  "name": "Beast Speech",
+  "type": "utility",
+  "effect": "track",
+  "description": "Communicate with forest creatures for aid",
+  "rarity": "uncommon"
+},
+"ancient-wisdom": {
+  "name": "Ancient Wisdom",
+  "type": "utility",
+  "effect": "first-aid",
+  "description": "Rare knowledge passed down through generations",
+  "rarity": "rare"
+},
+  "stone-skin": {
+  "name": "Stone Skin",
+  "type": "defense",
+  "effect": "defend",
+  "description": "Harden your body like mountain stone",
+  "rarity": "common"
+},
+"crystal-focus": {
+  "name": "Crystal Focus",
+  "type": "attack",
+  "effect": "magic-bolt",
+  "description": "Channel energy through crystalline formations",
+  "rarity": "uncommon"
+},
+"mountain-endurance": {
+  "name": "Mountain Endurance",
+  "type": "utility",
+  "effect": "heal",
+  "description": "Stamina techniques from high-altitude training",
+  "rarity": "common"
+},
+"forge-mastery": {
+  "name": "Forge Mastery",
+  "type": "utility",
+  "effect": "first-aid",
+  "description": "Dwarven metalworking techniques",
+  "rarity": "uncommon"
+},
+"gem-sight": {
+  "name": "Gem Sight",
+  "type": "utility",
+  "effect": "track",
+  "description": "See the true nature of crystalline magic",
+  "rarity": "rare"
+},
+  
+  "void-touch": {
+  "name": "Void Touch",
+  "type": "attack",
+  "effect": "magic-bolt",
+  "description": "Channel the emptiness between worlds",
+  "rarity": "common"
+},
+"desperation": {
+  "name": "Desperation",
+  "type": "attack",
+  "effect": "sneak-attack",
+  "description": "Fighting with nothing left to lose",
+  "rarity": "uncommon"
+},
+"survival-instinct": {
+  "name": "Survival Instinct",
+  "type": "defense",
+  "effect": "defend",
+  "description": "Techniques learned from constant danger",
+  "rarity": "common"
+},
+"entropy-mastery": {
+  "name": "Entropy Mastery",
+  "type": "utility",
+  "effect": "magic-bolt",
+  "description": "Understanding of decay and dissolution",
+  "rarity": "uncommon"
+},
+"forbidden-knowledge": {
+  "name": "Forbidden Knowledge",
+  "type": "utility",
+  "effect": "track",
+  "description": "Dark secrets that should not be known",
+  "rarity": "rare"
+}
 }
