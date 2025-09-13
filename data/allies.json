@@ -15,8 +15,8 @@
 
   "forest-region": {
     "warrior": {
-      "rarity": "common",
-      "weight": 3,
+      "rarity": "uncommon",
+      "weight": 2,
       "names": ["Marcus", "Elder", "Thorin", "Link", "Gareth", "Ji-an", "Finn", "Sage" , "Luke"],
       "titles": ["the Brave", "the Stalwart", "the Forest Guardian", "the Shield-Bearer", "the Woodland Protector"],
       "baseStats": { 
@@ -36,8 +36,8 @@
     },
 
     "ranger": {
-      "rarity": "common", 
-      "weight": 3,
+      "rarity": "uncommon", 
+      "weight": 2,
       "names": ["Robin", "Willow", "Ash", "Ruthy", "Elžbieta", "Fern", "Elzė", "Vale"],
       "titles": ["the Scout", "the Tracker", "the Pathfinder", "the Swift", "the Eagle-Eyed"],
       "baseStats": { 
