@@ -1591,7 +1591,7 @@ function selectRandomTechniques(region, count = 3) {
     
     for (let i = 0; i < Math.min(count, techniquePool.length); i++) {
         const weights = techniquePool.map(t => t.weight);
-        const selectedIndex = pickWeightedIndex(weights);
+        const selectedIndex = getWeightedRandomIndex(weights);
         selectedTechniques.push(techniquePool[selectedIndex]);
         techniquePool.splice(selectedIndex, 1); // Remove selected technique
     }
