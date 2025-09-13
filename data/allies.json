@@ -31,7 +31,7 @@
       "joinConditions": {
         "minGridLevel": 1,
         "maxPartySize": 4,
-        "regions": ["forest-region", "mountain-region"]
+        "regions": ["forest-region"]
       }
     },
 
@@ -73,7 +73,7 @@
       "joinConditions": {
         "minGridLevel": 2,
         "maxPartySize": 4,
-        "regions": ["forest-region", "mountain-region"]
+        "regions": ["forest-region"]
       }
     },
 
@@ -95,7 +95,7 @@
   "joinConditions": {
     "minGridLevel": 2,
     "maxPartySize": 4,
-    "regions": ["forest-region", "mountain-region", "void-region"]
+    "regions": ["forest-region"]
   }
 },
     "paladin": {
@@ -115,7 +115,7 @@
   "joinConditions": {
     "minGridLevel": 2,
     "maxPartySize": 4,
-    "regions": ["forest-region", "mountain-region"]
+    "regions": ["forest-region"]
   }
 },
 
@@ -176,7 +176,7 @@
       "joinConditions": {
         "minGridLevel": 7,
         "maxPartySize": 4,
-        "regions": ["mountain-region", "void-region"]
+        "regions": ["mountain-region"]
       }
     },
 
