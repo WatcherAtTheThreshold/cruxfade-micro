@@ -1612,7 +1612,7 @@ function createTechniqueCard(techniqueData) {
 }
 
 /**
- * Learn a technique card and add it to hand
+ * Learn a technique card and add it to hand - FIXED HAND REFERENCE
  */
 export function learnTechnique(techniqueData) {
     console.log('📚 Learning technique:', techniqueData.name);
@@ -1621,8 +1621,8 @@ export function learnTechnique(techniqueData) {
     const techniqueCard = createTechniqueCard(techniqueData);
     console.log('🃏 Created technique card:', techniqueCard);
     
-    // Check if hand is full (would cause overflow)
-    if (G.deck.hand.length >= 5) {
+    // Check if hand is full (would cause overflow) - FIXED: G.hand instead of G.deck.hand
+    if (G.hand.length >= 5) {
         console.log('⚠️ Hand full, technique will cause overflow');
         // Store for overflow handling
         G._pendingTechniqueCard = techniqueCard;
@@ -1643,7 +1643,6 @@ export function learnTechnique(techniqueData) {
         }
     }
 }
-
 /**
  * Handle abandoned camp encounter when party is full
  */
