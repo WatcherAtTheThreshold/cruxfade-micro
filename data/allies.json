@@ -31,7 +31,7 @@
       "joinConditions": {
         "minGridLevel": 1,
         "maxPartySize": 4,
-        "regions": ["forest-region"]
+        "regions": ["forest-region", "mountain-region"]
       }
     },
 
@@ -71,13 +71,45 @@
       "description": "A forest mystic who communes with nature",
      "cards": ["heal-nature", "track-forest"],
       "joinConditions": {
-        "minGridLevel": 1,
+        "minGridLevel": 2,
+        "maxPartySize": 4,
+        "regions": ["forest-region", "mountain-region"]
+      }
+    },
+
+    "druid": {
+      "rarity": "common",
+      "weight": 3,
+      "names": ["Oakenheart", "Stormcaller", "Moonwhisper", "Thornweaver", "Mistwalker"],
+      "titles": ["the Ancient", "the Wild", "the Storm-Born", "the Earth-Speaker"],
+      "baseStats": { 
+        "hp": 10, 
+        "maxHp": 10, 
+        "atk": 2, 
+        "mag": 5 
+      },
+      "tags": ["human", "mage", "druid"],
+      "description": "A powerful nature mage with primal magic",
+      "cards": [
+        { 
+          "id": "magic-bolt", 
+          "name": "Lightning Strike", 
+          "type": "attack",
+          "description": "Deal magic damage, bypasses armor"
+        },
+        { 
+          "id": "heal", 
+          "name": "Regeneration", 
+          "type": "utility",
+          "description": "Powerful healing magic"
+        }
+      ],
+      "joinConditions": {
+        "minGridLevel": 3,
         "maxPartySize": 4,
         "regions": ["forest-region"]
       }
     },
-
-  
     "rogue": {
   "rarity": "common",
   "weight": 3,
@@ -93,9 +125,9 @@
   "description": "A stealthy figure skilled in stealth and misdirection",
   "cards": ["sneak-attack-backstab", "defensive-stance"],
   "joinConditions": {
-    "minGridLevel": 1,
+    "minGridLevel": 2,
     "maxPartySize": 4,
-    "regions": ["forest-region"]
+    "regions": ["forest-region", "mountain-region", "void-region"]
   }
 },
     "paladin": {
@@ -109,13 +141,13 @@
     "atk": 3, 
     "mag": 2 
   },
-  "tags": ["human", "paladin"],
+  "tags": ["human", "paladin", "healer"],
   "description": "A holy warrior dedicated to protection and healing",
  "cards": ["divine-strike", "heal-nature"],
   "joinConditions": {
-    "minGridLevel": 1,
+    "minGridLevel": 2,
     "maxPartySize": 4,
-    "regions": ["forest-region"]
+    "regions": ["forest-region", "mountain-region"]
   }
 },
 
@@ -176,7 +208,7 @@
       "joinConditions": {
         "minGridLevel": 7,
         "maxPartySize": 4,
-        "regions": ["mountain-region"]
+        "regions": ["mountain-region", "void-region"]
       }
     },
 
@@ -246,7 +278,7 @@
         "atk": 5, 
         "mag": 3 
       },
-      "tags": ["human", "warrior", "crystal"],
+      "tags": ["human", "rogue", "crystal"],
       "description": "An elite warrior infused with crystal power",
       "cards": [
         { 
@@ -270,44 +302,18 @@
     },
 
     "rogue": {
-  "rarity": "common",
+  "rarity": "common", 
   "weight": 3,
-  "names": ["Shadow", "Swift", "Whisper", "Thorn", "Gülnarə", "Shade", "Quick", "Silent"],
-  "titles": ["the Silent", "the Quick", "the Shadow", "the Nimble", "the Cutpurse", "the Swift-Fingered"],
-  "baseStats": { 
-    "hp": 9, 
-    "maxHp": 9, 
-    "atk": 3, 
-    "mag": 2 
-  },
-  "tags": ["human", "rogue"],
-  "description": "A stealthy figure skilled in stealth and misdirection",
-  "cards": ["sneak-attack-backstab", "defensive-stance"],
-  "joinConditions": {
-    "minGridLevel": 2,
-    "maxPartySize": 4,
-    "regions": ["mountain-region"]
-  }
+  "names": ["Stealth", "Quick", "Shadow"],
+  "titles": ["the Cave-Stalker", "the Silent", "the Underground"],
+  "cards": ["sneak-attack-desperate", "defensive-stance"]
 },
-    "paladin": {
+"paladin": {
   "rarity": "common",
-  "weight": 3,
-  "names": ["Gareth", "Lion", "Thaddeus", "Seraphin", "Roland", "Celestine", "Aldric", "Artorius"],
-  "titles": ["the Righteous", "the Holy", "the Light-Bearer", "the Protector", "the Divine Champion", "the Sacred Shield"],
-  "baseStats": { 
-    "hp": 11, 
-    "maxHp": 11, 
-    "atk": 3, 
-    "mag": 2 
-  },
-  "tags": ["human", "paladin", "healer"],
-  "description": "A holy warrior dedicated to protection and healing",
- "cards": ["divine-strike", "heal-nature"],
-  "joinConditions": {
-    "minGridLevel": 2,
-    "maxPartySize": 4,
-    "regions": ["mountain-region"]
-  }
+  "weight": 3, 
+  "names": ["Light", "Dawn", "Beacon"],
+  "titles": ["the Crystal-Bearer", "the Light-Bringer"],
+  "cards": ["divine-strike", "heal-nature"]
 },
 
     "techniques": [
@@ -361,7 +367,7 @@
         "atk": 4, 
         "mag": 3 
       },
-      "tags": ["human", "paladin", "corrupted"],
+      "tags": ["human", "warrior", "corrupted"],
       "description": "A once-great hero, scarred by the void's touch",
      "cards": ["shield-bash-void", "sneak-attack-desperate"],
       "joinConditions": {
@@ -437,24 +443,18 @@
     "rogue": {
   "rarity": "common",
   "weight": 3,
-  "names": ["Shadow", "Swift", "Whisper", "Thorn", "Gülnarə", "Shade", "Quick", "Silent"],
-  "titles": ["the Silent", "the Quick", "the Shadow", "the Nimble", "the Cutpurse", "the Swift-Fingered"],
-  "baseStats": { 
-    "hp": 9, 
-    "maxHp": 9, 
-    "atk": 3, 
-    "mag": 2 
-  },
-  "tags": ["human", "rogue"],
-  "description": "A stealthy figure skilled in stealth and misdirection",
-  "cards": ["sneak-attack-backstab", "defensive-stance"],
-  "joinConditions": {
-    "minGridLevel": 2,
-    "maxPartySize": 4,
-    "regions": ["void-region"]
-  }
+  "names": ["Shadow", "Whisper", "Fade"], 
+  "titles": ["the Void-Walker", "the Silent"],
+  "cards": ["sneak-attack-desperate", "first-aid-field"]
 },
-   
+"paladin": {
+  "rarity": "common", 
+  "weight": 3,
+  "names": ["Hope", "Faith", "Light"],
+  "titles": ["the Last Light", "the Hope-Bearer"], 
+  "cards": ["divine-strike", "first-aid-field"]
+},
+
     "techniques": [
       {
         "id": "void-touch",
