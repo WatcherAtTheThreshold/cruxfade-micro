@@ -301,6 +301,21 @@
       }
     },
 
+    "rogue": {
+  "rarity": "common", 
+  "weight": 3,
+  "names": ["Stealth", "Quick", "Shadow"],
+  "titles": ["the Cave-Stalker", "the Silent", "the Underground"],
+  "cards": ["sneak-attack-desperate", "defensive-stance"]
+},
+"paladin": {
+  "rarity": "common",
+  "weight": 3, 
+  "names": ["Light", "Dawn", "Beacon"],
+  "titles": ["the Crystal-Bearer", "the Light-Bringer"],
+  "cards": ["divine-strike", "heal-nature"]
+},
+
     "techniques": [
       {
         "id": "stone-skin",
@@ -424,6 +439,21 @@
         "regions": ["void-region"]
       }
     },
+
+    "rogue": {
+  "rarity": "common",
+  "weight": 3,
+  "names": ["Shadow", "Whisper", "Fade"], 
+  "titles": ["the Void-Walker", "the Silent"],
+  "cards": ["sneak-attack-desperate", "first-aid-field"]
+},
+"paladin": {
+  "rarity": "common", 
+  "weight": 3,
+  "names": ["Hope", "Faith", "Light"],
+  "titles": ["the Last Light", "the Hope-Bearer"], 
+  "cards": ["divine-strike", "first-aid-field"]
+},
 
     "techniques": [
       {
