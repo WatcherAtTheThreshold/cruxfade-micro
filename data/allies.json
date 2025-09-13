@@ -77,39 +77,7 @@
       }
     },
 
-    "druid": {
-      "rarity": "common",
-      "weight": 3,
-      "names": ["Oakenheart", "Stormcaller", "Moonwhisper", "Thornweaver", "Mistwalker"],
-      "titles": ["the Ancient", "the Wild", "the Storm-Born", "the Earth-Speaker"],
-      "baseStats": { 
-        "hp": 10, 
-        "maxHp": 10, 
-        "atk": 2, 
-        "mag": 5 
-      },
-      "tags": ["human", "mage", "druid"],
-      "description": "A powerful nature mage with primal magic",
-      "cards": [
-        { 
-          "id": "magic-bolt", 
-          "name": "Lightning Strike", 
-          "type": "attack",
-          "description": "Deal magic damage, bypasses armor"
-        },
-        { 
-          "id": "heal", 
-          "name": "Regeneration", 
-          "type": "utility",
-          "description": "Powerful healing magic"
-        }
-      ],
-      "joinConditions": {
-        "minGridLevel": 3,
-        "maxPartySize": 4,
-        "regions": ["forest-region"]
-      }
-    },
+  
     "rogue": {
   "rarity": "common",
   "weight": 3,
@@ -278,7 +246,7 @@
         "atk": 5, 
         "mag": 3 
       },
-      "tags": ["human", "rogue", "crystal"],
+      "tags": ["human", "warrior", "crystal"],
       "description": "An elite warrior infused with crystal power",
       "cards": [
         { 
