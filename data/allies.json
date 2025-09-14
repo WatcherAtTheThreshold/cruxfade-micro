@@ -27,7 +27,7 @@
       },
       "tags": ["human", "warrior"],
       "description": "A stalwart fighter trained in forest combat",
-  "cards": ["shield-bash-forest", "defensive-stance"],
+      "cards": ["shield-bash-forest", "defensive-stance"],
       "joinConditions": {
         "minGridLevel": 1,
         "maxPartySize": 4,
@@ -73,43 +73,10 @@
       "joinConditions": {
         "minGridLevel": 2,
         "maxPartySize": 4,
-        "regions": ["forest-region", "mountain-region"]
-      }
-    },
-
-    "druid": {
-      "rarity": "common",
-      "weight": 3,
-      "names": ["Oakenheart", "Stormcaller", "Moonwhisper", "Thornweaver", "Mistwalker"],
-      "titles": ["the Ancient", "the Wild", "the Storm-Born", "the Earth-Speaker"],
-      "baseStats": { 
-        "hp": 10, 
-        "maxHp": 10, 
-        "atk": 2, 
-        "mag": 5 
-      },
-      "tags": ["human", "mage", "druid"],
-      "description": "A powerful nature mage with primal magic",
-      "cards": [
-        { 
-          "cards": ["magic-bolt", "heal"], 
-          "name": "Lightning Strike", 
-          "type": "attack",
-          "description": "Deal magic damage, bypasses armor"
-        },
-        { 
-          "id": "heal", 
-          "name": "Regeneration", 
-          "type": "utility",
-          "description": "Powerful healing magic"
-        }
-      ],
-      "joinConditions": {
-        "minGridLevel": 3,
-        "maxPartySize": 4,
         "regions": ["forest-region"]
       }
     },
+
     "rogue": {
   "rarity": "common",
   "weight": 3,
