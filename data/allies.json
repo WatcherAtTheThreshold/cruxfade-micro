@@ -92,7 +92,7 @@
       "description": "A powerful nature mage with primal magic",
       "cards": [
         { 
-          "cards": ["magic-bolt", "heal"] 
+          "cards": ["magic-bolt", "heal"], 
           "name": "Lightning Strike", 
           "type": "attack",
           "description": "Deal magic damage, bypasses armor"
