@@ -705,7 +705,7 @@ function startBossCombat(bossEnemyData, phase) {
     
     
     G.combat.active = true;
-    G.combat.enemy = { ...bossEnemyData };
+    G.combat.enemy = { ...bossEnemyData, type: phase.enemy }; 
     G.combat.playerHp = player.hp;
     G.combat.enemyHp = bossEnemyData.hp;
     G.combat.turn = 'player';
