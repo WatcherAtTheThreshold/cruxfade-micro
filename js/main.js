@@ -239,10 +239,10 @@ export function newGame(seed = null) {
     G.seed = seed || generateSeed();
     initRNG(G.seed);
     
-    // Step 3: Initialize game normally
+    // Step 3: Initialize game normally (this sets up tiles)
     initializeGame();
     
-    // Step 4: Render everything
+    // Step 4: ONLY NOW render everything (after tiles exist)
     renderAll();
     
     // Step 5: Add log entries
