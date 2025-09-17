@@ -118,6 +118,7 @@ export const G = {
  * Generate a new 4x4 grid with encounters - UPDATED to track combat engagement
  */
 function generateGrid() {
+     console.log('🎲 generateGrid() called - Level:', G.gridLevel, 'Boss check:', shouldTriggerBoss());
     G.board.tiles = [];
     
     // Check if this should be a boss encounter
