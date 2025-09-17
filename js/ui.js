@@ -1343,11 +1343,12 @@ function showVictoryScreen() {
 function handleVictoryAction(action) {
     switch (action) {
         case 'new-game':
+            closeAllOverlays();
             // Start a new game with random seed
             if (window.CruxfadeMicro && window.CruxfadeMicro.newGame) {
                 window.CruxfadeMicro.newGame();
             }
-            closeAllOverlays();
+            
             break;
             
         case 'same-seed':
