@@ -160,6 +160,10 @@ export function renderAll() {
  * Render the 4x4 game board - UPDATED for fog of war system
  */
 function renderBoard() {
+    if (!G.board.tiles || G.board.tiles.length === 0) {
+        console.log('⚠️ No tiles to render yet, skipping board render');
+        return;
+    }
     if (!DOM.tiles) return;
     
     DOM.tiles.forEach((tileElement, index) => {
