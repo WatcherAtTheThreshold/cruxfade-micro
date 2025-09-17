@@ -7,6 +7,7 @@
 import { G, initializeGame, addLogEntry, setGameData } from './state.js';
 import { renderAll, bindEventHandlers } from './ui.js';
 import { initRNG } from './rng.js';
+import { resetGameStateCompletely } from './state.js';
 
 // ================================================================
 // GAME LOOP & STATE MANAGEMENT (DEFINED FIRST)
@@ -227,27 +228,59 @@ function getSeedFromURL() {
     return generateSeed();
 }
 
+// Replace your newGame function with this:
 export function newGame(seed = null) {
+    console.log('🎮 Starting new game with full reset...');
+    
+    // Step 1: Complete state reset
+    resetGameStateCompletely();
+    
+    // Step 2: Set new seed and initialize RNG
     G.seed = seed || generateSeed();
     initRNG(G.seed);
+    
+    // Step 3: Initialize game normally
     initializeGame();
+    
+    // Step 4: Render everything
     renderAll();
+    
+    // Step 5: Add log entries
     addLogEntry(`🌱 New game started (Seed: ${G.seed})`);
     
     const gameData = G._gameData || {};
     if (gameData.bosses) {
         const bossCount = Object.keys(gameData.bosses).filter(key => key !== 'boss-enemies').length;
-        addLogEntry(`👀 ${bossCount} epic bosses await in Grid 4+...`);
+        addLogEntry(`👀 ${bossCount} epic bosses await in the deeper grids...`);
     }
+    
+    console.log('🎯 New game initialization complete');
 }
 
+// Replace your restartWithSeed function with this:
 export function restartWithSeed() {
+    console.log('🔄 Restarting with full reset...');
+    
+    const currentSeed = G.seed; // Save current seed
+    
+    // Step 1: Complete state reset
+    resetGameStateCompletely();
+    
+    // Step 2: Restore seed and reinitialize
+    G.seed = currentSeed;
     initRNG(G.seed);
-    initializeGame(); 
+    
+    // Step 3: Initialize game
+    initializeGame();
+    
+    // Step 4: Render everything  
     renderAll();
+    
+    // Step 5: Log restart
     addLogEntry(`🔄 Restarted with seed: ${G.seed}`);
+    
+    console.log('🎯 Game restart complete');
 }
-
 export function getGameState() {
     return G;
 }
