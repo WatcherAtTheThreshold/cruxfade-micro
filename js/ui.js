@@ -1727,8 +1727,15 @@ export function hideOverlay(overlayId) {
 /**
  * Close all overlays
  */
-export function closeAllOverlays() {
-    document.querySelectorAll('.overlay').forEach(overlay => {
+function closeAllOverlays() {
+    // Close victory overlay specifically
+    const victoryOverlay = document.getElementById('victory-overlay');
+    if (victoryOverlay) {
+        victoryOverlay.classList.remove('active');
+    }
+    
+    // Close other overlays
+    document.querySelectorAll('.overlay.active').forEach(overlay => {
         overlay.classList.remove('active');
     });
 }
