@@ -9,7 +9,7 @@
         "name": "Shadow Minions",
         "type": "fight",
         "description": "Twisted creatures emerge from the shadows to defend their master",
-        "enemies": ["shadow-general", "shadow-lieutenant", "shadow-general", "shadow-champion"],
+        "enemies": ["shadow-lieutenant", "shadow-general", "shadow-champion"],
         "sequentialFights": true,
         "flavorText": "Dark creatures surge from the void as you approach the Shadow Lord's sanctum...",
         "victoryText": "The minions dissolve back into shadow. The path ahead grows darker..."
