@@ -104,6 +104,13 @@
     "atk": 3,
     "mag": 1,
     "description": "A lesser officer in the Shadow Lord's dark army"
+  },
+   "shadow-champion": {
+    "name": "Shadow Champion",
+    "hp": 9,
+    "atk": 4,
+    "mag": 1,
+    "description": "An elite warrior corrupted by the Shadow Lord's dark power"
   }
 }
   
