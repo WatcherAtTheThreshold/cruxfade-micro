@@ -89,8 +89,8 @@
     "atk": 6,
     "mag": 4,
     "description": "A spirit consumed by the void's hunger"
-  }
-   {
+  },
+   
   "shadow-general": {
     "name": "Shadow General",
     "hp": 10,
