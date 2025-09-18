@@ -320,7 +320,8 @@ window.CruxfadeMicro = {
     restartWithSeed: restartWithSeed,
     update: updateGame,
     debugBoss: debugBoss,
-    debugVictory: debugVictory
+    debugVictory: debugVictory,
+    previewRandomItem, 
 };
 
 // Simplified error handler (no updateGame calls)
