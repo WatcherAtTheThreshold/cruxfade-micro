@@ -160,6 +160,10 @@ export function renderAll() {
  * Render the 4x4 game board - UPDATED for fog of war system
  */
 function renderBoard() {
+    if (!G.board.tiles || G.board.tiles.length === 0) {
+        console.log('⚠️ No tiles to render yet, skipping board render');
+        return;
+    }
     if (!DOM.tiles) return;
     
     DOM.tiles.forEach((tileElement, index) => {
@@ -1339,11 +1343,12 @@ function showVictoryScreen() {
 function handleVictoryAction(action) {
     switch (action) {
         case 'new-game':
+            closeAllOverlays();
             // Start a new game with random seed
             if (window.CruxfadeMicro && window.CruxfadeMicro.newGame) {
                 window.CruxfadeMicro.newGame();
             }
-            closeAllOverlays();
+            
             break;
             
         case 'same-seed':
@@ -1722,8 +1727,15 @@ export function hideOverlay(overlayId) {
 /**
  * Close all overlays
  */
-export function closeAllOverlays() {
-    document.querySelectorAll('.overlay').forEach(overlay => {
+function closeAllOverlays() {
+    // Close victory overlay specifically
+    const victoryOverlay = document.getElementById('victory-overlay');
+    if (victoryOverlay) {
+        victoryOverlay.classList.remove('active');
+    }
+    
+    // Close other overlays
+    document.querySelectorAll('.overlay.active').forEach(overlay => {
         overlay.classList.remove('active');
     });
 }

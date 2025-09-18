@@ -118,6 +118,7 @@ export const G = {
  * Generate a new 4x4 grid with encounters - UPDATED to track combat engagement
  */
 function generateGrid() {
+     console.log('🎲 generateGrid() called - Level:', G.gridLevel, 'Boss check:', shouldTriggerBoss());
     G.board.tiles = [];
     
     // Check if this should be a boss encounter
@@ -3177,5 +3178,82 @@ function startWithDefaultCharacter() {
     };
     
     startGameWithCharacter(defaultLeader, defaultCharacterData);
+}
+
+/**
+ * COMPREHENSIVE game state reset - clears ALL state completely
+ * Add this function to state.js
+ */
+export function resetGameStateCompletely() {
+    console.log('🧹 COMPREHENSIVE GAME STATE RESET');
+    
+    // Core game state
+    G.seed = 0;
+    G.gridLevel = 1;
+    G.victory = false;
+    G.over = false;
+    G.keyFound = false;
+    
+    // Board state - completely reset
+    G.board = {
+        tiles: [],
+        player: { r: 1, c: 0 }, // Default starting position
+        seen: new Set()
+    };
+    
+    // Party system - complete reset
+    G.party = [];
+    G.equipment = {};
+    
+    // Card system - complete reset
+    G.deck = [];
+    G.hand = [];
+    G.discard = [];
+    
+    // Combat system - complete reset
+    G.combat = {
+        active: false,
+        enemy: null,
+        playerHp: 0,
+        enemyHp: 0,
+        turn: 'player',
+        lastRoll: null,
+        bossPhase: null  // Clear any lingering boss phase data
+    };
+    
+    // Boss system - complete reset
+    G.boss = {
+        active: false,
+        bossId: null,
+        currentPhase: 0,
+        phaseComplete: false,
+        defeated: false,
+        enemyIndex: 0
+    };
+    
+    // Game log - clear completely
+    G.log = [];
+    
+    // Clear any cached game data references
+    if (G._gameData) {
+        delete G._gameData;
+    }
+    
+    // Clear any other potential lingering properties
+    for (const key in G) {
+        if (!['seed', 'gridLevel', 'victory', 'over', 'keyFound', 'board', 'party', 'equipment', 
+              'deck', 'hand', 'discard', 'combat', 'boss', 'log'].includes(key)) {
+            console.log('🗑️ Cleaning up unknown state property:', key);
+            delete G[key];
+        }
+    }
+    
+    console.log('✅ Game state completely reset');
+    console.log('🔍 Final state check:', {
+        boss: G.boss,
+        combat: G.combat,
+        gridLevel: G.gridLevel,
+        party: G.party.length
+    });
 }
 
