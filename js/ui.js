@@ -953,6 +953,13 @@ function getEnemyIcon(enemyType) {
  */
 function getEnemyPortraitPath(enemy) {
     const enemyType = enemy.type || 'unknown';
+
+    // DEBUG: Log what we're checking
+    console.log('🖼️ getEnemyPortraitPath called with:', {
+        enemyType: enemyType,
+        bossActive: G.boss?.active,
+        bossId: G.boss?.bossId
+    });
     
     // Check if we're in a boss encounter
     if (G.boss && G.boss.active) {
