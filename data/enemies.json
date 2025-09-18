@@ -89,6 +89,28 @@
     "atk": 6,
     "mag": 4,
     "description": "A spirit consumed by the void's hunger"
+  },
+   
+  "shadow-general": {
+    "name": "Shadow General",
+    "hp": 10,
+    "atk": 4,
+    "mag": 2,
+    "description": "The Shadow Lord's elite lieutenant, wreathed in living darkness"
+  },
+  "shadow-lieutenant": {
+    "name": "Shadow Lieutenant", 
+    "hp": 7,
+    "atk": 3,
+    "mag": 1,
+    "description": "A lesser officer in the Shadow Lord's dark army"
+  },
+   "shadow-champion": {
+    "name": "Shadow Champion",
+    "hp": 9,
+    "atk": 4,
+    "mag": 1,
+    "description": "An elite warrior corrupted by the Shadow Lord's dark power"
   }
-  
 }
+  
