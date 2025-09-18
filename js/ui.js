@@ -1102,15 +1102,23 @@ function renderItemEncounter() {
         `;
         DOM.encounterActions.innerHTML = ``; // No buttons
     } else {
-        // Show normal item encounter
+        // Show normal item encounter with graphic
         DOM.encounterArea.innerHTML = `
             <div class="encounter-item">
-                <h3>📦 Item Found</h3>
-                <p>You discovered a useful item!</p>
+                <div class="item-graphic-display">
+                    <img src="./images/items/health-potion.png" 
+                         alt="Health Potion" 
+                         class="encounter-item-image"
+                         style="width: 120px; height: 120px; display: block; margin: 0 auto 16px;">
+                    <div class="item-stats-preview">
+                        <h3>📦 Health Potion Found</h3>
+                        <p>You discovered a useful healing item!</p>
+                    </div>
+                </div>
             </div>
         `;
         DOM.encounterActions.innerHTML = `
-            <button class="btn-primary" data-action="take-item">Take Item</button>
+            <button class="btn-primary" data-action="take-item">Take Health Potion</button>
         `;
     }
 }
