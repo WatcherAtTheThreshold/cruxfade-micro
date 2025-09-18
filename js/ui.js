@@ -970,6 +970,8 @@ function getEnemyPortraitPath(enemy) {
         // Boss generals/lieutenants (like "shadow-general", "crystal-warden")
         else if (enemyType.includes('-general') || enemyType.includes('-warden') || 
                  enemyType.includes('-lieutenant') || enemyType.includes('-champion')) {
+            const path = `./images/generals/${enemyType}.png`;
+            console.log('🖼️ General path:', path);  // ← ADD THIS LINE
             return `./images/generals/${enemyType}.png`;
         }
     }
