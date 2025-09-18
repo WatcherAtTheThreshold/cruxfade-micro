@@ -87,6 +87,9 @@ let DOM = {};
 // Callback to trigger game updates
 let _updateGameCallback = null;
 
+// Store previewed item to ensure consistency
+let currentItemPreview = null;
+
 // ================================================================
 // DOM ELEMENT CACHING
 // ================================================================
@@ -1103,8 +1106,9 @@ function renderItemEncounter() {
         `;
         DOM.encounterActions.innerHTML = ``; // No buttons
     } else {
-        // === GET ITEM PREVIEW DATA ===
-        const itemPreview = window.CruxfadeMicro.previewRandomItem();
+        // === GET AND STORE ITEM PREVIEW DATA ===
+      currentItemPreview = window.CruxfadeMicro.previewRandomItem();
+      const itemPreview = currentItemPreview;
         
         // === BUILD IMAGE PATH AND FALLBACK ===
         const primaryImagePath = `./images/items/${itemPreview.id}.png`;
