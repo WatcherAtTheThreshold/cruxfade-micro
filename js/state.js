@@ -2872,6 +2872,47 @@ export function isEquipment(item) {
     return item.slot !== undefined;
 }
 
+// ================================================================
+// ITEM PREVIEW FUNCTION
+// ================================================================
+
+/**
+ * Preview what item would be found without actually giving it
+ * Uses same logic as giveRandomItem() but returns item data instead
+ */
+export function previewRandomItem() {
+    // Fallback item if no data system available
+    if (!GAME_DATA.items) {
+        const fallbackItems = [
+            { id: 'health-potion', name: 'Health Potion', stat: 'hp', boost: 3, maxBoost: 2 },
+            { id: 'strength-elixir', name: 'Strength Elixir', stat: 'atk', boost: 1 },
+            { id: 'magic-crystal', name: 'Magic Crystal', stat: 'mag', boost: 1 }
+        ];
+        return pickRandom(fallbackItems);
+    }
+    
+    // Use data-driven item selection (same logic as giveRandomItem)
+    const gridKey = `grid-${G.gridLevel}`;
+    const lootTable = GAME_DATA.items.lootTables[gridKey] || GAME_DATA.items.lootTables.basic;
+    const useConsumable = random() < lootTable.consumables;
+    
+    // Choose item pool
+    const itemPool = useConsumable ? 
+        GAME_DATA.items.consumables : 
+        GAME_DATA.items.equipment;
+        
+    // Pick random item from pool
+    const itemKeys = Object.keys(itemPool);
+    const itemKey = pickRandom(itemKeys);
+    const item = itemPool[itemKey];
+    
+    // Return item data with ID included
+    return {
+        id: itemKey,
+        ...item
+    };
+}
+
 /**
  * Enhanced item giving that handles equipment vs consumables
  */
