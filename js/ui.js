@@ -1106,7 +1106,7 @@ function renderItemEncounter() {
         DOM.encounterArea.innerHTML = `
             <div class="encounter-item">
                 <div class="item-graphic-display">
-                    <img src="./images/items/health-potion.png" 
+                    <img src="./images/items/consumables/health-potion.png" 
                          alt="Health Potion" 
                          class="encounter-item-image"
                          style="width: 120px; height: 120px; display: block; margin: 0 auto 16px;">
