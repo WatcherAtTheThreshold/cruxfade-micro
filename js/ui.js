@@ -1624,6 +1624,9 @@ export function bindEventHandlers(updateGameCallback) {
                     break;
                     
                 case 'take-item':
+              // Use stored preview to ensure consistency
+                  window.CruxfadeMicro.giveRandomItem(currentItemPreview);
+                  currentItemPreview = null; // Clear after use
                     giveRandomItem();  // Call our new function!
                     _updateGameCallback();
                      break;
