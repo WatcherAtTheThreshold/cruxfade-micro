@@ -4,7 +4,7 @@
 // ================================================================
 
 // Import core modules
-import { G, initializeGame, addLogEntry, setGameData, giveRandomItem, previewRandomItem } from './state.js';
+import { G, initializeGame, addLogEntry, setGameData, previewRandomItem, giveRandomItem } from './state.js';
 import { renderAll, bindEventHandlers } from './ui.js';
 import { initRNG } from './rng.js';
 import { resetGameStateCompletely } from './state.js';
@@ -323,6 +323,7 @@ window.CruxfadeMicro = {
     debugBoss: debugBoss,
     debugVictory: debugVictory,
     previewRandomItem, 
+    giveRandomItem,
 };
 
 // Simplified error handler (no updateGame calls)
