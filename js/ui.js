@@ -87,9 +87,6 @@ let DOM = {};
 // Callback to trigger game updates
 let _updateGameCallback = null;
 
-// Store previewed item to ensure consistency
-let currentItemPreview = null;
-
 // ================================================================
 // ITEM PREVIEW MANAGEMENT
 // ================================================================
