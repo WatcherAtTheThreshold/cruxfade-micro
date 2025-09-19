@@ -91,6 +91,20 @@ let _updateGameCallback = null;
 let currentItemPreview = null;
 
 // ================================================================
+// ITEM PREVIEW MANAGEMENT
+// ================================================================
+
+// Store previewed item to ensure consistency
+let currentItemPreview = null;
+
+/**
+ * Clear current item preview (called when player moves)
+ */
+export function clearItemPreview() {
+    currentItemPreview = null;
+}
+
+// ================================================================
 // DOM ELEMENT CACHING
 // ================================================================
 
