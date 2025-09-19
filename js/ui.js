@@ -1623,13 +1623,12 @@ export function bindEventHandlers(updateGameCallback) {
                    _updateGameCallback();
                     break;
                     
-                case 'take-item':
-              // Use stored preview to ensure consistency
-                  window.CruxfadeMicro.giveRandomItem(currentItemPreview);
-                  currentItemPreview = null; // Clear after use
-                    giveRandomItem();  // Call our new function!
-                    _updateGameCallback();
-                     break;
+               case 'take-item':
+             // Use stored preview to ensure consistency
+              window.CruxfadeMicro.giveRandomItem(currentItemPreview);
+              currentItemPreview = null; // Clear after use
+              _updateGameCallback();
+            break;
                     
                 case 'recruit-ally':
     const result = recruitRandomAlly();
