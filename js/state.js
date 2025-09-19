@@ -6,8 +6,7 @@
 
 // Import seeded RNG functions
 import { random, randomInt, pickRandom } from './rng.js';
-
-import { renderAll } from './ui.js';
+import { renderAll, clearItemPreview } from './ui.js';
 
 // ================================================================
 // GAME DATA STORAGE
@@ -1113,6 +1112,9 @@ export function movePlayer(newRow, newCol) {
     // MOVE PLAYER TO NEW POSITION
     G.board.player.r = newRow;
     G.board.player.c = newCol;
+
+    // CLEAR ITEM PREVIEW (when moving to new tile)
+    clearItemPreview();
     
     // EXPLORE THE NEW TILE (reveal its actual content)
     targetTile.explored = true;
