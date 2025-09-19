@@ -1107,8 +1107,10 @@ function renderItemEncounter() {
         DOM.encounterActions.innerHTML = ``; // No buttons
     } else {
         // === GET AND STORE ITEM PREVIEW DATA ===
-      currentItemPreview = window.CruxfadeMicro.previewRandomItem();
-      const itemPreview = currentItemPreview;
+      if (!currentItemPreview) {
+    currentItemPreview = window.CruxfadeMicro.previewRandomItem();
+}
+    const itemPreview = currentItemPreview;
         
         // === BUILD IMAGE PATH AND FALLBACK ===
         const primaryImagePath = `./images/items/${itemPreview.id}.png`;
