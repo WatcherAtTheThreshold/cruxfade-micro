@@ -87,6 +87,9 @@ let DOM = {};
 // Callback to trigger game updates
 let _updateGameCallback = null;
 
+// Store previewed item to ensure consistency
+let currentItemPreview = null;
+
 // ================================================================
 // DOM ELEMENT CACHING
 // ================================================================
@@ -1088,9 +1091,10 @@ function renderHazardEncounter() {
     }
 }
 
-/**
- * Render an item encounter
- */
+// ================================================================
+// DYNAMIC ITEM ENCOUNTER RENDERING
+// ================================================================
+
 function renderItemEncounter() {
     if (isCurrentTileConsumed()) {
         // Show consumed state
@@ -1102,27 +1106,54 @@ function renderItemEncounter() {
         `;
         DOM.encounterActions.innerHTML = ``; // No buttons
     } else {
-        // Show normal item encounter with graphic
+        // === GET AND STORE ITEM PREVIEW DATA ===
+      currentItemPreview = window.CruxfadeMicro.previewRandomItem();
+      const itemPreview = currentItemPreview;
+        
+        // === BUILD IMAGE PATH AND FALLBACK ===
+        const primaryImagePath = `./images/items/${itemPreview.id}.png`;
+        const fallbackImagePath = itemPreview.slot ? 
+            `./images/items/equipment-generic.png` : 
+            `./images/items/consumable-generic.png`;
+        
+        // === BUILD STAT DISPLAY ===
+        let statDisplay = '';
+        if (itemPreview.stat) {
+            // Consumable - show stat boost
+            statDisplay = `<div class="stat-bonus">+${itemPreview.boost} ${itemPreview.stat.toUpperCase()}</div>`;
+        } else if (itemPreview.statBonus) {
+            // Equipment - show stat bonuses
+            const bonuses = Object.entries(itemPreview.statBonus)
+                .map(([stat, bonus]) => `+${bonus} ${stat.toUpperCase()}`)
+                .join(', ');
+            statDisplay = `<div class="stat-bonus">${bonuses}</div>`;
+        }
+        
+        // === RENDER DYNAMIC ITEM ENCOUNTER ===
         DOM.encounterArea.innerHTML = `
             <div class="encounter-item">
                 <div class="item-graphic-display">
-                    <img src="./images/items/consumables/health-potion.png" 
-                         alt="Health Potion" 
+                    <img src="${primaryImagePath}" 
+                         alt="${itemPreview.name}" 
                          class="encounter-item-image"
-                         style="width: 120px; height: 120px; display: block; margin: 0 auto 16px;">
+                         style="width: 120px; height: 120px; display: block; margin: 0 auto 16px;"
+                         onerror="this.onerror=null; this.src='${fallbackImagePath}'; this.onerror=function(){this.style.display='none'; this.nextElementSibling.style.display='block';}">
+                    <div class="item-emoji-fallback" style="display: none; font-size: 120px; text-align: center; margin: 0 auto 16px;">📦</div>
                     <div class="item-stats-preview">
-                        <h3>📦 Health Potion Found</h3>
-                        <p>You discovered a useful healing item!</p>
+                        <h3>📦 ${itemPreview.name} Found</h3>
+                        ${statDisplay}
+                        <p>You discovered a useful item!</p>
                     </div>
                 </div>
             </div>
         `;
+        
+        // === UPDATE BUTTON TEXT ===
         DOM.encounterActions.innerHTML = `
-            <button class="btn-primary" data-action="take-item">Take Health Potion</button>
+            <button class="btn-primary" data-action="take-item">Take ${itemPreview.name}</button>
         `;
     }
 }
-
 /**
  * Render an ally encounter - WITH DIRECT EVENT LISTENERS FOR DEBUG
  */
@@ -1592,10 +1623,12 @@ export function bindEventHandlers(updateGameCallback) {
                    _updateGameCallback();
                     break;
                     
-                case 'take-item':
-                    giveRandomItem();  // Call our new function!
-                    _updateGameCallback();
-                     break;
+               case 'take-item':
+             // Use stored preview to ensure consistency
+              window.CruxfadeMicro.giveRandomItem(currentItemPreview);
+              currentItemPreview = null; // Clear after use
+              _updateGameCallback();
+            break;
                     
                 case 'recruit-ally':
     const result = recruitRandomAlly();

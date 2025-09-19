@@ -4,10 +4,11 @@
 // ================================================================
 
 // Import core modules
-import { G, initializeGame, addLogEntry, setGameData } from './state.js';
+import { G, initializeGame, addLogEntry, setGameData, previewRandomItem, giveRandomItem } from './state.js';
 import { renderAll, bindEventHandlers } from './ui.js';
 import { initRNG } from './rng.js';
 import { resetGameStateCompletely } from './state.js';
+
 
 // ================================================================
 // GAME LOOP & STATE MANAGEMENT (DEFINED FIRST)
@@ -320,7 +321,9 @@ window.CruxfadeMicro = {
     restartWithSeed: restartWithSeed,
     update: updateGame,
     debugBoss: debugBoss,
-    debugVictory: debugVictory
+    debugVictory: debugVictory,
+    previewRandomItem, 
+    giveRandomItem,
 };
 
 // Simplified error handler (no updateGame calls)
