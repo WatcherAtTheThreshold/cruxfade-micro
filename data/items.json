@@ -64,8 +64,8 @@
       "description": "A heavy two-handed weapon that deals massive damage",
       "rarity": "uncommon"
     },
-    "buckler": {
-      "name": "Buckler",
+    "heater-shield": {
+      "name": "Heater Shield",
       "slot": "armor",
       "statBonus": { "hp": 8 },
       "description": "A small, lightweight shield that increases health",
