@@ -64,25 +64,25 @@
       "description": "A heavy two-handed weapon that deals massive damage",
       "rarity": "uncommon"
     },
-    "leather-armor": {
-      "name": "Leather Armor",
+    "buckler": {
+      "name": "Buckler",
       "slot": "armor",
-      "statBonus": { "hp": 5 },
-      "description": "Basic protection that increases maximum health",
+      "statBonus": { "hp": 8 },
+      "description": "A small, lightweight shield that increases health",
       "rarity": "common"
     },
-    "chain-mail": {
-      "name": "Chain Mail",
+    "battle-shield": {
+      "name": "Battle Shield", 
       "slot": "armor",
-      "statBonus": { "hp": 6, "atk": 3 },
-      "description": "Heavy armor that provides excellent protection but limits mobility",
+      "statBonus": { "hp": 8, "atk": 6 },
+      "description": "A sturdy shield perfect for both defense and shield bashing",
       "rarity": "uncommon"
     },
-    "mage-robes": {
-      "name": "Mage Robes",
-      "slot": "armor",
-      "statBonus": { "mag": 3, "hp": 3 },
-      "description": "Enchanted robes that enhance magical abilities",
+    "aegis": {
+      "name": "Aegis",
+      "slot": "armor", 
+      "statBonus": { "mag": 6, "hp": 6 },
+      "description": "A mystical shield that enhances magical abilities",
       "rarity": "rare"
     },
     "power-crystal": {
